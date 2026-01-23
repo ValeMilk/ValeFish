@@ -18,7 +18,7 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
               <img 
                 src="/Logo ValeFish.png" 
                 alt="ValeFish Logo" 
-                className="h-12 w-auto"
+                className="h-20 w-auto"
               />
             </div>
           </div>
