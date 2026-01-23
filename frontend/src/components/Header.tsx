@@ -20,10 +20,6 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                 alt="ValeFish Logo" 
                 className="h-12 w-auto"
               />
-              <div>
-                <h1 className="text-2xl font-bold text-primary">ValeFish</h1>
-                <p className="text-xs text-muted-foreground italic">Pescados</p>
-              </div>
             </div>
           </div>
           
