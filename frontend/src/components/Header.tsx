@@ -14,13 +14,13 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
       <div className="container py-4 md:py-6">
         <div className="flex items-center justify-between mb-4 md:mb-6">
           <div className="flex items-center gap-3 flex-1">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <img 
                 src="/Logo ValeFish.png" 
                 alt="ValeFish Logo" 
-                className="h-24 md:h-32 w-auto"
+                className="h-12 w-auto"
               />
-              <div className="hidden md:block">
+              <div>
                 <h1 className="text-2xl font-bold text-primary">ValeFish</h1>
                 <p className="text-xs text-muted-foreground italic">Pescados</p>
               </div>
