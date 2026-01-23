@@ -38,7 +38,7 @@ const FormInput = ({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
-          className={`w-full input-ocean ${icon ? 'pl-10' : ''} ${suffix ? 'pr-14' : ''} ${
+          className={`w-full px-3 py-3 md:py-2 rounded-lg border border-muted-foreground/30 bg-muted text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all ${icon ? 'pl-10' : ''} ${suffix ? 'pr-14' : ''} ${
             computed ? 'bg-secondary/50 font-semibold text-secondary-foreground' : ''
           } ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`}
         />
