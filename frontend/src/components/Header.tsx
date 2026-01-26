@@ -1,13 +1,25 @@
-import { Package, LayoutDashboard, Menu } from "lucide-react";
+import { Package, LayoutDashboard, Menu, LogOut } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   activeTab: 'dashboard' | 'entrada';
   onTabChange: (tab: 'dashboard' | 'entrada') => void;
+  onLogout?: () => void;
 }
 
-const Header = ({ activeTab, onTabChange }: HeaderProps) => {
+const Header = ({ activeTab, onTabChange, onLogout }: HeaderProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    if (onLogout) {
+      onLogout();
+    }
+    navigate('/login');
+  };
 
   return (
     <header className="header-ocean text-foreground">
@@ -23,13 +35,22 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
             </div>
           </div>
           
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 hover:bg-foreground/10 rounded-lg transition-all"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
+          {/* Mobile menu button and Logout */}
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 hover:bg-foreground/10 rounded-lg transition-all"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+            <button
+              onClick={handleLogout}
+              className="p-2 hover:bg-red-500/20 rounded-lg transition-all text-red-600 hover:text-red-700"
+              title="Sair da conta"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Navigation - Desktop */}

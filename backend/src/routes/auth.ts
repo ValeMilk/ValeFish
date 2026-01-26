@@ -8,20 +8,20 @@ const router = Router();
 // Register
 router.post('/register', async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { email, password, name } = req.body;
+    const { username, password, name } = req.body;
 
-    if (!email || !password || !name) {
-      return res.status(400).json({ error: 'Email, password and name are required' });
+    if (!username || !password || !name) {
+      return res.status(400).json({ error: 'Username, password and name are required' });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
+      return res.status(400).json({ error: 'Username already exists' });
     }
 
     const hashedPassword = await hashPassword(password);
     const user = new User({
-      email,
+      username,
       password: hashedPassword,
       name,
       role: 'operador',
@@ -29,14 +29,14 @@ router.post('/register', async (req: AuthenticatedRequest, res: Response) => {
 
     await user.save();
 
-    const token = generateToken(user._id.toString(), user.email);
+    const token = generateToken(user._id.toString(), user.username);
     
     res.status(201).json({
       message: 'User registered successfully',
       token,
       user: {
         id: user._id,
-        email: user.email,
+        username: user.username,
         name: user.name,
         role: user.role,
       },
@@ -49,30 +49,30 @@ router.post('/register', async (req: AuthenticatedRequest, res: Response) => {
 // Login
 router.post('/login', async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password are required' });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+      return res.status(401).json({ error: 'Invalid username or password' });
     }
 
     const isPasswordValid = await comparePassword(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+      return res.status(401).json({ error: 'Invalid username or password' });
     }
 
-    const token = generateToken(user._id.toString(), user.email);
+    const token = generateToken(user._id.toString(), user.username);
 
     res.json({
       message: 'Login successful',
       token,
       user: {
         id: user._id,
-        email: user.email,
+        username: user.username,
         name: user.name,
         role: user.role,
       },

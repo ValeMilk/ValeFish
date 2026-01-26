@@ -1,14 +1,29 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Dashboard from "@/components/Dashboard";
 import RegistroEntrada from "@/components/RegistroEntrada";
 import { LoteData, createEmptyLote } from "@/types/lote";
 
-const Index = () => {
+interface IndexProps {
+  onLogout?: () => void;
+}
+
+const Index = ({ onLogout }: IndexProps) => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'dashboard' | 'entrada'>('dashboard');
   const [lotes, setLotes] = useState<LoteData[]>([]);
   const [currentLote, setCurrentLote] = useState<LoteData>(createEmptyLote());
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    if (onLogout) {
+      onLogout();
+    }
+    navigate('/login');
+  };
 
   const handleLoteChange = (field: keyof LoteData, value: any) => {
     setCurrentLote(prev => ({ ...prev, [field]: value }));
@@ -65,7 +80,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header activeTab={activeTab} onTabChange={handleTabChange} />
+      <Header activeTab={activeTab} onTabChange={handleTabChange} onLogout={handleLogout} />
 
       <main className="container py-6">
         {activeTab === 'dashboard' && <Dashboard lotes={lotes} />}
