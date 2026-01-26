@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import lotesRoutes from './routes/lotes';
+import analyticsRoutes from './routes/analytics';
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ app.get('/api/health', (req: Request, res: Response) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/lotes', lotesRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // 404 Handler
 app.use((req: Request, res: Response) => {
