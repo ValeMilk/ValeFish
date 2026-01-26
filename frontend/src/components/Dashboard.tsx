@@ -99,11 +99,11 @@ const Dashboard = ({ lotes, onLoteUpdate }: DashboardProps) => {
         <div className="stat-card">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">Lotes Ativos</p>
-              <p className="text-3xl font-bold text-foreground mt-1">{lotesAtivos}</p>
+              <p className="text-sm text-muted-foreground">Pendentes</p>
+              <p className="text-3xl font-bold text-foreground mt-1">{lotesPendentes}</p>
             </div>
-            <div className="icon-box">
-              <Clock className="w-5 h-5 text-primary-foreground" />
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-warning/15">
+              <AlertCircle className="w-5 h-5 text-warning" />
             </div>
           </div>
         </div>
