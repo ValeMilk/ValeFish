@@ -420,7 +420,17 @@ const RegistroEntrada = ({ lote, onChange, onSubmit }: RegistroEntradaProps) => 
             variant="outline" 
             size="lg" 
             className="w-full border-2 mt-4"
-            onClick={() => setEmbalagemConfirmado(true)}
+            onClick={() => {
+              // Auto-preencher fileEmbalado com o total calculado
+              const totalFileEmbalado = calcularFileEmbalado();
+              onChange('fileEmbalado', {
+                P: totalFileEmbalado,
+                M: 0,
+                G: 0,
+                GG: 0
+              });
+              setEmbalagemConfirmado(true);
+            }}
           >
             <CheckCircle className="w-5 h-5 mr-2" />
             Confirmar Embalagem
