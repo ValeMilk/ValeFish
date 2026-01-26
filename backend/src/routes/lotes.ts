@@ -1,6 +1,8 @@
 import { Router, Response } from 'express';
 import { Lote } from '../models/Lote';
+import { User } from '../models/User';
 import { AuthenticatedRequest, authMiddleware } from '../middleware/auth';
+import bcryptjs from 'bcryptjs';
 
 const router = Router();
 
@@ -43,9 +45,26 @@ router.get('/:id', authMiddleware, async (req: AuthenticatedRequest, res: Respon
 // Update Lote
 router.put('/:id', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
   try {
+    const { password, ...updateData } = req.body;
+
+    // Validar senha se fornecida
+    if (password && req.user) {
+      const user = await User.findById(req.user.userId);
+      
+      if (!user) {
+        return res.status(401).json({ error: 'Usuário não encontrado' });
+      }
+
+      const isPasswordValid = await bcryptjs.compare(password, user.password);
+      
+      if (!isPasswordValid) {
+        return res.status(401).json({ error: 'Senha incorreta' });
+      }
+    }
+
     const lote = await Lote.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     );
 

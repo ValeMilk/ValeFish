@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
@@ -15,6 +15,49 @@ const Index = ({ onLogout }: IndexProps) => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'entrada'>('dashboard');
   const [lotes, setLotes] = useState<LoteData[]>([]);
   const [currentLote, setCurrentLote] = useState<LoteData>(createEmptyLote());
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+
+  // Carregar lotes do backend ao montar o componente
+  useEffect(() => {
+    const fetchLotes = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
+
+        const response = await fetch('http://localhost:4000/api/lotes', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.removeItem('token');
+            navigate('/login');
+            return;
+          }
+          throw new Error('Erro ao carregar lotes');
+        }
+
+        const data = await response.json();
+        // Normalizar lotes: mapear _id para id
+        const normalizedLotes = data.map((lote: any) => ({
+          ...lote,
+          id: lote.id || lote._id,
+        }));
+        setLotes(normalizedLotes);
+      } catch (error) {
+        console.error('Erro ao carregar lotes:', error);
+        // Não mostrar erro, apenas log
+      }
+    };
+
+    fetchLotes();
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -29,7 +72,7 @@ const Index = ({ onLogout }: IndexProps) => {
     setCurrentLote(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleRegistrarEntrada = () => {
+  const handleRegistrarEntrada = async () => {
     if (!currentLote.processo || !currentLote.fornecedor || !currentLote.numeroLote) {
       toast({
         title: "Campos obrigatórios",
@@ -53,19 +96,65 @@ const Index = ({ onLogout }: IndexProps) => {
       return;
     }
 
-    const novoLote: LoteData = {
-      ...currentLote,
-      status: 'finalizado',
-    };
+    setLoadingSubmit(true);
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        toast({
+          title: "Erro de autenticação",
+          description: "Token não encontrado. Faça login novamente.",
+          variant: "destructive",
+        });
+        navigate('/login');
+        return;
+      }
 
-    setLotes(prev => [novoLote, ...prev]);
-    setCurrentLote(createEmptyLote());
-    setActiveTab('dashboard');
+      const novoLote: Omit<LoteData, 'id'> = {
+        ...currentLote,
+        status: 'finalizado',
+      };
 
-    toast({
-      title: "Lote finalizado!",
-      description: `Lote ${novoLote.numeroLote} foi criado com sucesso.`,
-    });
+      const response = await fetch('http://localhost:4000/api/lotes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(novoLote),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao salvar lote');
+      }
+
+      const savedLote = await response.json();
+      
+      // Normalizar lote: mapear _id para id
+      const normalizedLote = {
+        ...savedLote,
+        id: savedLote.id || savedLote._id,
+      };
+      
+      setLotes(prev => [normalizedLote, ...prev]);
+      setCurrentLote(createEmptyLote());
+      setActiveTab('dashboard');
+
+      toast({
+        title: "Sucesso!",
+        description: `Lote ${normalizedLote.numeroLote} foi criado e salvo no banco de dados.`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro ao salvar lote",
+        description: error.message || "Não foi possível salvar o lote no banco de dados.",
+        variant: "destructive",
+      });
+      console.error('Erro ao salvar lote:', error);
+    } finally {
+      setLoadingSubmit(false);
+    }
   };
 
   const handleTabChange = (tab: 'dashboard' | 'entrada') => {
@@ -83,13 +172,23 @@ const Index = ({ onLogout }: IndexProps) => {
       <Header activeTab={activeTab} onTabChange={handleTabChange} onLogout={handleLogout} />
 
       <main className="container py-6">
-        {activeTab === 'dashboard' && <Dashboard lotes={lotes} />}
+        {activeTab === 'dashboard' && (
+          <Dashboard 
+            lotes={lotes}
+            onLoteUpdate={(updatedLote) => {
+              setLotes(prevLotes => 
+                prevLotes.map(l => l.id === updatedLote.id ? updatedLote : l)
+              );
+            }}
+          />
+        )}
         
         {activeTab === 'entrada' && (
           <RegistroEntrada
             lote={currentLote}
             onChange={handleLoteChange}
             onSubmit={handleRegistrarEntrada}
+            loading={loadingSubmit}
           />
         )}
       </main>

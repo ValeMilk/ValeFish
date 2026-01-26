@@ -17,11 +17,12 @@ interface RegistroEntradaProps {
   lote: LoteData;
   onChange: (field: keyof LoteData, value: any) => void;
   onSubmit: () => void;
+  loading?: boolean;
 }
 
 const FORNECEDORES = ["VALEFISH", "NORFISH", "CARLITO"];
 
-const RegistroEntrada = ({ lote, onChange, onSubmit }: RegistroEntradaProps) => {
+const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false }: RegistroEntradaProps) => {
   const [notaFiscalConfirmado, setNotaFiscalConfirmado] = useState(false);
   const [filetagemConfirmado, setFiletagemConfirmado] = useState(false);
   const [embalagemConfirmado, setEmbalagemConfirmado] = useState(false);
@@ -471,9 +472,15 @@ const RegistroEntrada = ({ lote, onChange, onSubmit }: RegistroEntradaProps) => 
         </div>
       </FormSection>
 
-      <Button variant="success" size="xl" className="w-full" onClick={onSubmit}>
+      <Button 
+        variant="success" 
+        size="xl" 
+        className="w-full" 
+        onClick={onSubmit}
+        disabled={loading}
+      >
         <CheckCircle className="w-5 h-5 mr-2" />
-        Finalizar Lote
+        {loading ? 'Salvando...' : 'Finalizar Lote'}
       </Button>
     </div>
   );
