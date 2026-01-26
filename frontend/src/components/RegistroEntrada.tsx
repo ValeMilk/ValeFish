@@ -179,6 +179,16 @@ const RegistroEntrada = ({ lote, onChange, onSubmit }: RegistroEntradaProps) => 
             onChange={(v) => onChange('numeroNF', v)}
             disabled={notaFiscalConfirmado}
           />
+          <FormInput
+            label="Valor da Nota Fiscal"
+            icon={<FileText className="w-4 h-4" />}
+            type="number"
+            placeholder="Digite o valor"
+            value={lote.valorNF || ''}
+            onChange={(v) => onChange('valorNF', v ? parseFloat(v) : undefined)}
+            suffix="R$"
+            disabled={notaFiscalConfirmado}
+          />
           <SizeWeightInput
             label="Peso Nota Fiscal"
             icon={<Scale className="w-4 h-4" />}

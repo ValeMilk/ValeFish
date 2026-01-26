@@ -16,6 +16,7 @@ export interface LoteData {
   fornecedor: string;
   numeroLote: string;
   numeroNF?: string;
+  valorNF?: number;
   status: 'pendente' | 'em_producao' | 'finalizado';
   
   // Pesos por tamanho
