@@ -15,13 +15,10 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-
-RUN npm install --only=production
+RUN npm install -g serve
 
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/public ./public
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["serve", "-s", "dist", "-l", "3000"]
