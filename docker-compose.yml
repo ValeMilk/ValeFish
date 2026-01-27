@@ -22,11 +22,11 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}
     container_name: valefish-frontend
     ports:
       - "8888:3000"
-    environment:
-      - VITE_API_URL=${VITE_API_URL}
     restart: unless-stopped
     depends_on:
       - backend
