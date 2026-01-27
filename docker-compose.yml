@@ -24,7 +24,7 @@ services:
       dockerfile: Dockerfile
     container_name: valefish-frontend
     ports:
-      - "3000:3000"
+      - "8888:3000"
     environment:
       - VITE_API_URL=${VITE_API_URL}
     restart: unless-stopped
