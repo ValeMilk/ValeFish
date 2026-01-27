@@ -6,6 +6,8 @@ import Dashboard from "@/components/Dashboard";
 import RegistroEntrada from "@/components/RegistroEntrada";
 import { LoteData, createEmptyLote } from "@/types/lote";
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
 interface IndexProps {
   onLogout?: () => void;
 }
@@ -27,7 +29,7 @@ const Index = ({ onLogout }: IndexProps) => {
           return;
         }
 
-        const response = await fetch('http://localhost:4000/api/lotes', {
+        const response = await fetch(`${API_URL}/lotes`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -115,7 +117,7 @@ const Index = ({ onLogout }: IndexProps) => {
         status: 'finalizado',
       };
 
-      const response = await fetch('http://localhost:4000/api/lotes', {
+      const response = await fetch(`${API_URL}/lotes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
