@@ -1,14 +1,14 @@
 import express from 'express';
 import { User } from '../models/User';
 import { Lote } from '../models/Lote';
-import { authenticateToken } from '../middleware/auth';
+import { authMiddleware } from '../middleware/auth';
 import { requireAdmin } from '../middleware/adminAuth';
 import bcrypt from 'bcryptjs';
 
 const router = express.Router();
 
 // Todas as rotas requerem autenticação e permissão de admin
-router.use(authenticateToken);
+router.use(authMiddleware);
 router.use(requireAdmin);
 
 // Estatísticas do Dashboard
@@ -211,7 +211,7 @@ router.put('/users/:id', async (req, res) => {
 });
 
 // Deletar usuário
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/:id', async (req: any, res) => {
   try {
     // Não permitir deletar a si mesmo
     if (req.user && req.params.id === req.user._id.toString()) {
