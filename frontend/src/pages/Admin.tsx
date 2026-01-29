@@ -170,7 +170,8 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-6">
-      <didiv className="flex items-center gap-4 mb-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center gap-4 mb-8">
           <Button
             variant="outline"
             onClick={() => navigate('/')}
@@ -180,8 +181,7 @@ export default function Admin() {
             Voltar
           </Button>
           <h1 className="text-4xl font-bold text-gray-800">Painel Administrativo</h1>
-        </div
-        <h1 className="text-4xl font-bold text-gray-800 mb-8">Painel Administrativo</h1>
+        </div>
 
         {/* Tabs */}
         <div className="flex gap-4 mb-8 border-b border-gray-200">
