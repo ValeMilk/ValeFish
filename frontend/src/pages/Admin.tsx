@@ -70,6 +70,7 @@ export default function Admin() {
   }, [activeTab]);
 
   const loadStats = async () => {
+    setLoading(true);
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`${API_URL}/admin/stats`, {
