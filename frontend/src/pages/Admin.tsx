@@ -10,10 +10,6 @@ interface AdminProps {
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
-const Admin = ({ onLogout }: AdminProps) => {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('dashboard');
-
 interface Stats {
   totalLotes: {
     abertos: number;
