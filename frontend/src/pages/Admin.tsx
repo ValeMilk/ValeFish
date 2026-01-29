@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BarChart3, Users, Package, TrendingUp, DollarSign, Calendar, ArrowLeft } from 'lucide-react';
+import { BarChart3, Users, Package, TrendingUp, DollarSign, Calendar, ArrowLeft, LogOut } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Button } from '../components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -49,6 +49,13 @@ export default function Admin() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('userRole');
+    navigate('/login');
+  };
   
   // User Management
   const [showUserModal, setShowUserModal] = useState(false);
@@ -170,19 +177,40 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <Button
-            variant="outline"
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Voltar
-          </Button>
-          <h1 className="text-4xl font-bold text-gray-800">Painel Administrativo</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+      {/* Header */}
+      <header className="bg-gradient-to-br from-ocean-dark to-ocean-light shadow-lg">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border-white/30"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Voltar
+              </Button>
+              <img 
+                src="/Logo ValeFish.png" 
+                alt="ValeFish Logo" 
+                className="h-16 w-auto"
+              />
+            </div>
+            <button
+              onClick={handleLogout}
+              className="p-2 hover:bg-red-500/20 rounded-lg transition-all text-white hover:text-red-200 flex items-center gap-2"
+              title="Sair da conta"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="hidden sm:inline text-sm font-medium">Sair</span>
+            </button>
+          </div>
         </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto p-6">
+        <h1 className="text-4xl font-bold text-gray-800 mb-8">Painel Administrativo</h1>
 
         {/* Tabs */}
         <div className="flex gap-4 mb-8 border-b border-gray-200">
@@ -496,9 +524,9 @@ export default function Admin() {
                     className="w-full px-3 py-2 border rounded-lg"
                   >
                     <option value="todos">Todos</option>
+                    <option value="VALEFISH">VALEFISH</option>
                     <option value="NORFISH">NORFISH</option>
-                    <option value="ALIFISH">ALIFISH</option>
-                    <option value="SANTAMARIA">SANTAMARIA</option>
+                    <option value="CARLITO">CARLITO</option>
                   </select>
                 </div>
                 
