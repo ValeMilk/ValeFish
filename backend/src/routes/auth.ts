@@ -5,6 +5,16 @@ import { AuthenticatedRequest, authMiddleware } from '../middleware/auth';
 
 const router = Router();
 
+// Get all users (public - for login dropdown)
+router.get('/users-list', async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const users = await User.find().select('username name').sort({ name: 1 });
+    res.json(users);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Register
 router.post('/register', async (req: AuthenticatedRequest, res: Response) => {
   try {

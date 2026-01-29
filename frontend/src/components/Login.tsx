@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LogIn, User, Lock, AlertCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import FormInput from './FormInput';
@@ -7,10 +7,17 @@ interface LoginProps {
   onLoginSuccess: (token: string, user: any) => void;
 }
 
+interface UserOption {
+  _id: string;
+  username: string;
+  name: string;
+}
+
 const Login = ({ onLoginSuccess }: LoginProps) => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [users, setUsers] = useState<UserOption[]>([]);
   
   const [formData, setFormData] = useState({
     username: '',
@@ -20,6 +27,21 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
   });
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(`${API_URL}/auth/users-list`);
+        if (response.ok) {
+          const data = await response.json();
+          setUsers(data);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+      }
+    };
+    fetchUsers();
+  }, [API_URL]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -126,14 +148,38 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
           )}
 
           <form onSubmit={isLogin ? handleLogin : handleRegister} className="space-y-4">
-            {/* Username */}
-            <FormInput
-              label="Nome de Usuário"
-              icon={<User className="w-4 h-4" />}
-              placeholder="seu_usuario"
-              value={formData.username}
-              onChange={(v) => handleInputChange('username', v)}
-            />
+            {/* Username - Select para Login, Input para Registro */}
+            {isLogin ? (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">Selecione seu usuário</label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    <User className="w-4 h-4" />
+                  </div>
+                  <select
+                    value={formData.username}
+                    onChange={(e) => handleInputChange('username', e.target.value)}
+                    required
+                    className="w-full pl-10 pr-3 py-3 md:py-2 rounded-lg border border-muted-foreground/30 bg-muted text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  >
+                    <option value="">Selecione um usuário</option>
+                    {users.map((user) => (
+                      <option key={user._id} value={user.username}>
+                        {user.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            ) : (
+              <FormInput
+                label="Nome de Usuário"
+                icon={<User className="w-4 h-4" />}
+                placeholder="seu_usuario"
+                value={formData.username}
+                onChange={(v) => handleInputChange('username', v)}
+              />
+            )}
 
             {/* Name (apenas em registro) */}
             {!isLogin && (
