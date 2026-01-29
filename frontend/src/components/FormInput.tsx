@@ -10,6 +10,7 @@ interface FormInputProps {
   suffix?: string;
   disabled?: boolean;
   computed?: boolean;
+  inputMode?: 'text' | 'numeric' | 'decimal';
 }
 
 const FormInput = ({
@@ -22,6 +23,7 @@ const FormInput = ({
   suffix,
   disabled = false,
   computed = false,
+  inputMode,
 }: FormInputProps) => {
   return (
     <div className="space-y-2">
@@ -34,6 +36,7 @@ const FormInput = ({
         )}
         <input
           type={type}
+          inputMode={inputMode}
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}

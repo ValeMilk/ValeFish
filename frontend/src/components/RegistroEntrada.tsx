@@ -193,6 +193,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
             value={lote.numeroNF || ''}
             onChange={(v) => onChange('numeroNF', v)}
             disabled={notaFiscalConfirmado}
+            inputMode="numeric"
           />
           <FormInput
             label="Valor da Nota Fiscal"
@@ -203,6 +204,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
             onChange={(v) => onChange('valorNF', v ? parseFloat(v) : undefined)}
             suffix="R$"
             disabled={notaFiscalConfirmado}
+            inputMode="decimal"
           />
           <SizeWeightInput
             label="Peso Nota Fiscal"
@@ -371,6 +373,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
               <div className="flex-1">
                 <input
                   type="number"
+                  inputMode="numeric"
                   placeholder="0"
                   value={lote.qtdMaster || ''}
                   onChange={(v) => onChange('qtdMaster', parseInt(v.target.value) || 0)}
@@ -391,6 +394,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
               <div className="flex-1">
                 <input
                   type="number"
+                  inputMode="numeric"
                   placeholder="0"
                   value={lote.qtdSacos || ''}
                   onChange={(v) => onChange('qtdSacos', parseInt(v.target.value) || 0)}
@@ -486,7 +490,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
         </div>
       </FormSection>
 
-      <div className={`grid ${isEditing ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
+      <div className={`grid grid-cols-1 ${isEditing ? 'sm:grid-cols-3' : 'sm:grid-cols-2'} gap-4`}>
         {isEditing && onCancel && (
           <Button 
             variant="outline" 
@@ -507,7 +511,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
           disabled={loading || loadingAberto}
         >
           <Package className="w-5 h-5 mr-2" />
-          {loadingAberto ? 'Salvando...' : isEditing ? 'Salvar Aberto' : 'Salvar como Aberto'}
+          {loadingAberto ? 'Salvando...' : isEditing ? 'Salvar Aberto' : 'Salvar Aberto'}
         </Button>
         
         <Button 
@@ -518,7 +522,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
           disabled={loading || loadingAberto}
         >
           <CheckCircle className="w-5 h-5 mr-2" />
-          {loading ? 'Salvando...' : isEditing ? 'Finalizar Lote' : 'Salvar e Finalizar'}
+          {loading ? 'Salvando...' : isEditing ? 'Finalizar' : 'Finalizar'}
         </Button>
       </div>
     </div>

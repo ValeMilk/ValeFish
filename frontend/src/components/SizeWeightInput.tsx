@@ -33,6 +33,7 @@ const SizeWeightInput = ({
           <div key={size} className="flex flex-col items-center gap-2">
             <input
               type="number"
+              inputMode="decimal"
               placeholder="0"
               value={values[size] || ''}
               onChange={(e) => onChange(size, e.target.value)}
