@@ -193,20 +193,20 @@ const ViewLoteModal = ({ lote, open, onClose }: ViewLoteModalProps) => {
           </div>
 
           {/* Aproveitamento */}
-          {(lote.aproveitamentoNF || lote.aproveitamentoSalao) && (
+          {(lote.aprovNotaFiscal || lote.aprovSalao) && (
             <div className="bg-gradient-to-r from-blue-50 to-green-50 dark:from-blue-950 dark:to-green-950 rounded-lg p-4">
               <h3 className="font-semibold text-foreground mb-3">Aproveitamento</h3>
               <div className="grid grid-cols-2 gap-4">
-                {lote.aproveitamentoNF && (
+                {lote.aprovNotaFiscal && (
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground">Aprov. NF</p>
-                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{lote.aproveitamentoNF.toFixed(1)}%</p>
+                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{lote.aprovNotaFiscal.toFixed(1)}%</p>
                   </div>
                 )}
-                {lote.aproveitamentoSalao && (
+                {lote.aprovSalao && (
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground">Aprov. Salão</p>
-                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">{lote.aproveitamentoSalao.toFixed(1)}%</p>
+                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">{lote.aprovSalao.toFixed(1)}%</p>
                   </div>
                 )}
               </div>
