@@ -39,7 +39,7 @@ router.post('/register', async (req: AuthenticatedRequest, res: Response) => {
 
     await user.save();
 
-    const token = generateToken(user._id.toString(), user.username);
+    const token = generateToken(user._id.toString(), user.username, user.role);
     
     res.status(201).json({
       message: 'User registered successfully',
@@ -75,7 +75,7 @@ router.post('/login', async (req: AuthenticatedRequest, res: Response) => {
       return res.status(401).json({ error: 'Invalid username or password' });
     }
 
-    const token = generateToken(user._id.toString(), user.username);
+    const token = generateToken(user._id.toString(), user.username, user.role);
 
     res.json({
       message: 'Login successful',
