@@ -198,44 +198,6 @@ export default function Admin({ onLogout }: AdminProps) {
     }
   };
 
-  const loadLotes = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/lotes`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setLotes(data);
-      }
-    } catch (error) {
-      console.error('Erro ao carregar lotes:', error);
-    }
-  };
-
-  const handleDeleteLote = async (id: string, numeroLote: string) => {
-    if (!confirm(`Tem certeza que deseja EXCLUIR o lote ${numeroLote}? Esta ação não pode ser desfeita!`)) return;
-    
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/lotes/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        alert('Lote excluído com sucesso!');
-        loadLotes();
-        loadStats(); // Recarregar estatísticas
-      } else {
-        const error = await response.json();
-        alert('Erro ao excluir lote: ' + (error.message || 'Erro desconhecido'));
-      }
-    } catch (error) {
-      console.error('Erro ao deletar lote:', error);
-      alert('Erro ao excluir lote.');
-    }
-  };
-
   const handleGenerateReport = async () => {
     try {
       const token = localStorage.getItem('token');
