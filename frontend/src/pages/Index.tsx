@@ -19,6 +19,7 @@ const Index = ({ onLogout }: IndexProps) => {
   const [currentLote, setCurrentLote] = useState<LoteData>(createEmptyLote());
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [loadingSubmitAberto, setLoadingSubmitAberto] = useState(false);
+  const [isEditingLote, setIsEditingLote] = useState(false);
 
   // Carregar lotes do backend ao montar o componente
   useEffect(() => {
@@ -75,6 +76,12 @@ const Index = ({ onLogout }: IndexProps) => {
     setCurrentLote(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleLoadLoteForEdit = (lote: LoteData) => {
+    setCurrentLote(lote);
+    setIsEditingLote(true);
+    setActiveTab('entrada');
+  };
+
   const handleRegistrarEntrada = async (status: 'aberto' | 'finalizado') => {
     if (!currentLote.processo || !currentLote.fornecedor || !currentLote.numeroLote) {
       toast({
@@ -117,42 +124,79 @@ const Index = ({ onLogout }: IndexProps) => {
         return;
       }
 
-      const novoLote: Omit<LoteData, 'id'> = {
+      const loteData: Omit<LoteData, 'id'> = {
         ...currentLote,
         status: status,
       };
 
-      const response = await fetch(`${API_URL}/lotes`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(novoLote),
-      });
+      let response;
+      let savedLote;
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Erro ao salvar lote');
+      // Se está editando (tem ID), faz PUT, senão faz POST
+      if (isEditingLote && currentLote.id) {
+        const loteId = currentLote.id || (currentLote as any)._id;
+        response = await fetch(`${API_URL}/lotes/${loteId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ 
+            ...loteData,
+            password: '' // Senha vazia para atualização via entrada (sem verificação)
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Erro ao atualizar lote');
+        }
+
+        savedLote = await response.json();
+        
+        // Atualizar lote na lista
+        setLotes(prev => prev.map(l => 
+          (l.id === loteId || (l as any)._id === loteId) ? savedLote : l
+        ));
+      } else {
+        // Criar novo lote
+        response = await fetch(`${API_URL}/lotes`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify(loteData),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Erro ao salvar lote');
+        }
+
+        savedLote = await response.json();
+        
+        // Adicionar novo lote na lista
+        setLotes(prev => [savedLote, ...prev]);
       }
 
-      const savedLote = await response.json();
-      
       // Normalizar lote: mapear _id para id
       const normalizedLote = {
         ...savedLote,
         id: savedLote.id || savedLote._id,
       };
       
-      setLotes(prev => [normalizedLote, ...prev]);
       setCurrentLote(createEmptyLote());
+      setIsEditingLote(false);
       setActiveTab('dashboard');
 
       toast({
         title: "Sucesso!",
-        description: status === 'aberto' 
-          ? `Lote ${normalizedLote.numeroLote} foi salvo como ABERTO.`
-          : `Lote ${normalizedLote.numeroLote} foi finalizado e salvo.`,
+        description: isEditingLote
+          ? `Lote ${normalizedLote.numeroLote} foi atualizado com sucesso.`
+          : status === 'aberto' 
+            ? `Lote ${normalizedLote.numeroLote} foi salvo como ABERTO.`
+            : `Lote ${normalizedLote.numeroLote} foi finalizado e salvo.`,
       });
     } catch (error: any) {
       toast({
@@ -189,6 +233,7 @@ const Index = ({ onLogout }: IndexProps) => {
                 prevLotes.map(l => l.id === updatedLote.id ? updatedLote : l)
               );
             }}
+            onLoadLoteForEdit={handleLoadLoteForEdit}
           />
         )}
         
@@ -199,6 +244,12 @@ const Index = ({ onLogout }: IndexProps) => {
             onSubmit={handleRegistrarEntrada}
             loading={loadingSubmit}
             loadingAberto={loadingSubmitAberto}
+            isEditing={isEditingLote}
+            onCancel={() => {
+              setCurrentLote(createEmptyLote());
+              setIsEditingLote(false);
+              setActiveTab('dashboard');
+            }}
           />
         )}
       </main>

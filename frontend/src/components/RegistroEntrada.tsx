@@ -19,11 +19,13 @@ interface RegistroEntradaProps {
   onSubmit: (status: 'aberto' | 'finalizado') => void;
   loading?: boolean;
   loadingAberto?: boolean;
+  isEditing?: boolean;
+  onCancel?: () => void;
 }
 
 const FORNECEDORES = ["VALEFISH", "NORFISH", "CARLITO"];
 
-const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAberto = false }: RegistroEntradaProps) => {
+const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAberto = false, isEditing = false, onCancel }: RegistroEntradaProps) => {
   const [notaFiscalConfirmado, setNotaFiscalConfirmado] = useState(false);
   const [filetagemConfirmado, setFiletagemConfirmado] = useState(false);
   const [embalagemConfirmado, setEmbalagemConfirmado] = useState(false);
@@ -93,6 +95,17 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
 
   return (
     <div className="space-y-4 animate-fade-in">
+      {isEditing && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <p className="text-blue-800 font-medium">
+            📝 Editando Lote {lote.numeroLote}
+          </p>
+          <p className="text-blue-600 text-sm mt-1">
+            Você pode atualizar os dados e finalizar este lote aberto.
+          </p>
+        </div>
+      )}
+      
       <FormSection
         title="Informações do Lote"
         icon={<Package className="w-5 h-5 text-primary-foreground" />}
@@ -473,7 +486,19 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
         </div>
       </FormSection>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className={`grid ${isEditing ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
+        {isEditing && onCancel && (
+          <Button 
+            variant="outline" 
+            size="xl" 
+            className="w-full" 
+            onClick={onCancel}
+            disabled={loading || loadingAberto}
+          >
+            Cancelar
+          </Button>
+        )}
+        
         <Button 
           variant="outline" 
           size="xl" 
@@ -482,7 +507,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
           disabled={loading || loadingAberto}
         >
           <Package className="w-5 h-5 mr-2" />
-          {loadingAberto ? 'Salvando...' : 'Salvar como Aberto'}
+          {loadingAberto ? 'Salvando...' : isEditing ? 'Salvar Aberto' : 'Salvar como Aberto'}
         </Button>
         
         <Button 
@@ -493,7 +518,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
           disabled={loading || loadingAberto}
         >
           <CheckCircle className="w-5 h-5 mr-2" />
-          {loading ? 'Salvando...' : 'Salvar e Finalizar'}
+          {loading ? 'Salvando...' : isEditing ? 'Finalizar Lote' : 'Salvar e Finalizar'}
         </Button>
       </div>
     </div>

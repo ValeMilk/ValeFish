@@ -7,9 +7,10 @@ import LoteModal from "./LoteModal";
 interface DashboardProps {
   lotes: LoteData[];
   onLoteUpdate?: (lote: LoteData) => void;
+  onLoadLoteForEdit?: (lote: LoteData) => void;
 }
 
-const Dashboard = ({ lotes, onLoteUpdate }: DashboardProps) => {
+const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) => {
   const [selectedLote, setSelectedLote] = useState<LoteData | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -39,8 +40,14 @@ const Dashboard = ({ lotes, onLoteUpdate }: DashboardProps) => {
     : '0.0';
 
   const handleEditLote = (lote: LoteData) => {
-    setSelectedLote(lote);
-    setModalOpen(true);
+    // Se o lote está aberto, carrega na tela de entrada para finalizar
+    if (lote.status === 'aberto' && onLoadLoteForEdit) {
+      onLoadLoteForEdit(lote);
+    } else {
+      // Caso contrário, abre o modal de edição
+      setSelectedLote(lote);
+      setModalOpen(true);
+    }
   };
 
   const handleSaveLote = async (updatedLote: LoteData, password: string) => {
