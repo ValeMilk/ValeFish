@@ -4,7 +4,15 @@ import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Cart
 import { Button } from '../components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
+interface AdminProps {
+  onLogout: () => void;
+}
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
+const Admin = ({ onLogout }: AdminProps) => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('dashboard');
 
 interface Stats {
   totalLotes: {
@@ -43,7 +51,7 @@ interface ReportFilters {
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
-export default function Admin() {
+export default function Admin({ onLogout }: AdminProps) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'reports'>('dashboard');
   const [stats, setStats] = useState<Stats | null>(null);
@@ -51,9 +59,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('userRole');
+    onLogout();
     navigate('/login');
   };
   

@@ -28,7 +28,11 @@ const App = () => {
   }, []);
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('userRole');
     setIsAuthenticated(false);
+    setUserRole(null);
   };
 
   if (loading) {
@@ -83,7 +87,7 @@ const App = () => {
               path="/admin" 
               element={
                 isAuthenticated && userRole === 'admin' ? (
-                  <Admin />
+                  <Admin onLogout={handleLogout} />
                 ) : isAuthenticated ? (
                   <Navigate to="/" replace />
                 ) : (
