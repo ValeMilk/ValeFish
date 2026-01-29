@@ -84,9 +84,12 @@ router.get('/stats', async (req, res) => {
         return sum + total;
       }, 0);
 
+      const valorDia = lotesFinalizadosDia.reduce((sum, lote) => sum + (lote.valorNF || 0), 0);
+
       last7Days.push({
         date: date.toISOString().split('T')[0],
         kg: parseFloat(kgDia.toFixed(2)),
+        valor: parseFloat(valorDia.toFixed(2)),
         count: lotesFinalizadosDia.length
       });
     }

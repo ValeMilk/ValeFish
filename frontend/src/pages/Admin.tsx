@@ -25,7 +25,7 @@ interface Stats {
   fornecedoresAtivos: number;
   valorTotal: number;
   graficos: {
-    ultimosSete: Array<{ date: string; kg: number; count: number }>;
+    ultimosSete: Array<{ date: string; kg: number; valor: number; count: number }>;
     porFornecedor: Array<{ _id: string; count: number; totalKg: number }>;
   };
 }
@@ -360,7 +360,7 @@ export default function Admin({ onLogout }: AdminProps) {
 
             {/* Gráficos */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Gráfico de Linha - Últimos 7 dias */}
+              {/* Gráfico de Linha - Kg Últimos 7 dias */}
               <div className="bg-white rounded-xl shadow-md p-6">
                 <h3 className="text-lg font-semibold mb-4">Kg Processados (Últimos 7 dias)</h3>
                 <ResponsiveContainer width="100%" height={300}>
@@ -370,11 +370,29 @@ export default function Admin({ onLogout }: AdminProps) {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="kg" stroke="#0088FE" strokeWidth={2} />
+                    <Line type="monotone" dataKey="kg" stroke="#0088FE" strokeWidth={2} name="Kg" />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
 
+              {/* Gráfico de Linha - Faturamento Últimos 7 dias */}
+              <div className="bg-white rounded-xl shadow-md p-6">
+                <h3 className="text-lg font-semibold mb-4">Faturamento (Últimos 7 dias)</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={stats.graficos.ultimosSete}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <Tooltip formatter={(value: number) => `R$ ${value.toFixed(2)}`} />
+                    <Legend />
+                    <Line type="monotone" dataKey="valor" stroke="#10b981" strokeWidth={2} name="Valor (R$)" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Gráfico de Pizza */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
               {/* Gráfico de Pizza - Por Fornecedor */}
               <div className="bg-white rounded-xl shadow-md p-6">
                 <h3 className="text-lg font-semibold mb-4">Distribuição por Fornecedor (Kg)</h3>

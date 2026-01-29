@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Package, Scale, TrendingUp, Clock, CheckCircle, AlertCircle, Edit, Eye } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Package, Scale, TrendingUp, Clock, CheckCircle, AlertCircle, Edit, Eye, DollarSign } from "lucide-react";
 import { LoteData } from "@/types/lote";
 import { toast } from "@/hooks/use-toast";
 import LoteModal from "./LoteModal";
 import ViewLoteModal from "./ViewLoteModal";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface DashboardProps {
   lotes: LoteData[];
@@ -55,6 +56,36 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
   const faturamentoFinalizados = normalizedLotes
     .filter(l => l.status === 'finalizado')
     .reduce((acc, l) => acc + (l.valorNF || 0), 0);
+
+  // Preparar dados para gráficos (por data)
+  const chartData = useMemo(() => {
+    const dataMap = new Map<string, { date: string; kg: number; valor: number; count: number }>();
+    
+    normalizedLotes.forEach(lote => {
+      const date = lote.dataProducao;
+      if (!dataMap.has(date)) {
+        dataMap.set(date, { date, kg: 0, valor: 0, count: 0 });
+      }
+      const entry = dataMap.get(date)!;
+      
+      // Somar kg (peso nota fiscal)
+      if (lote.pesoNotaFiscal) {
+        const totalKg = lote.pesoNotaFiscal.P + lote.pesoNotaFiscal.M + lote.pesoNotaFiscal.G + lote.pesoNotaFiscal.GG;
+        entry.kg += totalKg;
+      }
+      
+      // Somar valor apenas dos lotes finalizados
+      if (lote.status === 'finalizado' && lote.valorNF) {
+        entry.valor += lote.valorNF;
+      }
+      
+      entry.count += 1;
+    });
+    
+    return Array.from(dataMap.values())
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(-7); // Últimos 7 dias
+  }, [normalizedLotes]);
 
   const handleViewLote = (lote: LoteData) => {
     setSelectedLote(lote);
@@ -205,6 +236,51 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
               <TrendingUp className="w-5 h-5 text-primary-foreground" />
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Gráficos */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Gráfico Kg Processados */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <h3 className="text-lg font-semibold text-foreground mb-4">Kg Processados (Últimos 7 dias)</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="date" 
+                tickFormatter={(value) => new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+              />
+              <YAxis />
+              <Tooltip 
+                labelFormatter={(value) => new Date(value).toLocaleDateString('pt-BR')}
+                formatter={(value: any) => [`${value.toFixed(2)} kg`, 'Kg']}
+              />
+              <Legend />
+              <Line type="monotone" dataKey="kg" stroke="#3b82f6" strokeWidth={2} name="Kg" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Gráfico Faturamento */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <h3 className="text-lg font-semibold text-foreground mb-4">Faturamento Lotes Finalizados (Últimos 7 dias)</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="date" 
+                tickFormatter={(value) => new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+              />
+              <YAxis />
+              <Tooltip 
+                labelFormatter={(value) => new Date(value).toLocaleDateString('pt-BR')}
+                formatter={(value: any) => [`R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Faturamento']}
+              />
+              <Legend />
+              <Line type="monotone" dataKey="valor" stroke="#10b981" strokeWidth={2} name="Faturamento (R$)" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
