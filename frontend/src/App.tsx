@@ -59,7 +59,10 @@ const App = () => {
                 isAuthenticated ? (
                   <Navigate to="/" replace />
                 ) : (
-                  <L  setUserRole(user.role);
+                  <Login 
+                    onLoginSuccess={(token, user) => {
+                      setIsAuthenticated(true);
+                      setUserRole(user.role);
                       localStorage.setItem('userRole', user.role);
                     }}
                   />
