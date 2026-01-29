@@ -37,6 +37,12 @@ const Header = ({ activeTab, onTabChange, onLogout }: HeaderProps) => {
                 src="/Logo ValeFish.png" 
                 alt="ValeFish Logo" 
                 className="h-20 w-auto"
+              />
+            </div>
+          </div>
+          
+          {/* Mobile menu button and Logout */}
+          <div className="flex gap-2 items-center">
             {isAdmin && (
               <button
                 onClick={() => navigate('/admin')}
@@ -47,12 +53,6 @@ const Header = ({ activeTab, onTabChange, onLogout }: HeaderProps) => {
                 <span className="hidden sm:inline text-sm font-medium">Admin</span>
               </button>
             )}
-              />
-            </div>
-          </div>
-          
-          {/* Mobile menu button and Logout */}
-          <div className="flex gap-2 items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 hover:bg-foreground/10 rounded-lg transition-all"

@@ -85,10 +85,7 @@ const App = () => {
                 isAuthenticated && userRole === 'admin' ? (
                   <Admin />
                 ) : isAuthenticated ? (
-                  <Navigate to="/" replace
-              element={
-                isAuthenticated ? (
-                  <Index onLogout={handleLogout} />
+                  <Navigate to="/" replace />
                 ) : (
                   <Navigate to="/login" replace />
                 )
