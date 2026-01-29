@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Package, Scale, TrendingUp, Clock, CheckCircle, AlertCircle, Edit } from "lucide-react";
+import { Package, Scale, TrendingUp, Clock, CheckCircle, AlertCircle, Edit, Eye } from "lucide-react";
 import { LoteData } from "@/types/lote";
 import { toast } from "@/hooks/use-toast";
 import LoteModal from "./LoteModal";
+import ViewLoteModal from "./ViewLoteModal";
 
 interface DashboardProps {
   lotes: LoteData[];
@@ -13,6 +14,7 @@ interface DashboardProps {
 const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) => {
   const [selectedLote, setSelectedLote] = useState<LoteData | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // Normalizar lotes: mapear _id para id
@@ -38,6 +40,11 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
   const aproveitamentoMedio = totalPesoSalao > 0 
     ? ((totalFileEmbalado / totalPesoSalao) * 100).toFixed(1) 
     : '0.0';
+
+  const handleViewLote = (lote: LoteData) => {
+    setSelectedLote(lote);
+    setViewModalOpen(true);
+  };
 
   const handleEditLote = (lote: LoteData) => {
     // Se o lote está aberto, carrega na tela de entrada para finalizar
@@ -185,6 +192,15 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
                     </div>
                     
                     <button
+                      onClick={() => handleViewLote(lote)}
+                      className="p-2 hover:bg-blue-100 rounded-lg transition-colors flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"
+                      title="Ver detalhes do lote"
+                    >
+                      <Eye className="w-4 h-4" />
+                      <span className="hidden sm:inline">Ver</span>
+                    </button>
+                    
+                    <button
                       onClick={() => handleEditLote(lote)}
                       className="p-2 hover:bg-muted rounded-lg transition-colors flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
                       title="Editar lote"
@@ -222,6 +238,16 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
         }}
         onSave={handleSaveLote}
         loading={loading}
+      />
+
+      {/* Modal de Visualização */}
+      <ViewLoteModal
+        lote={selectedLote}
+        open={viewModalOpen}
+        onClose={() => {
+          setViewModalOpen(false);
+          setSelectedLote(null);
+        }}
       />
     </div>
   );
