@@ -1,5 +1,5 @@
-import { Package, LayoutDashboard, Menu, LogOut } from "lucide-react";
-import { useState } from "react";
+import { Package, LayoutDashboard, Menu, LogOut, Shield } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
@@ -10,7 +10,13 @@ interface HeaderProps {
 
 const Header = ({ activeTab, onTabChange, onLogout }: HeaderProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const role = localStorage.getItem('userRole');
+    setIsAdmin(role === 'admin');
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -31,6 +37,16 @@ const Header = ({ activeTab, onTabChange, onLogout }: HeaderProps) => {
                 src="/Logo ValeFish.png" 
                 alt="ValeFish Logo" 
                 className="h-20 w-auto"
+            {isAdmin && (
+              <button
+                onClick={() => navigate('/admin')}
+                className="p-2 hover:bg-purple-500/20 rounded-lg transition-all text-purple-600 hover:text-purple-700 flex items-center gap-2"
+                title="Painel Admin"
+              >
+                <Shield className="w-5 h-5" />
+                <span className="hidden sm:inline text-sm font-medium">Admin</span>
+              </button>
+            )}
               />
             </div>
           </div>

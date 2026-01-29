@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import lotesRoutes from './routes/lotes';
 import analyticsRoutes from './routes/analytics';
+import adminRoutes from './routes/admin';
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ app.get('/api/health', (req: Request, res: Response) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/lotes', lotesRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 Handler
 app.use((req: Request, res: Response) => {

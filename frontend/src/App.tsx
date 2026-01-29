@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Index from "./pages/Index";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Login from "./components/Login";
 
@@ -12,13 +13,16 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<'admin' | 'operador' | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Verificar se tem token salvo
     const token = localStorage.getItem('token');
+    const role = localStorage.getItem('userRole') as 'admin' | 'operador' | null;
     if (token) {
       setIsAuthenticated(true);
+      setUserRole(role);
     }
     setLoading(false);
   }, []);
@@ -55,9 +59,8 @@ const App = () => {
                 isAuthenticated ? (
                   <Navigate to="/" replace />
                 ) : (
-                  <Login 
-                    onLoginSuccess={(token, user) => {
-                      setIsAuthenticated(true);
+                  <L  setUserRole(user.role);
+                      localStorage.setItem('userRole', user.role);
                     }}
                   />
                 )
@@ -65,6 +68,21 @@ const App = () => {
             />
             <Route 
               path="/" 
+              element={
+                isAuthenticated ? (
+                  <Index onLogout={handleLogout} />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route 
+              path="/admin" 
+              element={
+                isAuthenticated && userRole === 'admin' ? (
+                  <Admin />
+                ) : isAuthenticated ? (
+                  <Navigate to="/" replace
               element={
                 isAuthenticated ? (
                   <Index onLogout={handleLogout} />
