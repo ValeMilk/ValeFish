@@ -31,7 +31,7 @@ interface ILote {
   aproveitamentoNF?: number;
   aproveitamentoSalao?: number;
   
-  status: 'pendente' | 'em_producao' | 'finalizado';
+  status: 'aberto' | 'em_producao' | 'finalizado';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -83,8 +83,8 @@ const loteSchema = new Schema<ILote>(
     
     status: {
       type: String,
-      enum: ['pendente', 'em_producao', 'finalizado'],
-      default: 'pendente',
+      enum: ['aberto', 'em_producao', 'finalizado'],
+      default: 'aberto',
     },
   },
   { timestamps: true }

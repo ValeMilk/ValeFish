@@ -176,6 +176,11 @@
     @apply bg-warning/15 text-warning;
   }
 
+  .status-open {
+    /* stylelint-disable-next-line at-rule-no-unknown */
+    @apply bg-blue-500/15 text-blue-600;
+  }
+
   .status-active {
     /* stylelint-disable-next-line at-rule-no-unknown */
     @apply bg-info/15 text-info;

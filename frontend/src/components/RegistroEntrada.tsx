@@ -16,13 +16,14 @@ import { useState } from "react";
 interface RegistroEntradaProps {
   lote: LoteData;
   onChange: (field: keyof LoteData, value: any) => void;
-  onSubmit: () => void;
+  onSubmit: (status: 'aberto' | 'finalizado') => void;
   loading?: boolean;
+  loadingAberto?: boolean;
 }
 
 const FORNECEDORES = ["VALEFISH", "NORFISH", "CARLITO"];
 
-const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false }: RegistroEntradaProps) => {
+const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAberto = false }: RegistroEntradaProps) => {
   const [notaFiscalConfirmado, setNotaFiscalConfirmado] = useState(false);
   const [filetagemConfirmado, setFiletagemConfirmado] = useState(false);
   const [embalagemConfirmado, setEmbalagemConfirmado] = useState(false);
@@ -472,16 +473,29 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false }: Registro
         </div>
       </FormSection>
 
-      <Button 
-        variant="success" 
-        size="xl" 
-        className="w-full" 
-        onClick={onSubmit}
-        disabled={loading}
-      >
-        <CheckCircle className="w-5 h-5 mr-2" />
-        {loading ? 'Salvando...' : 'Finalizar Lote'}
-      </Button>
+      <div className="grid grid-cols-2 gap-4">
+        <Button 
+          variant="outline" 
+          size="xl" 
+          className="w-full border-blue-500 text-blue-600 hover:bg-blue-50" 
+          onClick={() => onSubmit('aberto')}
+          disabled={loading || loadingAberto}
+        >
+          <Package className="w-5 h-5 mr-2" />
+          {loadingAberto ? 'Salvando...' : 'Salvar como Aberto'}
+        </Button>
+        
+        <Button 
+          variant="success" 
+          size="xl" 
+          className="w-full" 
+          onClick={() => onSubmit('finalizado')}
+          disabled={loading || loadingAberto}
+        >
+          <CheckCircle className="w-5 h-5 mr-2" />
+          {loading ? 'Salvando...' : 'Salvar e Finalizar'}
+        </Button>
+      </div>
     </div>
   );
 };

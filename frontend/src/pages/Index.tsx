@@ -18,6 +18,7 @@ const Index = ({ onLogout }: IndexProps) => {
   const [lotes, setLotes] = useState<LoteData[]>([]);
   const [currentLote, setCurrentLote] = useState<LoteData>(createEmptyLote());
   const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [loadingSubmitAberto, setLoadingSubmitAberto] = useState(false);
 
   // Carregar lotes do backend ao montar o componente
   useEffect(() => {
@@ -74,7 +75,7 @@ const Index = ({ onLogout }: IndexProps) => {
     setCurrentLote(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleRegistrarEntrada = async () => {
+  const handleRegistrarEntrada = async (status: 'aberto' | 'finalizado') => {
     if (!currentLote.processo || !currentLote.fornecedor || !currentLote.numeroLote) {
       toast({
         title: "Campos obrigatórios",
@@ -98,7 +99,11 @@ const Index = ({ onLogout }: IndexProps) => {
       return;
     }
 
-    setLoadingSubmit(true);
+    if (status === 'aberto') {
+      setLoadingSubmitAberto(true);
+    } else {
+      setLoadingSubmit(true);
+    }
     try {
       const token = localStorage.getItem('token');
       
@@ -114,7 +119,7 @@ const Index = ({ onLogout }: IndexProps) => {
 
       const novoLote: Omit<LoteData, 'id'> = {
         ...currentLote,
-        status: 'finalizado',
+        status: status,
       };
 
       const response = await fetch(`${API_URL}/lotes`, {
@@ -145,7 +150,9 @@ const Index = ({ onLogout }: IndexProps) => {
 
       toast({
         title: "Sucesso!",
-        description: `Lote ${normalizedLote.numeroLote} foi criado e salvo no banco de dados.`,
+        description: status === 'aberto' 
+          ? `Lote ${normalizedLote.numeroLote} foi salvo como ABERTO.`
+          : `Lote ${normalizedLote.numeroLote} foi finalizado e salvo.`,
       });
     } catch (error: any) {
       toast({
@@ -191,6 +198,7 @@ const Index = ({ onLogout }: IndexProps) => {
             onChange={handleLoteChange}
             onSubmit={handleRegistrarEntrada}
             loading={loadingSubmit}
+            loadingAberto={loadingSubmitAberto}
           />
         )}
       </main>

@@ -17,7 +17,7 @@ export interface LoteData {
   numeroLote: string;
   numeroNF?: string;
   valorNF?: number;
-  status: 'pendente' | 'em_producao' | 'finalizado';
+  status: 'aberto' | 'em_producao' | 'finalizado';
   
   // Pesos por tamanho
   pesoNotaFiscal?: WeightBySize;
@@ -55,7 +55,7 @@ export const createEmptyLote = (): LoteData => ({
   processo: '',
   fornecedor: '',
   numeroLote: '',
-  status: 'pendente',
+  status: 'aberto',
   pesoNotaFiscal: createEmptyWeightBySize(),
   pesoSalao: createEmptyWeightBySize(),
   numBasquetas: createEmptyWeightBySize(),

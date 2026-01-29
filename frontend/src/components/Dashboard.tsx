@@ -20,7 +20,7 @@ const Dashboard = ({ lotes, onLoteUpdate }: DashboardProps) => {
     id: lote.id || (lote as any)._id || lote.id,
   }));
   const lotesAtivos = normalizedLotes.filter(l => l.status === 'em_producao').length;
-  const lotesPendentes = normalizedLotes.filter(l => l.status === 'pendente').length;
+  const lotesAbertos = normalizedLotes.filter(l => l.status === 'aberto').length;
   const lotesFinalizados = normalizedLotes.filter(l => l.status === 'finalizado').length;
   
   const calcularTotal = (field: any) => {
@@ -99,11 +99,11 @@ const Dashboard = ({ lotes, onLoteUpdate }: DashboardProps) => {
         <div className="stat-card">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">Pendentes</p>
-              <p className="text-3xl font-bold text-foreground mt-1">{lotesPendentes}</p>
+              <p className="text-sm text-muted-foreground">Abertos</p>
+              <p className="text-3xl font-bold text-foreground mt-1">{lotesAbertos}</p>
             </div>
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-warning/15">
-              <AlertCircle className="w-5 h-5 text-warning" />
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-500/15">
+              <Package className="w-5 h-5 text-blue-500" />
             </div>
           </div>
         </div>
@@ -189,10 +189,12 @@ const Dashboard = ({ lotes, onLoteUpdate }: DashboardProps) => {
                     <span className={`status-badge ${
                       lote.status === 'finalizado' ? 'status-complete' :
                       lote.status === 'em_producao' ? 'status-active' :
+                      lote.status === 'aberto' ? 'status-open' :
                       'status-pending'
                     }`}>
                       {lote.status === 'finalizado' ? 'Finalizado' :
                        lote.status === 'em_producao' ? 'Em Produção' :
+                       lote.status === 'aberto' ? 'Aberto' :
                        'Pendente'}
                     </span>
                   </div>
