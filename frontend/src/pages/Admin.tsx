@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BarChart3, Users, Package, TrendingUp, DollarSign, Calendar, ArrowLeft, LogOut } from 'lucide-react';
+import { BarChart3, Users, Package, TrendingUp, DollarSign, Calendar, ArrowLeft, LogOut, User } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Button } from '../components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -180,37 +180,41 @@ export default function Admin() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
       {/* Header */}
       <header className="bg-gradient-to-br from-ocean-dark to-ocean-light shadow-lg">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
+              <img 
+                src="/Logo ValeFish.png" 
+                alt="ValeFish Logo" 
+                className="h-24 w-auto"
+              />
+              <div className="hidden md:block h-16 w-px bg-white/30"></div>
+              <h1 className="hidden md:block text-2xl font-bold text-white">Painel Administrativo</h1>
+            </div>
+            <div className="flex items-center gap-3">
               <Button
                 variant="outline"
                 onClick={() => navigate('/')}
                 className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border-white/30"
               >
-                <ArrowLeft className="w-4 h-4" />
-                Voltar
+                <User className="w-4 h-4" />
+                <span className="hidden sm:inline">Visão Operador</span>
               </Button>
-              <img 
-                src="/Logo ValeFish.png" 
-                alt="ValeFish Logo" 
-                className="h-16 w-auto"
-              />
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 hover:bg-red-500/20 rounded-lg transition-all text-white hover:text-red-200 flex items-center gap-2 border border-red-300/30"
+                title="Sair da conta"
+              >
+                <LogOut className="w-5 h-5" />
+                <span className="hidden sm:inline text-sm font-medium">Sair</span>
+              </button>
             </div>
-            <button
-              onClick={handleLogout}
-              className="p-2 hover:bg-red-500/20 rounded-lg transition-all text-white hover:text-red-200 flex items-center gap-2"
-              title="Sair da conta"
-            >
-              <LogOut className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm font-medium">Sair</span>
-            </button>
           </div>
         </div>
       </header>
 
       <div className="max-w-7xl mx-auto p-6">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8">Painel Administrativo</h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-8 md:hidden">Painel Administrativo</h1>
 
         {/* Tabs */}
         <div className="flex gap-4 mb-8 border-b border-gray-200">
