@@ -16,12 +16,22 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
   const [modalOpen, setModalOpen] = useState(false);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   // Normalizar lotes: mapear _id para id
-  const normalizedLotes = lotes.map(lote => ({
+  let normalizedLotes = lotes.map(lote => ({
     ...lote,
     id: lote.id || (lote as any)._id || lote.id,
   }));
+
+  // Filtrar por período
+  if (startDate) {
+    normalizedLotes = normalizedLotes.filter(l => l.dataProducao >= startDate);
+  }
+  if (endDate) {
+    normalizedLotes = normalizedLotes.filter(l => l.dataProducao <= endDate);
+  }
   const lotesAtivos = normalizedLotes.filter(l => l.status === 'em_producao').length;
   const lotesAbertos = normalizedLotes.filter(l => l.status === 'aberto').length;
   const lotesFinalizados = normalizedLotes.filter(l => l.status === 'finalizado').length;
@@ -40,6 +50,11 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
   const aproveitamentoMedio = totalPesoSalao > 0 
     ? ((totalFileEmbalado / totalPesoSalao) * 100).toFixed(1) 
     : '0.0';
+
+  // Calcular faturamento dos lotes finalizados
+  const faturamentoFinalizados = normalizedLotes
+    .filter(l => l.status === 'finalizado')
+    .reduce((acc, l) => acc + (l.valorNF || 0), 0);
 
   const handleViewLote = (lote: LoteData) => {
     setSelectedLote(lote);
@@ -108,8 +123,41 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* Filtros de Período */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+        <h3 className="text-sm font-semibold text-foreground mb-3">Filtrar por Período</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label className="block text-xs text-muted-foreground mb-1">Data Inicial</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-muted-foreground mb-1">Data Final</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg text-sm"
+            />
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={() => { setStartDate(''); setEndDate(''); }}
+              className="w-full px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+            >
+              Limpar Filtros
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="stat-card">
           <div className="flex items-start justify-between">
             <div>
@@ -130,6 +178,19 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
             </div>
             <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-success/15">
               <CheckCircle className="w-5 h-5 text-success" />
+            </div>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Faturamento</p>
+              <p className="text-3xl font-bold text-foreground mt-1">R$ {faturamentoFinalizados.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+              <p className="text-xs text-muted-foreground mt-1">Lotes finalizados</p>
+            </div>
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-yellow-500/15">
+              <TrendingUp className="w-5 h-5 text-yellow-500" />
             </div>
           </div>
         </div>

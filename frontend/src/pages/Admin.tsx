@@ -49,9 +49,10 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
 export default function Admin({ onLogout }: AdminProps) {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'reports'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'lotes' | 'reports'>('dashboard');
   const [stats, setStats] = useState<Stats | null>(null);
   const [users, setUsers] = useState<User[]>([]);
+  const [lotes, setLotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
   const handleLogout = () => {
@@ -76,6 +77,7 @@ export default function Admin({ onLogout }: AdminProps) {
   useEffect(() => {
     if (activeTab === 'dashboard') loadStats();
     if (activeTab === 'users') loadUsers();
+    if (activeTab === 'lotes') loadLotes();
   }, [activeTab]);
 
   const loadStats = async () => {
@@ -155,6 +157,82 @@ export default function Admin({ onLogout }: AdminProps) {
       if (response.ok) loadUsers();
     } catch (error) {
       console.error('Erro ao deletar usuário:', error);
+    }
+  };
+
+  const loadLotes = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/lotes`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setLotes(data);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar lotes:', error);
+    }
+  };
+
+  const handleDeleteLote = async (id: string, numeroLote: string) => {
+    if (!confirm(`Tem certeza que deseja EXCLUIR o lote ${numeroLote}? Esta ação não pode ser desfeita!`)) return;
+    
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/lotes/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        alert('Lote excluído com sucesso!');
+        loadLotes();
+        loadStats(); // Recarregar estatísticas
+      } else {
+        const error = await response.json();
+        alert('Erro ao excluir lote: ' + (error.message || 'Erro desconhecido'));
+      }
+    } catch (error) {
+      console.error('Erro ao deletar lote:', error);
+      alert('Erro ao excluir lote.');
+    }
+  };
+
+  const loadLotes = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/lotes`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setLotes(data);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar lotes:', error);
+    }
+  };
+
+  const handleDeleteLote = async (id: string, numeroLote: string) => {
+    if (!confirm(`Tem certeza que deseja EXCLUIR o lote ${numeroLote}? Esta ação não pode ser desfeita!`)) return;
+    
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/lotes/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        alert('Lote excluído com sucesso!');
+        loadLotes();
+        loadStats(); // Recarregar estatísticas
+      } else {
+        const error = await response.json();
+        alert('Erro ao excluir lote: ' + (error.message || 'Erro desconhecido'));
+      }
+    } catch (error) {
+      console.error('Erro ao deletar lote:', error);
+      alert('Erro ao excluir lote.');
     }
   };
 
@@ -239,6 +317,17 @@ export default function Admin({ onLogout }: AdminProps) {
           >
             <Users className="w-5 h-5 inline mr-2" />
             Usuários
+          </button>
+          <button
+            onClick={() => setActiveTab('lotes')}
+            className={`pb-4 px-6 font-semibold transition-colors ${
+              activeTab === 'lotes'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <Package className="w-5 h-5 inline mr-2" />
+            Lotes
           </button>
           <button
             onClick={() => setActiveTab('reports')}
@@ -490,6 +579,70 @@ export default function Admin({ onLogout }: AdminProps) {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Lotes Tab */}
+        {activeTab === 'lotes' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">Gerenciar Lotes</h2>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left py-3 px-4">Lote</th>
+                      <th className="text-left py-3 px-4">Fornecedor</th>
+                      <th className="text-left py-3 px-4">Processo</th>
+                      <th className="text-left py-3 px-4">Status</th>
+                      <th className="text-left py-3 px-4">Data</th>
+                      <th className="text-right py-3 px-4">Valor NF</th>
+                      <th className="text-right py-3 px-4">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {lotes.map((lote) => (
+                      <tr key={lote._id} className="border-b hover:bg-gray-50">
+                        <td className="py-3 px-4 font-medium">{lote.numeroLote}</td>
+                        <td className="py-3 px-4">{lote.fornecedor}</td>
+                        <td className="py-3 px-4">{lote.processo}</td>
+                        <td className="py-3 px-4">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            lote.status === 'finalizado' ? 'bg-green-100 text-green-700' :
+                            lote.status === 'aberto' ? 'bg-blue-100 text-blue-700' :
+                            'bg-yellow-100 text-yellow-700'
+                          }`}>
+                            {lote.status === 'finalizado' ? 'Finalizado' :
+                             lote.status === 'aberto' ? 'Aberto' :
+                             'Em Produção'}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">{new Date(lote.dataProducao).toLocaleDateString('pt-BR')}</td>
+                        <td className="py-3 px-4 text-right">R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                        <td className="py-3 px-4 text-right">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleDeleteLote(lote._id, lote.numeroLote)}
+                          >
+                            Excluir
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {lotes.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    Nenhum lote encontrado
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
