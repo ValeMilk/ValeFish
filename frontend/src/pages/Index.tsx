@@ -20,6 +20,9 @@ const Index = ({ onLogout }: IndexProps) => {
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [loadingSubmitAberto, setLoadingSubmitAberto] = useState(false);
   const [isEditingLote, setIsEditingLote] = useState(false);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [password, setPassword] = useState('');
+  const [pendingStatus, setPendingStatus] = useState<'aberto' | 'finalizado' | null>(null);
 
   // Carregar lotes do backend ao montar o componente
   useEffect(() => {
@@ -106,6 +109,18 @@ const Index = ({ onLogout }: IndexProps) => {
       return;
     }
 
+    // Se está editando, primeiro pede a senha
+    if (isEditingLote) {
+      setPendingStatus(status);
+      setShowPasswordDialog(true);
+      return;
+    }
+
+    // Se não está editando, salva diretamente
+    await executeSave(status, '');
+  };
+
+  const executeSave = async (status: 'aberto' | 'finalizado', pwd: string) => {
     if (status === 'aberto') {
       setLoadingSubmitAberto(true);
     } else {
@@ -170,7 +185,7 @@ const Index = ({ onLogout }: IndexProps) => {
           },
           body: JSON.stringify({ 
             ...loteData,
-            password: '' // Senha vazia para atualização via entrada (sem verificação)
+            password: pwd // Senha fornecida pelo usuário no diálogo
           }),
         });
 
@@ -247,6 +262,22 @@ const Index = ({ onLogout }: IndexProps) => {
     }
   };
 
+  const handleConfirmPassword = async () => {
+    if (!password.trim()) {
+      toast({
+        title: "Senha obrigatória",
+        description: "Digite a senha para confirmar a edição.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setShowPasswordDialog(false);
+    await executeSave(pendingStatus!, password);
+    setPassword('');
+    setPendingStatus(null);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header activeTab={activeTab} onTabChange={handleTabChange} onLogout={handleLogout} />
@@ -280,6 +311,49 @@ const Index = ({ onLogout }: IndexProps) => {
           />
         )}
       </main>
+
+      {/* Diálogo de Senha para Edição */}
+      {showPasswordDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-background p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <h3 className="text-lg font-bold mb-4">Confirmar Edição</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Digite a senha para confirmar as alterações no lote {currentLote.numeroLote}:
+            </p>
+            <input
+              type="password"
+              placeholder="Digite a senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleConfirmPassword();
+                }
+              }}
+              className="w-full px-3 py-2 border rounded-lg mb-4"
+              autoFocus
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowPasswordDialog(false);
+                  setPassword('');
+                  setPendingStatus(null);
+                }}
+                className="flex-1 px-4 py-2 border rounded-lg hover:bg-muted"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleConfirmPassword}
+                className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
