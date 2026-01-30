@@ -1,5 +1,6 @@
 import React from 'react';
 import { LoteData } from '@/types/lote';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface PrintableLoteProps {
   lote: LoteData;
@@ -44,11 +45,26 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 alt="ValeFish Logo" 
                 style={{ height: '65px', width: 'auto' }}
               />
-              
+              <div>
+                <h1 style={{ fontSize: '20px', margin: 0 }} className="font-bold text-blue-600">ValeFish</h1>
+                <p style={{ fontSize: '13px', margin: 0 }} className="text-gray-600">Relatório de Lote</p>
+              </div>
             </div>
-            <div className="text-right">
-              <p style={{ fontSize: '12px', margin: 0 }} className="text-gray-600">Data de Impressão</p>
-              <p className="font-semibold" style={{ fontSize: '14px', margin: 0 }}>{new Date().toLocaleDateString('pt-BR')}</p>
+            <div className="flex items-center gap-4">
+              {/* QR Code */}
+              <div className="text-center">
+                <QRCodeSVG 
+                  value={`Lote: ${lote.numeroLote}\nProcesso: ${lote.processo}\nFornecedor: ${lote.fornecedor}\nData: ${lote.dataProducao}\nID: ${lote.id || lote._id || ''}`}
+                  size={80}
+                  level="M"
+                  includeMargin={false}
+                />
+                <p style={{ fontSize: '9px', margin: '4px 0 0 0' }} className="text-gray-500">Lote {lote.numeroLote}</p>
+              </div>
+              <div className="text-right">
+                <p style={{ fontSize: '12px', margin: 0 }} className="text-gray-600">Data de Impressão</p>
+                <p className="font-semibold" style={{ fontSize: '14px', margin: 0 }}>{new Date().toLocaleDateString('pt-BR')}</p>
+              </div>
             </div>
           </div>
         </div>
