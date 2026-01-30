@@ -1,9 +1,11 @@
-import { useState, useMemo } from "react";
-import { Package, Scale, TrendingUp, Clock, CheckCircle, AlertCircle, Edit, Eye, DollarSign } from "lucide-react";
+import { useState, useMemo, useRef } from "react";
+import { Package, Scale, TrendingUp, Clock, CheckCircle, AlertCircle, Edit, Eye, DollarSign, Printer } from "lucide-react";
 import { LoteData } from "@/types/lote";
 import { toast } from "@/hooks/use-toast";
 import LoteModal from "./LoteModal";
 import ViewLoteModal from "./ViewLoteModal";
+import PrintableLote from "./PrintableLote";
+import { useReactToPrint } from 'react-to-print';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface DashboardProps {
@@ -19,6 +21,20 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [loteToPrint, setLoteToPrint] = useState<LoteData | null>(null);
+  const printRef = useRef<HTMLDivElement>(null);
+
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    documentTitle: `Lote-${loteToPrint?.numeroLote || 'documento'}`,
+  });
+
+  const handlePrintLote = (lote: LoteData) => {
+    setLoteToPrint(lote);
+    setTimeout(() => {
+      handlePrint();
+    }, 100);
+  };
 
   // Normalizar lotes: mapear _id para id
   let normalizedLotes = lotes.map(lote => ({
@@ -346,6 +362,15 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
                       <span className="hidden sm:inline">Editar</span>
                     </button>
 
+                    <button
+                      onClick={() => handlePrintLote(lote)}
+                      className="p-2 hover:bg-purple-100 rounded-lg transition-colors flex items-center gap-2 text-sm text-purple-600 hover:text-purple-700"
+                      title="Imprimir lote"
+                    >
+                      <Printer className="w-4 h-4" />
+                      <span className="hidden sm:inline">Imprimir</span>
+                    </button>
+
                     <span className={`status-badge ${
                       lote.status === 'finalizado' ? 'status-complete' :
                       lote.status === 'em_producao' ? 'status-active' :
@@ -386,6 +411,11 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
           setSelectedLote(null);
         }}
       />
+
+      {/* Componente oculto para impressão */}
+      <div style={{ display: 'none' }}>
+        {loteToPrint && <PrintableLote ref={printRef} lote={loteToPrint} />}
+      </div>
     </div>
   );
 };

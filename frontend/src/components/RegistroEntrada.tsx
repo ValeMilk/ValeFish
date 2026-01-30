@@ -11,7 +11,7 @@ import FormSection from "./FormSection";
 import FormInput from "./FormInput";
 import SizeWeightInput from "./SizeWeightInput";
 import { LoteData, FishSize } from "@/types/lote";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface RegistroEntradaProps {
   lote: LoteData;
@@ -31,6 +31,16 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
   const [embalagemConfirmado, setEmbalagemConfirmado] = useState(false);
   const [tipoFile, setTipoFile] = useState<'400g' | '800g'>('400g');
 
+  // Calcular data de validade automaticamente quando data de fabricação mudar
+  useEffect(() => {
+    if (lote.dataFabricacao && !embalagemConfirmado) {
+      const dataFab = new Date(lote.dataFabricacao + 'T00:00:00');
+      dataFab.setDate(dataFab.getDate() + 364);
+      const dataValidade = dataFab.toISOString().split('T')[0];
+      onChange('dataValidade', dataValidade);
+    }
+  }, [lote.dataFabricacao, embalagemConfirmado]);
+
   const handleSizeChange = (field: keyof LoteData, size: FishSize, value: string) => {
     const current = lote[field] as any || { P: 0, M: 0, G: 0, GG: 0 };
     onChange(field, {
@@ -47,7 +57,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
 
   const totalPesoNotaFiscal = calcularTotalPeso(lote.pesoNotaFiscal);
   const totalPesoSalao = calcularTotalPeso(lote.pesoSalao);
-  const gap = totalPesoNotaFiscal - totalPesoSalao;
+  const gap = totalPesoSalao - totalPesoNotaFiscal;
 
   // Cálculos automáticos de aproveitamento
   const calcularAproveitamento = (fileEmbalado: any, pesoReferencia: any) => {
@@ -72,6 +82,19 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
     const inNatura = calcularTotalPeso(lote.fileInNatura);
     const congelado = calcularTotalPeso(lote.fileCongelado);
     return inNatura + congelado;
+  };
+
+  const calcularDiferencaFiletagem = () => {
+    const inNatura = calcularTotalPeso(lote.fileInNatura);
+    const congelado = calcularTotalPeso(lote.fileCongelado);
+    return congelado - inNatura;
+  };
+
+  const calcularRendimentoFiletagem = () => {
+    const inNatura = calcularTotalPeso(lote.fileInNatura);
+    const congelado = calcularTotalPeso(lote.fileCongelado);
+    if (inNatura === 0) return 0;
+    return ((congelado / inNatura) * 100);
   };
 
   // Cálculos de Embalagem
@@ -260,9 +283,13 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
               <p className="text-xs font-medium text-cyan-700">Congelado</p>
               <p className="text-xs md:text-sm font-bold text-cyan-900">{calcularTotalPeso(lote.fileCongelado).toFixed(2)} kg</p>
             </div>
+            <div className="px-2 md:px-3 py-1 md:py-1.5 rounded-lg bg-green-100 border border-green-300 text-center">
+              <p className="text-xs font-medium text-green-700">Diferença</p>
+              <p className="text-xs md:text-sm font-bold text-green-900">{calcularDiferencaFiletagem().toFixed(2)} kg</p>
+            </div>
             <div className="px-2 md:px-3 py-1 md:py-1.5 rounded-lg bg-purple-100 border border-purple-300 text-center">
-              <p className="text-xs font-medium text-purple-700">Total</p>
-              <p className="text-xs md:text-sm font-bold text-purple-900">{calcularTotalFiletagemProduzida().toFixed(2)} kg</p>
+              <p className="text-xs font-medium text-purple-700">Rendimento</p>
+              <p className="text-xs md:text-sm font-bold text-purple-900">{calcularRendimentoFiletagem().toFixed(1)}%</p>
             </div>
             <button
               onClick={() => setFiletagemConfirmado(false)}
