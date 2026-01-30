@@ -48,6 +48,31 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
     }
   }, [lote.dataFabricacao, embalagemConfirmado]);
 
+  // Recalcular aproveitamentos automaticamente quando valores mudarem
+  useEffect(() => {
+    if (lote.fileEmbalado && (lote.pesoNotaFiscal || lote.pesoSalao)) {
+      const totalFileEmbalado = (lote.fileEmbalado.P || 0) + (lote.fileEmbalado.M || 0) + 
+                                (lote.fileEmbalado.G || 0) + (lote.fileEmbalado.GG || 0);
+      const totalPesoNF = (lote.pesoNotaFiscal?.P || 0) + (lote.pesoNotaFiscal?.M || 0) + 
+                           (lote.pesoNotaFiscal?.G || 0) + (lote.pesoNotaFiscal?.GG || 0);
+      const totalPesoSalao = (lote.pesoSalao?.P || 0) + (lote.pesoSalao?.M || 0) + 
+                             (lote.pesoSalao?.G || 0) + (lote.pesoSalao?.GG || 0);
+      
+      if (totalFileEmbalado > 0) {
+        const aprovNF = totalPesoNF > 0 ? parseFloat(((totalFileEmbalado / totalPesoNF) * 100).toFixed(2)) : 0;
+        const aprovSal = totalPesoSalao > 0 ? parseFloat(((totalFileEmbalado / totalPesoSalao) * 100).toFixed(2)) : 0;
+        
+        // Só atualiza se os valores mudaram (evita loop infinito)
+        if (lote.aprovNotaFiscal !== aprovNF) {
+          onChange('aprovNotaFiscal', aprovNF);
+        }
+        if (lote.aprovSalao !== aprovSal) {
+          onChange('aprovSalao', aprovSal);
+        }
+      }
+    }
+  }, [lote.fileEmbalado, lote.pesoNotaFiscal, lote.pesoSalao]);
+
   const handleSizeChange = (field: keyof LoteData, size: FishSize, value: string) => {
     const current = lote[field] as any || { P: 0, M: 0, G: 0, GG: 0 };
     onChange(field, {
