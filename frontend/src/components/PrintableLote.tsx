@@ -61,30 +61,30 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
           <h2 style={{ fontSize: '17px', margin: '0 0 8px 0' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
             Informações do Lote
           </h2>
-          <div className="grid grid-cols-2 gap-2" style={{ fontSize: '13px' }}>
-            <div className="bg-blue-50 p-2 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '11px' }}>Número do Lote</p>
-              <p className="font-bold text-blue-900" style={{ fontSize: '16px', margin: 0 }}>{lote.numeroLote}</p>
-            </div>
-            <div className="bg-blue-50 p-2 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '11px' }}>Status</p>
-              <p className="font-bold text-blue-900 capitalize" style={{ fontSize: '16px', margin: 0 }}>{lote.status}</p>
-            </div>
+          <div className="grid grid-cols-3 gap-2" style={{ fontSize: '13px' }}>
             <div className="bg-gray-50 p-2 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '11px' }}>Fornecedor</p>
-              <p className="font-semibold" style={{ fontSize: '14px', margin: 0 }}>{lote.fornecedor}</p>
+              <p className="text-gray-600 mb-0" style={{ fontSize: '11px' }}>Data de Produção</p>
+              <p className="font-semibold" style={{ fontSize: '14px', margin: 0 }}>{lote.dataProducao ? new Date(lote.dataProducao).toLocaleDateString('pt-BR') : '-'}</p>
             </div>
             <div className="bg-gray-50 p-2 rounded">
               <p className="text-gray-600 mb-0" style={{ fontSize: '11px' }}>Processo</p>
               <p className="font-semibold" style={{ fontSize: '14px', margin: 0 }}>{lote.processo}</p>
             </div>
             <div className="bg-gray-50 p-2 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '11px' }}>Data de Produção</p>
-              <p className="font-semibold" style={{ fontSize: '14px', margin: 0 }}>{lote.dataProducao ? new Date(lote.dataProducao).toLocaleDateString('pt-BR') : '-'}</p>
+              <p className="text-gray-600 mb-0" style={{ fontSize: '11px' }}>Fornecedor</p>
+              <p className="font-semibold" style={{ fontSize: '14px', margin: 0 }}>{lote.fornecedor}</p>
             </div>
             <div className="bg-gray-50 p-2 rounded">
               <p className="text-gray-600 mb-0" style={{ fontSize: '11px' }}>Nota Fiscal</p>
               <p className="font-semibold" style={{ fontSize: '14px', margin: 0 }}>{lote.numeroNF || '-'}</p>
+            </div>
+            <div className="bg-blue-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '11px' }}>Número do Lote</p>
+              <p className="font-bold text-blue-900" style={{ fontSize: '16px', margin: 0 }}>{lote.numeroLote}</p>
+            </div>
+            <div className="bg-yellow-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '11px' }}>Valor da Transferência</p>
+              <p className="font-bold text-yellow-900" style={{ fontSize: '16px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
             </div>
           </div>
         </div>
@@ -205,18 +205,48 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
             <h2 style={{ fontSize: '16px', margin: '0 0 8px 0' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
               Embalagem
             </h2>
-            <div className="grid grid-cols-3 gap-2" style={{ fontSize: '12px' }}>
+            <div className="grid grid-cols-2 gap-2" style={{ fontSize: '12px' }}>
               <div className="bg-gray-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Tipo de Filé</p>
                 <p className="font-semibold" style={{ margin: 0, fontSize: '12px' }}>{lote.tipoFile || '-'}</p>
               </div>
               <div className="bg-gray-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Pacotes Total na Produção</p>
+                <p className="font-bold" style={{ fontSize: '13px', margin: 0 }}>
+                  {(() => {
+                    const pacotesPorCaixa = lote.tipoFile === '800g' ? 12 : 24;
+                    const totalPacotes = (lote.caixas || 0) * pacotesPorCaixa + (lote.pacotes || 0);
+                    return `${totalPacotes.toLocaleString()} pacotes`;
+                  })()}
+                </p>
+                <p className="text-gray-500" style={{ fontSize: '9px', margin: 0 }}>
+                  {lote.caixas || 0} cxs × {lote.tipoFile === '800g' ? 12 : 24} + {lote.pacotes || 0} pacotes
+                </p>
+              </div>
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Caixas Total na Produção</p>
+                <p className="font-bold" style={{ fontSize: '13px', margin: 0 }}>
+                  {(() => {
+                    const pacotesPorCaixa = lote.tipoFile === '800g' ? 12 : 24;
+                    const totalCaixas = (lote.pacotes || 0) / pacotesPorCaixa + (lote.caixas || 0);
+                    return `${totalCaixas.toFixed(2)} caixas`;
+                  })()}
+                </p>
+                <p className="text-gray-500" style={{ fontSize: '9px', margin: 0 }}>
+                  {lote.pacotes || 0} ÷ {lote.tipoFile === '800g' ? 12 : 24} + {lote.caixas || 0} caixas
+                </p>
+              </div>
+              <div className="bg-gray-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Filé Embalado Total</p>
                 <p className="font-bold" style={{ fontSize: '13px', margin: 0 }}>{calcularTotal(lote.fileEmbalado).toFixed(2)} kg</p>
               </div>
-              <div className="bg-gray-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Caixas / Pacotes</p>
-                <p className="font-semibold" style={{ margin: 0, fontSize: '12px' }}>{lote.caixas || 0} / {lote.pacotes || 0}</p>
+              <div className="bg-green-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Aproveitamento Nota Fiscal</p>
+                <p className="font-bold text-green-900" style={{ fontSize: '13px', margin: 0 }}>{lote.aprovNotaFiscal || 0}%</p>
+              </div>
+              <div className="bg-green-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Aproveitamento Salão</p>
+                <p className="font-bold text-green-900" style={{ fontSize: '13px', margin: 0 }}>{lote.aprovSalao || 0}%</p>
               </div>
               <div className="bg-gray-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Data Fabricação</p>
@@ -225,10 +255,6 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
               <div className="bg-gray-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Data Validade</p>
                 <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{lote.dataValidade ? new Date(lote.dataValidade).toLocaleDateString('pt-BR') : '-'}</p>
-              </div>
-              <div className="bg-yellow-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Valor NF</p>
-                <p className="font-bold text-yellow-900" style={{ fontSize: '13px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
               </div>
             </div>
           </div>
