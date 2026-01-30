@@ -48,6 +48,30 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
     }
   }, [lote.dataFabricacao, embalagemConfirmado]);
 
+  // Recalcular FILÉ EMBALADO automaticamente quando fileInNatura ou fileCongelado mudarem
+  useEffect(() => {
+    if (lote.fileInNatura || lote.fileCongelado) {
+      const inNatura = calcularTotalPeso(lote.fileInNatura);
+      const congelado = calcularTotalPeso(lote.fileCongelado);
+      const totalFiletagem = inNatura + congelado;
+      
+      if (totalFiletagem > 0) {
+        const novoFileEmbalado = {
+          P: totalFiletagem,
+          M: 0,
+          G: 0,
+          GG: 0
+        };
+        
+        // Só atualiza se o valor mudou
+        const fileEmbAtual = calcularTotalPeso(lote.fileEmbalado);
+        if (Math.abs(fileEmbAtual - totalFiletagem) > 0.01) {
+          onChange('fileEmbalado', novoFileEmbalado);
+        }
+      }
+    }
+  }, [lote.fileInNatura, lote.fileCongelado]);
+
   // Recalcular aproveitamentos automaticamente quando valores mudarem
   useEffect(() => {
     if (lote.fileEmbalado && (lote.pesoNotaFiscal || lote.pesoSalao)) {

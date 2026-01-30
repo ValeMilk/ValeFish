@@ -124,8 +124,35 @@ const Index = ({ onLogout }: IndexProps) => {
         return;
       }
 
+      // RECALCULAR TODOS OS CAMPOS antes de salvar
+      const calcularTotal = (obj: any) => {
+        if (!obj) return 0;
+        return (obj.P || 0) + (obj.M || 0) + (obj.G || 0) + (obj.GG || 0);
+      };
+
+      // Recalcular filé embalado total (In Natura + Congelado)
+      const totalInNatura = calcularTotal(currentLote.fileInNatura);
+      const totalCongelado = calcularTotal(currentLote.fileCongelado);
+      const novoFileEmbalado = {
+        P: totalInNatura + totalCongelado,
+        M: 0,
+        G: 0,
+        GG: 0
+      };
+
+      // Recalcular aproveitamentos
+      const totalFileEmb = calcularTotal(novoFileEmbalado);
+      const totalPesoNF = calcularTotal(currentLote.pesoNotaFiscal);
+      const totalPesoSalao = calcularTotal(currentLote.pesoSalao);
+      
+      const aprovNF = totalPesoNF > 0 ? parseFloat(((totalFileEmb / totalPesoNF) * 100).toFixed(2)) : 0;
+      const aprovSal = totalPesoSalao > 0 ? parseFloat(((totalFileEmb / totalPesoSalao) * 100).toFixed(2)) : 0;
+
       const loteData: Omit<LoteData, 'id'> = {
         ...currentLote,
+        fileEmbalado: novoFileEmbalado,
+        aprovNotaFiscal: aprovNF,
+        aprovSalao: aprovSal,
         status: status,
       };
 
