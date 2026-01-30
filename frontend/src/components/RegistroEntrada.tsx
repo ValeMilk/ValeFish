@@ -29,7 +29,14 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
   const [notaFiscalConfirmado, setNotaFiscalConfirmado] = useState(false);
   const [filetagemConfirmado, setFiletagemConfirmado] = useState(false);
   const [embalagemConfirmado, setEmbalagemConfirmado] = useState(false);
-  const [tipoFile, setTipoFile] = useState<'400g' | '800g'>('400g');
+  const [tipoFile, setTipoFile] = useState<'400g' | '800g'>(lote.tipoFile || '400g');
+
+  // Sincronizar tipoFile quando o lote mudar
+  useEffect(() => {
+    if (lote.tipoFile) {
+      setTipoFile(lote.tipoFile);
+    }
+  }, [lote.tipoFile]);
 
   // Calcular data de validade automaticamente quando data de fabricação mudar
   useEffect(() => {
@@ -340,7 +347,10 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
       >
         <div className="flex gap-3">
           <button
-            onClick={() => setTipoFile('400g')}
+            onClick={() => {
+              setTipoFile('400g');
+              onChange('tipoFile', '400g');
+            }}
             className={`flex-1 py-3 px-4 rounded-lg border-2 font-medium transition-all ${
               tipoFile === '400g'
                 ? 'bg-primary text-primary-foreground border-primary'
@@ -350,7 +360,10 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
             Filé 400g
           </button>
           <button
-            onClick={() => setTipoFile('800g')}
+            onClick={() => {
+              setTipoFile('800g');
+              onChange('tipoFile', '800g');
+            }}
             className={`flex-1 py-3 px-4 rounded-lg border-2 font-medium transition-all ${
               tipoFile === '800g'
                 ? 'bg-primary text-primary-foreground border-primary'
@@ -403,7 +416,11 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
                   inputMode="numeric"
                   placeholder="0"
                   value={lote.qtdMaster || ''}
-                  onChange={(v) => onChange('qtdMaster', parseInt(v.target.value) || 0)}
+                  onChange={(v) => {
+                    const valor = parseInt(v.target.value) || 0;
+                    onChange('qtdMaster', valor);
+                    onChange('caixas', valor);
+                  }}
                   disabled={embalagemConfirmado}
                   className="w-full px-3 py-2 rounded-lg border border-muted-foreground/30 bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
                 />
@@ -424,7 +441,11 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
                   inputMode="numeric"
                   placeholder="0"
                   value={lote.qtdSacos || ''}
-                  onChange={(v) => onChange('qtdSacos', parseInt(v.target.value) || 0)}
+                  onChange={(v) => {
+                    const valor = parseInt(v.target.value) || 0;
+                    onChange('qtdSacos', valor);
+                    onChange('pacotes', valor);
+                  }}
                   disabled={embalagemConfirmado}
                   className="w-full px-3 py-2 rounded-lg border border-muted-foreground/30 bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
                 />

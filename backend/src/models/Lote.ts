@@ -23,13 +23,16 @@ interface ILote {
   fileCongelado?: WeightBySize;
   fileEmbalado?: WeightBySize;
   
+  tipoFile?: '400g' | '800g';
+  caixas?: number;
+  pacotes?: number;
   qtdMaster?: number;
   qtdSacos?: number;
   dataFabricacao?: string;
   dataValidade?: string;
   
-  aproveitamentoNF?: number;
-  aproveitamentoSalao?: number;
+  aprovNotaFiscal?: number;
+  aprovSalao?: number;
   
   status: 'aberto' | 'em_producao' | 'finalizado';
   createdAt: Date;
@@ -73,13 +76,19 @@ const loteSchema = new Schema<ILote>(
     fileCongelado: weightBySize,
     fileEmbalado: weightBySize,
     
+    tipoFile: {
+      type: String,
+      enum: ['400g', '800g'],
+    },
+    caixas: Number,
+    pacotes: Number,
     qtdMaster: Number,
     qtdSacos: Number,
     dataFabricacao: String,
     dataValidade: String,
     
-    aproveitamentoNF: Number,
-    aproveitamentoSalao: Number,
+    aprovNotaFiscal: Number,
+    aprovSalao: Number,
     
     status: {
       type: String,
