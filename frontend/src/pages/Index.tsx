@@ -145,18 +145,23 @@ const Index = ({ onLogout }: IndexProps) => {
         return (obj.P || 0) + (obj.M || 0) + (obj.G || 0) + (obj.GG || 0);
       };
 
-      // Recalcular filé embalado total (In Natura + Congelado)
-      const totalInNatura = calcularTotal(currentLote.fileInNatura);
-      const totalCongelado = calcularTotal(currentLote.fileCongelado);
+      // Recalcular filé embalado baseado em caixas e pacotes (embalagem)
+      const tipoFile = currentLote.tipoFile || '400g';
+      const gramatura = tipoFile === '400g' ? 400 : 800;
+      const caixas = currentLote.caixas || currentLote.qtdMaster || 0;
+      const pacotes = currentLote.pacotes || currentLote.qtdSacos || 0;
+      const kgMaster = (caixas * (gramatura * 24)) / 1000;
+      const kgSacos = (pacotes * gramatura) / 1000;
+      const totalFileEmb = kgMaster + kgSacos;
+
       const novoFileEmbalado = {
-        P: totalInNatura + totalCongelado,
+        P: totalFileEmb,
         M: 0,
         G: 0,
         GG: 0
       };
 
       // Recalcular aproveitamentos
-      const totalFileEmb = calcularTotal(novoFileEmbalado);
       const totalPesoNF = calcularTotal(currentLote.pesoNotaFiscal);
       const totalPesoSalao = calcularTotal(currentLote.pesoSalao);
       
