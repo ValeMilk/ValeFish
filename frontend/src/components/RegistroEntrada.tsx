@@ -490,19 +490,30 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
             onClick={() => {
               // Auto-preencher fileEmbalado com o total calculado
               const totalFileEmbalado = calcularFileEmbalado();
-              onChange('fileEmbalado', {
+              const novoFileEmbalado = {
                 P: totalFileEmbalado,
                 M: 0,
                 G: 0,
                 GG: 0
-              });
+              };
+              onChange('fileEmbalado', novoFileEmbalado);
+              
+              // Recalcular aproveitamentos COM O NOVO fileEmbalado
+              const totalPesoNF = (lote.pesoNotaFiscal?.P || 0) + (lote.pesoNotaFiscal?.M || 0) + 
+                                   (lote.pesoNotaFiscal?.G || 0) + (lote.pesoNotaFiscal?.GG || 0);
+              const totalPesoSalao = (lote.pesoSalao?.P || 0) + (lote.pesoSalao?.M || 0) + 
+                                     (lote.pesoSalao?.G || 0) + (lote.pesoSalao?.GG || 0);
+              
+              const aprovNF = totalPesoNF > 0 ? ((totalFileEmbalado / totalPesoNF) * 100) : 0;
+              const aprovSal = totalPesoSalao > 0 ? ((totalFileEmbalado / totalPesoSalao) * 100) : 0;
+              
               // Salvar tipo de filé, caixas e pacotes
               onChange('tipoFile', tipoFile);
               onChange('caixas', lote.qtdMaster || 0);
               onChange('pacotes', lote.qtdSacos || 0);
-              // Salvar aproveitamentos calculados (converter string para número)
-              onChange('aprovNotaFiscal', parseFloat(aprovNotaFiscal));
-              onChange('aprovSalao', parseFloat(aprovSalao));
+              // Salvar aproveitamentos recalculados
+              onChange('aprovNotaFiscal', parseFloat(aprovNF.toFixed(2)));
+              onChange('aprovSalao', parseFloat(aprovSal.toFixed(2)));
               setEmbalagemConfirmado(true);
             }}
           >
