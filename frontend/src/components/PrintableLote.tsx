@@ -44,10 +44,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 alt="ValeFish Logo" 
                 style={{ height: '65px', width: 'auto' }}
               />
-              <div>
-                <h1 className="text-2xl font-bold text-blue-600" style={{ margin: 0, fontSize: '26px' }}>ValeFish</h1>
-                <p className="text-gray-600" style={{ fontSize: '14px', margin: 0 }}>Relatório de Lote</p>
-              </div>
+              
             </div>
             <div className="text-right">
               <p style={{ fontSize: '12px', margin: 0 }} className="text-gray-600">Data de Impressão</p>
