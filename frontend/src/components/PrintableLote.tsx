@@ -214,26 +214,44 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Pacotes Total na Produção</p>
                 <p className="font-bold" style={{ fontSize: '13px', margin: 0 }}>
                   {(() => {
-                    const pacotesPorCaixa = lote.tipoFile === '800g' ? 12 : 24;
-                    const totalPacotes = (lote.caixas || 0) * pacotesPorCaixa + (lote.pacotes || 0);
+                    const tipoFile = lote.tipoFile || '400g';
+                    const caixas = lote.caixas || lote.qtdMaster || 0;
+                    const pacotes = lote.pacotes || lote.qtdSacos || 0;
+                    const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
+                    const totalPacotes = caixas * pacotesPorCaixa + pacotes;
                     return `${totalPacotes.toLocaleString()} pacotes`;
                   })()}
                 </p>
                 <p className="text-gray-500" style={{ fontSize: '9px', margin: 0 }}>
-                  {lote.caixas || 0} cxs × {lote.tipoFile === '800g' ? 12 : 24} + {lote.pacotes || 0} pacotes
+                  {(() => {
+                    const tipoFile = lote.tipoFile || '400g';
+                    const caixas = lote.caixas || lote.qtdMaster || 0;
+                    const pacotes = lote.pacotes || lote.qtdSacos || 0;
+                    const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
+                    return `${caixas} cxs × ${pacotesPorCaixa} + ${pacotes} pacotes`;
+                  })()}
                 </p>
               </div>
               <div className="bg-gray-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Caixas Total na Produção</p>
                 <p className="font-bold" style={{ fontSize: '13px', margin: 0 }}>
                   {(() => {
-                    const pacotesPorCaixa = lote.tipoFile === '800g' ? 12 : 24;
-                    const totalCaixas = (lote.pacotes || 0) / pacotesPorCaixa + (lote.caixas || 0);
+                    const tipoFile = lote.tipoFile || '400g';
+                    const caixas = lote.caixas || lote.qtdMaster || 0;
+                    const pacotes = lote.pacotes || lote.qtdSacos || 0;
+                    const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
+                    const totalCaixas = pacotes / pacotesPorCaixa + caixas;
                     return `${totalCaixas.toFixed(2)} caixas`;
                   })()}
                 </p>
                 <p className="text-gray-500" style={{ fontSize: '9px', margin: 0 }}>
-                  {lote.pacotes || 0} ÷ {lote.tipoFile === '800g' ? 12 : 24} + {lote.caixas || 0} caixas
+                  {(() => {
+                    const tipoFile = lote.tipoFile || '400g';
+                    const caixas = lote.caixas || lote.qtdMaster || 0;
+                    const pacotes = lote.pacotes || lote.qtdSacos || 0;
+                    const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
+                    return `${pacotes} ÷ ${pacotesPorCaixa} + ${caixas} caixas`;
+                  })()}
                 </p>
               </div>
               <div className="bg-gray-50 p-2 rounded">

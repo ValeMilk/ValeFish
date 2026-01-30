@@ -30,6 +30,9 @@ export interface LoteData {
   fileEmbalado?: WeightBySize;
   
   // Embalagem
+  tipoFile?: '400g' | '800g';
+  caixas?: number;
+  pacotes?: number;
   qtdMaster?: number;
   qtdSacos?: number;
   

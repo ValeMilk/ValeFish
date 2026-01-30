@@ -475,6 +475,10 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
                 G: 0,
                 GG: 0
               });
+              // Salvar tipo de filé, caixas e pacotes
+              onChange('tipoFile', tipoFile);
+              onChange('caixas', lote.qtdMaster || 0);
+              onChange('pacotes', lote.qtdSacos || 0);
               setEmbalagemConfirmado(true);
             }}
           >
