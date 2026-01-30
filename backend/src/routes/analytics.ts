@@ -49,8 +49,8 @@ router.get('/stats/geral', authMiddleware, async (req: AuthenticatedRequest, res
       {
         $group: {
           _id: null,
-          aprovNF: { $avg: '$aproveitamentoNF' },
-          aprovSalao: { $avg: '$aproveitamentoSalao' }
+          aprovNF: { $avg: '$aprovNotaFiscal' },
+          aprovSalao: { $avg: '$aprovSalao' }
         }
       }
     ]);
@@ -94,7 +94,7 @@ router.get('/stats/fornecedor', authMiddleware, async (req: AuthenticatedRequest
               ]
             }
           },
-          aproveitamentoMedio: { $avg: '$aproveitamentoNF' }
+          aproveitamentoMedio: { $avg: '$aprovNotaFiscal' }
         }
       },
       { $sort: { totalLotes: -1 } }
@@ -237,8 +237,8 @@ router.get('/export', authMiddleware, async (req: AuthenticatedRequest, res: Res
       fileEmbalado_GG: lote.fileEmbalado?.GG || 0,
       fileEmbalado_Total: (lote.fileEmbalado?.P || 0) + (lote.fileEmbalado?.M || 0) + (lote.fileEmbalado?.G || 0) + (lote.fileEmbalado?.GG || 0),
       
-      aproveitamentoNF: lote.aproveitamentoNF,
-      aproveitamentoSalao: lote.aproveitamentoSalao,
+      aproveitamentoNF: lote.aprovNotaFiscal,
+      aproveitamentoSalao: lote.aprovSalao,
       
       qtdMaster: lote.qtdMaster,
       qtdSacos: lote.qtdSacos,
