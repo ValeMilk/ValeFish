@@ -111,9 +111,13 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
   };
 
   const handleEditLote = (lote: LoteData) => {
-    // Sempre carrega na tela de entrada para editar (aberto ou finalizado)
-    if (onLoadLoteForEdit) {
+    // Se o lote está aberto, carrega na tela de entrada para finalizar
+    if (lote.status === 'aberto' && onLoadLoteForEdit) {
       onLoadLoteForEdit(lote);
+    } else {
+      // Caso contrário, abre o modal de edição
+      setSelectedLote(lote);
+      setModalOpen(true);
     }
   };
 
