@@ -6,6 +6,21 @@ import bcryptjs from 'bcryptjs';
 
 const router = Router();
 
+// Get Lote by ID (Public - No Auth Required)
+router.get('/public/:id', async (req, res: Response) => {
+  try {
+    const lote = await Lote.findById(req.params.id);
+    
+    if (!lote) {
+      return res.status(404).json({ error: 'Lote not found' });
+    }
+
+    res.json(lote);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Create Lote
 router.post('/', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
   try {

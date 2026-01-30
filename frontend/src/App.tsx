@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Login from "./components/Login";
+import PublicLote from "./pages/PublicLote";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,9 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
+            {/* Rota pública - não requer autenticação */}
+            <Route path="/lote/:id" element={<PublicLote />} />
+            
             <Route 
               path="/login" 
               element={
