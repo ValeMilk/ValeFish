@@ -14,6 +14,8 @@ interface DashboardProps {
   onLoadLoteForEdit?: (lote: LoteData) => void;
 }
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
 const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) => {
   const [selectedLote, setSelectedLote] = useState<LoteData | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -129,7 +131,7 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
         throw new Error('ID do lote não encontrado');
       }
 
-      const response = await fetch(`http://localhost:4000/api/lotes/${loteId}`, {
+      const response = await fetch(`${API_URL}/lotes/${loteId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
