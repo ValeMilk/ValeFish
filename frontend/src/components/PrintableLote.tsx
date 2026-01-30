@@ -18,7 +18,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
     const totalInNatura = calcularTotal(lote.fileInNatura);
     const totalCongelado = calcularTotal(lote.fileCongelado);
     const diferencaFile = totalCongelado - totalInNatura;
-    const rendimento = totalInNatura > 0 ? ((totalCongelado / totalInNatura) * 100) : 0;
+    const rendimento = totalInNatura > 0 ? (((totalCongelado / totalInNatura) - 1) * 100) : 0;
 
     return (
       <div ref={ref} className="p-8 bg-white" style={{ width: '210mm', fontSize: '13px' }}>

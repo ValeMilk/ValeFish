@@ -150,7 +150,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
     const inNatura = calcularTotalPeso(lote.fileInNatura);
     const congelado = calcularTotalPeso(lote.fileCongelado);
     if (inNatura === 0) return 0;
-    return ((congelado / inNatura) * 100);
+    return (((congelado / inNatura) - 1) * 100);
   };
 
   // Cálculos de Embalagem
