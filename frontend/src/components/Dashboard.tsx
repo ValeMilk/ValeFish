@@ -3,7 +3,6 @@ import { Package, Scale, TrendingUp, Clock, CheckCircle, AlertCircle, Edit, Eye,
 import { LoteData } from "@/types/lote";
 import { toast } from "@/hooks/use-toast";
 import LoteModal from "./LoteModal";
-import ViewLoteModal from "./ViewLoteModal";
 import PrintableLote from "./PrintableLote";
 import { useReactToPrint } from 'react-to-print';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -106,7 +105,7 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
   }, [normalizedLotes]);
 
   const handleViewLote = (lote: LoteData) => {
-    setSelectedLote(lote);
+    setLoteToPrint(lote);
     setViewModalOpen(true);
   };
 
@@ -400,15 +399,23 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
         loading={loading}
       />
 
-      {/* Modal de Visualização */}
-      <ViewLoteModal
-        lote={selectedLote}
-        open={viewModalOpen}
-        onClose={() => {
-          setViewModalOpen(false);
-          setSelectedLote(null);
-        }}
-      />
+      {/* Modal de Visualização com layout de impressão */}
+      {viewModalOpen && loteToPrint && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+            <button
+              onClick={() => {
+                setViewModalOpen(false);
+                setLoteToPrint(null);
+              }}
+              className="sticky top-4 right-4 float-right bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 z-10"
+            >
+              Fechar
+            </button>
+            <PrintableLote lote={loteToPrint} />
+          </div>
+        </div>
+      )}
 
       {/* Componente oculto para impressão */}
       <div style={{ display: 'none' }}>
