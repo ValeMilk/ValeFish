@@ -54,7 +54,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
               {/* QR Code */}
               <div className="text-center">
                 <QRCodeSVG 
-                  value={`Lote: ${lote.numeroLote}\nProcesso: ${lote.processo}\nFornecedor: ${lote.fornecedor}\nData: ${lote.dataProducao}\nID: ${lote.id || (lote as any)._id || ''}`}
+                  value={`http://72.61.62.17:8888/?lote=${lote.id || (lote as any)._id || ''}`}
                   size={80}
                   level="M"
                   includeMargin={false}
