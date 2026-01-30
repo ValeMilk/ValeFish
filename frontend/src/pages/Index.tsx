@@ -254,6 +254,7 @@ const Index = ({ onLogout }: IndexProps) => {
       console.error('Erro ao salvar lote:', error);
     } finally {
       setLoadingSubmit(false);
+      setLoadingSubmitAberto(false);
     }
   };
 
