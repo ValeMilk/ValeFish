@@ -24,6 +24,7 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
   const [endDate, setEndDate] = useState('');
   const [loteToPrint, setLoteToPrint] = useState<LoteData | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
+  const username = JSON.parse(localStorage.getItem('user') || '{}').username || 'Desconhecido';
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
@@ -412,14 +413,14 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
             >
               Fechar
             </button>
-            <PrintableLote lote={loteToPrint} />
+            <PrintableLote lote={loteToPrint} username={username} />
           </div>
         </div>
       )}
 
       {/* Componente oculto para impressão */}
       <div style={{ display: 'none' }}>
-        {loteToPrint && <PrintableLote ref={printRef} lote={loteToPrint} />}
+        {loteToPrint && <PrintableLote ref={printRef} lote={loteToPrint} username={username} />}
       </div>
     </div>
   );

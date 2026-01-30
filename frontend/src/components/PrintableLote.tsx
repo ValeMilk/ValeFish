@@ -4,10 +4,11 @@ import { QRCodeSVG } from 'qrcode.react';
 
 interface PrintableLoteProps {
   lote: LoteData;
+  username?: string;
 }
 
 const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
-  ({ lote }, ref) => {
+  ({ lote, username }, ref) => {
     const calcularTotal = (peso: any) => {
       if (!peso) return 0;
       return (peso.P || 0) + (peso.M || 0) + (peso.G || 0) + (peso.GG || 0);
@@ -45,10 +46,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 alt="ValeFish Logo" 
                 style={{ height: '65px', width: 'auto' }}
               />
-              <div>
-                <h1 style={{ fontSize: '20px', margin: 0 }} className="font-bold text-blue-600">ValeFish</h1>
-                <p style={{ fontSize: '13px', margin: 0 }} className="text-gray-600">Relatório de Lote</p>
-              </div>
+
             </div>
             <div className="flex items-center gap-4">
               {/* QR Code */}
@@ -61,11 +59,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 />
                 <p style={{ fontSize: '9px', margin: '4px 0 0 0' }} className="text-gray-500">Lote {lote.numeroLote}</p>
               </div>
-              <div className="text-right">
-                <p style={{ fontSize: '12px', margin: 0 }} className="text-gray-600">Data de Impressão</p>
-                <p className="font-semibold" style={{ fontSize: '14px', margin: 0 }}>{new Date().toLocaleDateString('pt-BR')}</p>
-              </div>
-            </div>
+                  </div>
           </div>
         </div>
 
@@ -294,7 +288,10 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
         {/* Footer */}
         <div className="mt-4 pt-2 border-t border-gray-300 text-center" style={{ fontSize: '10px' }}>
           <p className="text-gray-600" style={{ margin: 0 }}>ValeFish - Sistema de Gestão de Lotes</p>
-          <p className="text-gray-500" style={{ fontSize: '9px', margin: '2px 0 0 0' }}>Documento gerado automaticamente em {new Date().toLocaleString('pt-BR')}</p>
+          <p className="text-gray-500" style={{ fontSize: '9px', margin: '2px 0 0 0' }}>
+            Documento gerado automaticamente em {new Date().toLocaleString('pt-BR')}
+            {username && ` por ${username}`}
+          </p>
         </div>
       </div>
     );
