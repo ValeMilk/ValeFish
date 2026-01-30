@@ -500,6 +500,9 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
               onChange('tipoFile', tipoFile);
               onChange('caixas', lote.qtdMaster || 0);
               onChange('pacotes', lote.qtdSacos || 0);
+              // Salvar aproveitamentos calculados
+              onChange('aprovNotaFiscal', aprovNotaFiscal);
+              onChange('aprovSalao', aprovSalao);
               setEmbalagemConfirmado(true);
             }}
           >
