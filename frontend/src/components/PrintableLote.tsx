@@ -116,7 +116,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <th className="border border-gray-300 p-1 text-right">M (kg)</th>
                 <th className="border border-gray-300 p-1 text-right">G (kg)</th>
                 <th className="border border-gray-300 p-1 text-right">GG (kg)</th>
-                <th className="border border-gray-300 p-1 text-right">Total (kg)</th>
+
               </tr>
             </thead>
             <tbody>
@@ -126,7 +126,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <td className="border border-gray-300 p-1 text-right">{lote.pesoNotaFiscal?.M || 0}</td>
                 <td className="border border-gray-300 p-1 text-right">{lote.pesoNotaFiscal?.G || 0}</td>
                 <td className="border border-gray-300 p-1 text-right">{lote.pesoNotaFiscal?.GG || 0}</td>
-                <td className="border border-gray-300 p-1 text-right font-bold">{totalNF.toFixed(2)}</td>
+
               </tr>
               <tr>
                 <td className="border border-gray-300 p-1 font-medium">Salão</td>
@@ -134,7 +134,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <td className="border border-gray-300 p-1 text-right">{lote.pesoSalao?.M || 0}</td>
                 <td className="border border-gray-300 p-1 text-right">{lote.pesoSalao?.G || 0}</td>
                 <td className="border border-gray-300 p-1 text-right">{lote.pesoSalao?.GG || 0}</td>
-                <td className="border border-gray-300 p-1 text-right font-bold">{totalSalao.toFixed(2)}</td>
+
               </tr>
             </tbody>
           </table>
@@ -172,7 +172,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <th className="border border-gray-300 p-1 text-right">M (kg)</th>
                 <th className="border border-gray-300 p-1 text-right">G (kg)</th>
                 <th className="border border-gray-300 p-1 text-right">GG (kg)</th>
-                <th className="border border-gray-300 p-1 text-right">Total (kg)</th>
+
               </tr>
             </thead>
             <tbody>
@@ -182,7 +182,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <td className="border border-gray-300 p-1 text-right">{lote.fileInNatura?.M || 0}</td>
                 <td className="border border-gray-300 p-1 text-right">{lote.fileInNatura?.G || 0}</td>
                 <td className="border border-gray-300 p-1 text-right">{lote.fileInNatura?.GG || 0}</td>
-                <td className="border border-gray-300 p-1 text-right font-bold">{totalInNatura.toFixed(2)}</td>
+
               </tr>
               <tr>
                 <td className="border border-gray-300 p-1 font-medium">Filé Congelado</td>
@@ -190,7 +190,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <td className="border border-gray-300 p-1 text-right">{lote.fileCongelado?.M || 0}</td>
                 <td className="border border-gray-300 p-1 text-right">{lote.fileCongelado?.G || 0}</td>
                 <td className="border border-gray-300 p-1 text-right">{lote.fileCongelado?.GG || 0}</td>
-                <td className="border border-gray-300 p-1 text-right font-bold">{totalCongelado.toFixed(2)}</td>
+
               </tr>
             </tbody>
           </table>
