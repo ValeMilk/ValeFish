@@ -350,7 +350,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                     <tr className="bg-gray-200">
                       <th className="border border-gray-300 p-2 text-left" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Unidade</th>
                       <th className="border border-gray-300 p-2 text-right bg-yellow-100" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Filé (R$)</th>
-                      <th className="border border-gray-300 p-2 text-right bg-blue-100" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Embalag. (R$)</th>
+                      <th className="border border-gray-300 p-2 text-right bg-blue-100" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Embalagem (R$)</th>
                       <th className="border border-gray-300 p-2 text-right bg-green-100" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Serviço (R$)</th>
                       <th className="border border-gray-300 p-2 text-right bg-purple-100" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Total (R$)</th>
                     </tr>
