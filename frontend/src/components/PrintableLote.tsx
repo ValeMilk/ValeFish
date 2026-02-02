@@ -40,7 +40,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
     
     const custos = calcularCustos();
 
-    // Calcular tabela de an\u00e1lise de custos
+    // Calcular tabela de análise de custos
     const calcularTabelaCustos = () => {
       const tipoFile = lote.tipoFile || '400g';
       const caixas = lote.caixas || lote.qtdMaster || 0;
@@ -55,7 +55,23 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
         return null;
       }
       
-      // FIL\u00c9\n      const filePacket = valorNF / totalPacotes;\n      const fileKg = valorNF / fileEmbalado;\n      const fileBox = valorNF / totalCaixas;\n      \n      // EMBALAGEM\n      const custoPacoteBase = tipoFile === '400g' ? 0.4295 : 0.5515;\n      const embalagemPacket = custoPacoteBase + (6.05 / 24);\n      const divisorKg = tipoFile === '400g' ? 4 : 8;\n      const embalagemKg = (embalagemPacket / divisorKg) * 10;\n      const embalagemBox = embalagemKg * 9.6;\n      \n      // SERVI\u00c7O\n      const multiplicadorServico = tipoFile === '400g' ? 4 : 8;\n      const servicoPacket = (6 / 10) * multiplicadorServico;\n      const servicoKg = 6.00;\n      const servicoBox = 57.60;\n      \n      // TOTAL\n      const totalPacket = filePacket + embalagemPacket + servicoPacket;\n      const totalKg = fileKg + embalagemKg + servicoKg;\n      const totalBox = fileBox + embalagemBox + servicoBox;\n      \n      return {\n        custoFile: { pacote: filePacket, kg: fileKg, caixa: fileBox },\n        custoEmbalagem: { pacote: embalagemPacket, kg: embalagemKg, caixa: embalagemBox },\n        custoServico: { pacote: servicoPacket, kg: servicoKg, caixa: servicoBox },\n        custoTotal: { pacote: totalPacket, kg: totalKg, caixa: totalBox }\n      };\n    };\n    \n    const tabelaCustos = lote.custoFile && lote.custoEmbalagem && lote.custoServico && lote.custoTotal\n      ? { custoFile: lote.custoFile, custoEmbalagem: lote.custoEmbalagem, custoServico: lote.custoServico, custoTotal: lote.custoTotal }\n      : calcularTabelaCustos();
+      // FILÉ
+      const filePacket = valorNF / totalPacotes;
+      const fileKg = valorNF / fileEmbalado;
+      const fileBox = valorNF / totalCaixas;
+      
+      // EMBALAGEM
+      const custoPacoteBase = tipoFile === '400g' ? 0.4295 : 0.5515;
+      const embalagemPacket = custoPacoteBase + (6.05 / 24);
+      const divisorKg = tipoFile === '400g' ? 4 : 8;
+      const embalagemKg = (embalagemPacket / divisorKg) * 10;
+      const embalagemBox = embalagemKg * 9.6;
+      
+      // SERVIÇO
+      const multiplicadorServico = tipoFile === '400g' ? 4 : 8;
+      const servicoPacket = (6 / 10) * multiplicadorServico;
+      const servicoKg = 6.00;
+      const servicoBox = 57.60;\n      \n      // TOTAL\n      const totalPacket = filePacket + embalagemPacket + servicoPacket;\n      const totalKg = fileKg + embalagemKg + servicoKg;\n      const totalBox = fileBox + embalagemBox + servicoBox;\n      \n      return {\n        custoFile: { pacote: filePacket, kg: fileKg, caixa: fileBox },\n        custoEmbalagem: { pacote: embalagemPacket, kg: embalagemKg, caixa: embalagemBox },\n        custoServico: { pacote: servicoPacket, kg: servicoKg, caixa: servicoBox },\n        custoTotal: { pacote: totalPacket, kg: totalKg, caixa: totalBox }\n      };\n    };\n    \n    const tabelaCustos = lote.custoFile && lote.custoEmbalagem && lote.custoServico && lote.custoTotal\n      ? { custoFile: lote.custoFile, custoEmbalagem: lote.custoEmbalagem, custoServico: lote.custoServico, custoTotal: lote.custoTotal }\n      : calcularTabelaCustos();
 
     return (
       <div ref={ref} className="p-8 bg-white" style={{ width: '210mm', fontSize: '13px' }}>
@@ -326,19 +342,18 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
               </div>
             </div>
             
-            {/* Tabela de An\u00e1lise de Custos */}
             {tabelaCustos && (
               <div className="mt-3">
                 <h3 style={{ fontSize: '14px', margin: '0 0 6px 0' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
-                  An\u00e1lise de Custos
+                  Análise de Custos
                 </h3>
                 <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '11px' }}>
                   <thead>
                     <tr className="bg-gray-200">
                       <th className="border border-gray-300 p-1 text-left">Unidade</th>
-                      <th className="border border-gray-300 p-1 text-right bg-yellow-100">Fil\u00e9 (R$)</th>
+                      <th className="border border-gray-300 p-1 text-right bg-yellow-100">Filé (R$)</th>
                       <th className="border border-gray-300 p-1 text-right bg-blue-100">Embalagem (R$)</th>
-                      <th className="border border-gray-300 p-1 text-right bg-green-100">Servi\u00e7o (R$)</th>
+                      <th className="border border-gray-300 p-1 text-right bg-green-100">Serviço (R$)</th>
                       <th className="border border-gray-300 p-1 text-right bg-purple-100">Total (R$)</th>
                     </tr>
                   </thead>
