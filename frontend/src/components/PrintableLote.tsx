@@ -358,24 +358,24 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                   <tbody>
                     <tr>
                       <td className="border border-gray-300 p-2 font-medium">Pacote</td>
-                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoFile.pacote.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoEmbalagem.pacote.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoServico.pacote.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right font-bold">{tabelaCustos.custoTotal.pacote.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoFile.pacote.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoEmbalagem.pacote.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoServico.pacote.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right font-bold">R$ {tabelaCustos.custoTotal.pacote.toFixed(2)}</td>
                     </tr>
                     <tr className="bg-yellow-50">
                       <td className="border border-gray-300 p-2 font-medium">KG</td>
-                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoFile.kg.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoEmbalagem.kg.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoServico.kg.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right font-bold">{tabelaCustos.custoTotal.kg.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoFile.kg.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoEmbalagem.kg.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoServico.kg.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right font-bold">R$ {tabelaCustos.custoTotal.kg.toFixed(2)}</td>
                     </tr>
                     <tr>
                       <td className="border border-gray-300 p-2 font-medium">Caixa</td>
-                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoFile.caixa.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoEmbalagem.caixa.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoServico.caixa.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right font-bold">{tabelaCustos.custoTotal.caixa.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoFile.caixa.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoEmbalagem.caixa.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoServico.caixa.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right font-bold">R$ {tabelaCustos.custoTotal.caixa.toFixed(2)}</td>
                     </tr>
                   </tbody>
                 </table>
