@@ -116,6 +116,72 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
     }
   }, [lote.qtdMaster, lote.qtdSacos, tipoFile]);
 
+  // Recalcular tabela de análise de custos
+  useEffect(() => {
+    if (lote.valorNF && lote.fileEmbalado && (lote.qtdMaster || lote.qtdSacos) && tipoFile) {
+      const caixas = lote.qtdMaster || 0;
+      const pacotes = lote.qtdSacos || 0;
+      const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
+      const totalPacotes = caixas * pacotesPorCaixa + pacotes;
+      const totalCaixas = pacotes / pacotesPorCaixa + caixas;
+      const fileEmbalado = calcularTotalPeso(lote.fileEmbalado);
+      
+      if (totalPacotes > 0 && fileEmbalado > 0 && totalCaixas > 0) {
+        // FILÉ (custo da matéria-prima)
+        const filePacket = lote.valorNF / totalPacotes;
+        const fileKg = lote.valorNF / fileEmbalado;
+        const fileBox = lote.valorNF / totalCaixas;
+        
+        // EMBALAGEM
+        const custoPacoteBase = tipoFile === '400g' ? 0.4295 : 0.5515;
+        const embalagemPacket = custoPacoteBase + (6.05 / 24);
+        const divisorKg = tipoFile === '400g' ? 4 : 8;
+        const embalagemKg = (embalagemPacket / divisorKg) * 10;
+        const embalagemBox = embalagemKg * 9.6;
+        
+        // SERVIÇO
+        const multiplicadorServico = tipoFile === '400g' ? 4 : 8;
+        const servicoPacket = (6 / 10) * multiplicadorServico;
+        const servicoKg = 6.00;
+        const servicoBox = 57.60;
+        
+        // TOTAL
+        const totalPacket = filePacket + embalagemPacket + servicoPacket;
+        const totalKg = fileKg + embalagemKg + servicoKg;
+        const totalBox = fileBox + embalagemBox + servicoBox;
+        
+        const novoCustoFile = {
+          pacote: parseFloat(filePacket.toFixed(2)),
+          kg: parseFloat(fileKg.toFixed(2)),
+          caixa: parseFloat(fileBox.toFixed(2))
+        };
+        
+        const novoCustoEmbalagem = {
+          pacote: parseFloat(embalagemPacket.toFixed(2)),
+          kg: parseFloat(embalagemKg.toFixed(2)),
+          caixa: parseFloat(embalagemBox.toFixed(2))
+        };
+        
+        const novoCustoServico = {
+          pacote: parseFloat(servicoPacket.toFixed(2)),
+          kg: parseFloat(servicoKg.toFixed(2)),
+          caixa: parseFloat(servicoBox.toFixed(2))
+        };
+        
+        const novoCustoTotal = {
+          pacote: parseFloat(totalPacket.toFixed(2)),
+          kg: parseFloat(totalKg.toFixed(2)),
+          caixa: parseFloat(totalBox.toFixed(2))
+        };
+        
+        if (JSON.stringify(lote.custoFile) !== JSON.stringify(novoCustoFile)) onChange('custoFile', novoCustoFile);
+        if (JSON.stringify(lote.custoEmbalagem) !== JSON.stringify(novoCustoEmbalagem)) onChange('custoEmbalagem', novoCustoEmbalagem);
+        if (JSON.stringify(lote.custoServico) !== JSON.stringify(novoCustoServico)) onChange('custoServico', novoCustoServico);
+        if (JSON.stringify(lote.custoTotal) !== JSON.stringify(novoCustoTotal)) onChange('custoTotal', novoCustoTotal);
+      }
+    }
+  }, [lote.valorNF, lote.fileEmbalado, lote.qtdMaster, lote.qtdSacos, tipoFile]);
+
   const handleSizeChange = (field: keyof LoteData, size: FishSize, value: string) => {
     const current = lote[field] as any || { P: 0, M: 0, G: 0, GG: 0 };
     onChange(field, {
@@ -484,6 +550,49 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
               <p className="text-xs text-muted-foreground">{calcularKgMaster() + calcularKgSacos() > 0 ? `${(((lote.custoCaixas || 0) / (calcularKgMaster() + calcularKgSacos())) || 0).toFixed(4)} /kg` : '-'}</p>
             </div>
           </div>
+          
+          {/* Tabela de An\u00e1lise de Custos */}
+          {lote.custoFile && lote.custoEmbalagem && lote.custoServico && lote.custoTotal && (
+            <div className="mt-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+              <p className="text-sm font-semibold text-foreground mb-2">\ud83d\udcc8 An\u00e1lise de Custos</p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                      <th className="text-left py-1 px-2 text-muted-foreground font-medium">Unidade</th>
+                      <th className="text-right py-1 px-2 text-yellow-700 dark:text-yellow-400 font-medium">Fil\u00e9</th>
+                      <th className="text-right py-1 px-2 text-blue-700 dark:text-blue-400 font-medium">Embalagem</th>
+                      <th className="text-right py-1 px-2 text-green-700 dark:text-green-400 font-medium">Servi\u00e7o</th>
+                      <th className="text-right py-1 px-2 text-purple-700 dark:text-purple-400 font-medium">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-gray-100 dark:border-gray-800">
+                      <td className="py-1 px-2 font-medium">Pacote</td>
+                      <td className="text-right py-1 px-2">R$ {lote.custoFile.pacote.toFixed(2)}</td>
+                      <td className="text-right py-1 px-2">R$ {lote.custoEmbalagem.pacote.toFixed(2)}</td>
+                      <td className="text-right py-1 px-2">R$ {lote.custoServico.pacote.toFixed(2)}</td>
+                      <td className="text-right py-1 px-2 font-bold">R$ {lote.custoTotal.pacote.toFixed(2)}</td>
+                    </tr>
+                    <tr className="border-b border-gray-100 dark:border-gray-800 bg-yellow-50 dark:bg-yellow-950">
+                      <td className="py-1 px-2 font-medium">KG</td>
+                      <td className="text-right py-1 px-2">R$ {lote.custoFile.kg.toFixed(2)}</td>
+                      <td className="text-right py-1 px-2">R$ {lote.custoEmbalagem.kg.toFixed(2)}</td>
+                      <td className="text-right py-1 px-2">R$ {lote.custoServico.kg.toFixed(2)}</td>
+                      <td className="text-right py-1 px-2 font-bold">R$ {lote.custoTotal.kg.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1 px-2 font-medium">Caixa</td>
+                      <td className="text-right py-1 px-2">R$ {lote.custoFile.caixa.toFixed(2)}</td>
+                      <td className="text-right py-1 px-2">R$ {lote.custoEmbalagem.caixa.toFixed(2)}</td>
+                      <td className="text-right py-1 px-2">R$ {lote.custoServico.caixa.toFixed(2)}</td>
+                      <td className="text-right py-1 px-2 font-bold">R$ {lote.custoTotal.caixa.toFixed(2)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

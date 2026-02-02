@@ -47,6 +47,28 @@ export interface LoteData {
   // Custos (calculado)
   custoPacotes?: number;
   custoCaixas?: number;
+  
+  // Tabela de Análise de Custos
+  custoFile?: {
+    pacote: number;
+    kg: number;
+    caixa: number;
+  };
+  custoEmbalagem?: {
+    pacote: number;
+    kg: number;
+    caixa: number;
+  };
+  custoServico?: {
+    pacote: number;
+    kg: number;
+    caixa: number;
+  };
+  custoTotal?: {
+    pacote: number;
+    kg: number;
+    caixa: number;
+  };
 }
 
 const createEmptyWeightBySize = (): WeightBySize => ({
