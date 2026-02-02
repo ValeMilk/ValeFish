@@ -91,13 +91,13 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
       : calcularTabelaCustos();
 
     return (
-      <div ref={ref} className="p-3 bg-white" style={{ width: '210mm', fontSize: '10px', lineHeight: '1.3' }}>
+      <div ref={ref} className="p-6 bg-white" style={{ width: '210mm', fontSize: '12px', lineHeight: '1.4' }}>
         <style>{`
           @media print {
             @page {
               size: A4;
-              margin: 6mm;
-            }
+              margin: 10mm;
+            }}
             body {
               print-color-adjust: exact;
               -webkit-print-color-adjust: exact;
@@ -106,111 +106,111 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
         `}</style>
         
         {/* Header */}
-        <div className="border-b border-blue-600 pb-1 mb-1">
+        <div className="border-b-2 border-blue-600 pb-3 mb-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <img 
                 src="/Logo ValeFish.png" 
                 alt="ValeFish Logo" 
-                style={{ height: '40px', width: 'auto' }}
+                style={{ height: '60px', width: 'auto' }}
               />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {/* QR Code */}
               <div className="text-center">
                 <QRCodeSVG 
                   value={`http://72.61.62.17:8888/lote/${lote.id || (lote as any)._id || ''}`}
-                  size={50}
+                  size={75}
                   level="M"
                   includeMargin={false}
                 />
-                <p style={{ fontSize: '7px', margin: '1px 0 0 0' }} className="text-gray-500">Lote {lote.numeroLote}</p>
+                <p style={{ fontSize: '9px', margin: '3px 0 0 0' }} className="text-gray-500">Lote {lote.numeroLote}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Informações Básicas */}
-        <div className="mb-1">
-          <h2 style={{ fontSize: '11px', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800">
+        <div className="mb-3">
+          <h2 style={{ fontSize: '14px', margin: '0 0 6px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
             Informações do Lote
           </h2>
-          <div className="grid grid-cols-6 gap-1" style={{ fontSize: '9px' }}>
-            <div className="bg-gray-50 px-1 py-0.5 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Data Produção</p>
-              <p className="font-semibold" style={{ fontSize: '9px', margin: 0 }}>{lote.dataProducao ? new Date(lote.dataProducao).toLocaleDateString('pt-BR') : '-'}</p>
+          <div className="grid grid-cols-6 gap-2" style={{ fontSize: '11px' }}>
+            <div className="bg-gray-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Data Produção</p>
+              <p className="font-semibold" style={{ fontSize: '12px', margin: 0 }}>{lote.dataProducao ? new Date(lote.dataProducao).toLocaleDateString('pt-BR') : '-'}</p>
             </div>
-            <div className="bg-gray-50 px-1 py-0.5 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Processo</p>
-              <p className="font-semibold" style={{ fontSize: '9px', margin: 0 }}>{lote.processo}</p>
+            <div className="bg-gray-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Processo</p>
+              <p className="font-semibold" style={{ fontSize: '12px', margin: 0 }}>{lote.processo}</p>
             </div>
-            <div className="bg-gray-50 px-1 py-0.5 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Fornecedor</p>
-              <p className="font-semibold" style={{ fontSize: '9px', margin: 0 }}>{lote.fornecedor}</p>
+            <div className="bg-gray-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Fornecedor</p>
+              <p className="font-semibold" style={{ fontSize: '12px', margin: 0 }}>{lote.fornecedor}</p>
             </div>
-            <div className="bg-gray-50 px-1 py-0.5 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Nota Fiscal</p>
-              <p className="font-semibold" style={{ fontSize: '9px', margin: 0 }}>{lote.numeroNF || '-'}</p>
+            <div className="bg-gray-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Nota Fiscal</p>
+              <p className="font-semibold" style={{ fontSize: '12px', margin: 0 }}>{lote.numeroNF || '-'}</p>
             </div>
-            <div className="bg-blue-50 px-1 py-0.5 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Nº Lote</p>
-              <p className="font-bold text-blue-900" style={{ fontSize: '10px', margin: 0 }}>{lote.numeroLote}</p>
+            <div className="bg-blue-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Nº Lote</p>
+              <p className="font-bold text-blue-900" style={{ fontSize: '13px', margin: 0 }}>{lote.numeroLote}</p>
             </div>
-            <div className="bg-yellow-50 px-1 py-0.5 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Valor NF</p>
-              <p className="font-bold text-yellow-900" style={{ fontSize: '10px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+            <div className="bg-yellow-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Valor NF</p>
+              <p className="font-bold text-yellow-900" style={{ fontSize: '13px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
             </div>
           </div>
         </div>
 
         {/* Nota Fiscal e Peso */}
-        <div className="mb-1">
-          <h2 style={{ fontSize: '10px', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800">
+        <div className="mb-3">
+          <h2 style={{ fontSize: '13px', margin: '0 0 6px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
             Nota Fiscal e Peso
           </h2>
-          <div className="flex gap-1 mb-1" style={{ fontSize: '9px' }}>
-            <div className="bg-blue-100 border border-blue-300 px-2 py-0.5 rounded text-center flex-1">
-              <p className="font-medium text-blue-700 mb-0" style={{ fontSize: '7px' }}>Total NF</p>
-              <p className="font-bold text-blue-900" style={{ fontSize: '10px', margin: 0 }}>{totalNF.toFixed(2)} kg</p>
+          <div className="flex gap-2 mb-2" style={{ fontSize: '11px' }}>
+            <div className="bg-blue-100 border border-blue-300 p-2 rounded text-center flex-1">
+              <p className="font-medium text-blue-700 mb-0" style={{ fontSize: '10px' }}>Total NF</p>
+              <p className="font-bold text-blue-900" style={{ fontSize: '14px', margin: 0 }}>{totalNF.toFixed(2)} kg</p>
             </div>
-            <div className="bg-green-100 border border-green-300 px-2 py-0.5 rounded text-center flex-1">
-              <p className="font-medium text-green-700 mb-0" style={{ fontSize: '7px' }}>Total Salão</p>
-              <p className="font-bold text-green-900" style={{ fontSize: '10px', margin: 0 }}>{totalSalao.toFixed(2)} kg</p>
+            <div className="bg-green-100 border border-green-300 p-2 rounded text-center flex-1">
+              <p className="font-medium text-green-700 mb-0" style={{ fontSize: '10px' }}>Total Salão</p>
+              <p className="font-bold text-green-900" style={{ fontSize: '14px', margin: 0 }}>{totalSalao.toFixed(2)} kg</p>
             </div>
-            <div className={`border px-2 py-0.5 rounded text-center flex-1 ${
+            <div className={`border p-2 rounded text-center flex-1 ${
               gap >= 0 ? 'bg-orange-100 border-orange-300' : 'bg-red-100 border-red-300'
             }`}>
-              <p className={`font-medium mb-0 ${gap >= 0 ? 'text-orange-700' : 'text-red-700'}`} style={{ fontSize: '7px' }}>Gap</p>
-              <p className={`font-bold ${gap >= 0 ? 'text-orange-900' : 'text-red-900'}`} style={{ fontSize: '10px', margin: 0 }}>{gap.toFixed(2)} kg</p>
+              <p className={`font-medium mb-0 ${gap >= 0 ? 'text-orange-700' : 'text-red-700'}`} style={{ fontSize: '10px' }}>Gap</p>
+              <p className={`font-bold ${gap >= 0 ? 'text-orange-900' : 'text-red-900'}`} style={{ fontSize: '14px', margin: 0 }}>{gap.toFixed(2)} kg</p>
             </div>
           </div>
           
-          <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '8px' }}>
+          <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '11px' }}>
             <thead>
               <tr className="bg-gray-200">
-                <th className="border border-gray-300 px-1 py-0.5 text-left" style={{ fontSize: '7px', textTransform: 'uppercase' }}>Tipo</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '7px', textTransform: 'uppercase' }}>P (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '7px', textTransform: 'uppercase' }}>M (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '7px', textTransform: 'uppercase' }}>G (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '7px', textTransform: 'uppercase' }}>GG (kg)</th>
+                <th className="border border-gray-300 p-2 text-left" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Tipo</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>P (kg)</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>M (kg)</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>G (kg)</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>GG (kg)</th>
 
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-1 py-0.5 font-medium">Nota Fiscal</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoNotaFiscal?.P || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoNotaFiscal?.M || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoNotaFiscal?.G || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoNotaFiscal?.GG || 0}</td>
+                <td className="border border-gray-300 p-2 font-medium">Nota Fiscal</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.pesoNotaFiscal?.P || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.pesoNotaFiscal?.M || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.pesoNotaFiscal?.G || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.pesoNotaFiscal?.GG || 0}</td>
 
               </tr>
               <tr>
-                <td className="border border-gray-300 px-1 py-0.5 font-medium">Salão</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoSalao?.P || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoSalao?.M || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoSalao?.G || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoSalao?.GG || 0}</td>
+                <td className="border border-gray-300 p-2 font-medium">Salão</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.pesoSalao?.P || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.pesoSalao?.M || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.pesoSalao?.G || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.pesoSalao?.GG || 0}</td>
 
               </tr>
             </tbody>
@@ -218,55 +218,55 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
         </div>
 
         {/* Filetagem */}
-        <div className="mb-1">
-          <h2 style={{ fontSize: '10px', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800">
+        <div className="mb-3">
+          <h2 style={{ fontSize: '13px', margin: '0 0 6px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
             Filetagem
           </h2>
-          <div className="flex gap-1 mb-1" style={{ fontSize: '9px' }}>
-            <div className="bg-blue-100 border border-blue-300 px-2 py-0.5 rounded text-center flex-1">
-              <p className="font-medium text-blue-700 mb-0" style={{ fontSize: '7px' }}>In Natura</p>
-              <p className="font-bold text-blue-900" style={{ fontSize: '10px', margin: 0 }}>{totalInNatura.toFixed(2)} kg</p>
+          <div className="flex gap-2 mb-2" style={{ fontSize: '11px' }}>
+            <div className="bg-blue-100 border border-blue-300 p-2 rounded text-center flex-1">
+              <p className="font-medium text-blue-700 mb-0" style={{ fontSize: '10px' }}>In Natura</p>
+              <p className="font-bold text-blue-900" style={{ fontSize: '14px', margin: 0 }}>{totalInNatura.toFixed(2)} kg</p>
             </div>
-            <div className="bg-cyan-100 border border-cyan-300 px-2 py-0.5 rounded text-center flex-1">
-              <p className="font-medium text-cyan-700 mb-0" style={{ fontSize: '7px' }}>Congelado</p>
-              <p className="font-bold text-cyan-900" style={{ fontSize: '10px', margin: 0 }}>{totalCongelado.toFixed(2)} kg</p>
+            <div className="bg-cyan-100 border border-cyan-300 p-2 rounded text-center flex-1">
+              <p className="font-medium text-cyan-700 mb-0" style={{ fontSize: '10px' }}>Congelado</p>
+              <p className="font-bold text-cyan-900" style={{ fontSize: '14px', margin: 0 }}>{totalCongelado.toFixed(2)} kg</p>
             </div>
-            <div className="bg-green-100 border border-green-300 px-2 py-0.5 rounded text-center flex-1">
-              <p className="font-medium text-green-700 mb-0" style={{ fontSize: '7px' }}>Diferença</p>
-              <p className="font-bold text-green-900" style={{ fontSize: '10px', margin: 0 }}>{diferencaFile.toFixed(2)} kg</p>
+            <div className="bg-green-100 border border-green-300 p-2 rounded text-center flex-1">
+              <p className="font-medium text-green-700 mb-0" style={{ fontSize: '10px' }}>Diferença</p>
+              <p className="font-bold text-green-900" style={{ fontSize: '14px', margin: 0 }}>{diferencaFile.toFixed(2)} kg</p>
             </div>
-            <div className="bg-purple-100 border border-purple-300 px-2 py-0.5 rounded text-center flex-1">
-              <p className="font-medium text-purple-700 mb-0" style={{ fontSize: '7px' }}>Rendimento</p>
-              <p className="font-bold text-purple-900" style={{ fontSize: '10px', margin: 0 }}>{rendimento.toFixed(1)}%</p>
+            <div className="bg-purple-100 border border-purple-300 p-2 rounded text-center flex-1">
+              <p className="font-medium text-purple-700 mb-0" style={{ fontSize: '10px' }}>Rendimento</p>
+              <p className="font-bold text-purple-900" style={{ fontSize: '14px', margin: 0 }}>{rendimento.toFixed(1)}%</p>
             </div>
           </div>
 
-          <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '9px' }}>
+          <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '11px' }}>
             <thead>
               <tr className="bg-gray-200">
-                <th className="border border-gray-300 p-1 text-left">Tipo</th>
-                <th className="border border-gray-300 p-1 text-right">P (kg)</th>
-                <th className="border border-gray-300 p-1 text-right">M (kg)</th>
-                <th className="border border-gray-300 p-1 text-right">G (kg)</th>
-                <th className="border border-gray-300 p-1 text-right">GG (kg)</th>
+                <th className="border border-gray-300 p-2 text-left" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Tipo</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>P (kg)</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>M (kg)</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>G (kg)</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>GG (kg)</th>
 
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-1 py-0.5 font-medium">Filé In Natura</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileInNatura?.P || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileInNatura?.M || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileInNatura?.G || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileInNatura?.GG || 0}</td>
+                <td className="border border-gray-300 p-2 font-medium">Filé In Natura</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.fileInNatura?.P || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.fileInNatura?.M || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.fileInNatura?.G || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.fileInNatura?.GG || 0}</td>
 
               </tr>
               <tr>
-                <td className="border border-gray-300 px-1 py-0.5 font-medium">Filé Congelado</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileCongelado?.P || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileCongelado?.M || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileCongelado?.G || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileCongelado?.GG || 0}</td>
+                <td className="border border-gray-300 p-2 font-medium">Filé Congelado</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.fileCongelado?.P || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.fileCongelado?.M || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.fileCongelado?.G || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.fileCongelado?.GG || 0}</td>
 
               </tr>
             </tbody>
@@ -275,18 +275,18 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
 
         {/* Embalagem */}
         {lote.status === 'finalizado' && (
-          <div className="mb-1">
-            <h2 style={{ fontSize: '10px', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800">
+          <div className="mb-3">
+            <h2 style={{ fontSize: '13px', margin: '0 0 6px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
               Embalagem
             </h2>
-            <div className="grid grid-cols-4 gap-1" style={{ fontSize: '9px' }}>
-              <div className="bg-gray-50 px-1 py-0.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Tipo Filé</p>
-                <p className="font-semibold" style={{ margin: 0, fontSize: '8px' }}>{lote.tipoFile || '-'}</p>
+            <div className="grid grid-cols-4 gap-2" style={{ fontSize: '11px' }}>
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Tipo Filé</p>
+                <p className="font-semibold" style={{ margin: 0, fontSize: '11px' }}>{lote.tipoFile || '-'}</p>
               </div>
-              <div className="bg-gray-50 px-1 py-0.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Total Pacotes</p>
-                <p className="font-bold" style={{ fontSize: '9px', margin: 0 }}>
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Total Pacotes</p>
+                <p className="font-bold" style={{ fontSize: '12px', margin: 0 }}>
                   {(() => {
                     const tipoFile = lote.tipoFile || '400g';
                     const caixas = lote.caixas || lote.qtdMaster || 0;
@@ -297,9 +297,9 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                   })()}
                 </p>
               </div>
-              <div className="bg-gray-50 px-1 py-0.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Total Caixas</p>
-                <p className="font-bold" style={{ fontSize: '9px', margin: 0 }}>
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Total Caixas</p>
+                <p className="font-bold" style={{ fontSize: '12px', margin: 0 }}>
                   {(() => {
                     const tipoFile = lote.tipoFile || '400g';
                     const caixas = lote.caixas || lote.qtdMaster || 0;
@@ -310,72 +310,72 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                   })()}
                 </p>
               </div>
-              <div className="bg-gray-50 px-1 py-0.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Filé Embalado</p>
-                <p className="font-bold" style={{ fontSize: '9px', margin: 0 }}>{calcularTotal(lote.fileEmbalado).toFixed(2)} kg</p>
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Filé Embalado</p>
+                <p className="font-bold" style={{ fontSize: '12px', margin: 0 }}>{calcularTotal(lote.fileEmbalado).toFixed(2)} kg</p>
               </div>
-              <div className="bg-blue-50 px-1 py-0.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Custo Pacotes</p>
-                <p className="font-bold text-blue-900" style={{ fontSize: '9px', margin: 0 }}>R$ {(lote.custoPacotes || custos.custoPacotes).toFixed(2)}</p>
+              <div className="bg-blue-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Pacotes</p>
+                <p className="font-bold text-blue-900" style={{ fontSize: '12px', margin: 0 }}>R$ {(lote.custoPacotes || custos.custoPacotes).toFixed(2)}</p>
               </div>
-              <div className="bg-purple-50 px-1 py-0.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Custo Caixas</p>
-                <p className="font-bold text-purple-900" style={{ fontSize: '9px', margin: 0 }}>R$ {(lote.custoCaixas || custos.custoCaixas).toFixed(2)}</p>
+              <div className="bg-purple-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Caixas</p>
+                <p className="font-bold text-purple-900" style={{ fontSize: '12px', margin: 0 }}>R$ {(lote.custoCaixas || custos.custoCaixas).toFixed(2)}</p>
               </div>
-              <div className="bg-green-50 px-1 py-0.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Aprov. NF</p>
-                <p className="font-bold text-green-900" style={{ fontSize: '9px', margin: 0 }}>{lote.aprovNotaFiscal || 0}%</p>
+              <div className="bg-green-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Aprov. NF</p>
+                <p className="font-bold text-green-900" style={{ fontSize: '12px', margin: 0 }}>{lote.aprovNotaFiscal || 0}%</p>
               </div>
-              <div className="bg-green-50 px-1 py-0.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Aprov. Salão</p>
-                <p className="font-bold text-green-900" style={{ fontSize: '9px', margin: 0 }}>{lote.aprovSalao || 0}%</p>
+              <div className="bg-green-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Aprov. Salão</p>
+                <p className="font-bold text-green-900" style={{ fontSize: '12px', margin: 0 }}>{lote.aprovSalao || 0}%</p>
               </div>
-              <div className="bg-gray-50 px-1 py-0.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Data Fabric.</p>
-                <p className="font-semibold" style={{ fontSize: '8px', margin: 0 }}>{lote.dataFabricacao ? new Date(lote.dataFabricacao).toLocaleDateString('pt-BR') : '-'}</p>
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Data Fabric.</p>
+                <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{lote.dataFabricacao ? new Date(lote.dataFabricacao).toLocaleDateString('pt-BR') : '-'}</p>
               </div>
-              <div className="bg-gray-50 px-1 py-0.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Data Validade</p>
-                <p className="font-semibold" style={{ fontSize: '8px', margin: 0 }}>{lote.dataValidade ? new Date(lote.dataValidade).toLocaleDateString('pt-BR') : '-'}</p>
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Data Validade</p>
+                <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{lote.dataValidade ? new Date(lote.dataValidade).toLocaleDateString('pt-BR') : '-'}</p>
               </div>
             </div>
             
             {tabelaCustos && (
-              <div className="mt-1">
-                <h3 style={{ fontSize: '10px', margin: '0 0 1px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800">
+              <div className="mt-3">
+                <h3 style={{ fontSize: '12px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
                   Análise de Custos
                 </h3>
-                <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '8px' }}>
+                <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '11px' }}>
                   <thead>
                     <tr className="bg-gray-200">
-                      <th className="border border-gray-300 px-1 py-0.5 text-left" style={{ fontSize: '7px', textTransform: 'uppercase' }}>Unidade</th>
-                      <th className="border border-gray-300 px-1 py-0.5 text-right bg-yellow-100" style={{ fontSize: '7px', textTransform: 'uppercase' }}>Filé</th>
-                      <th className="border border-gray-300 px-1 py-0.5 text-right bg-blue-100" style={{ fontSize: '7px', textTransform: 'uppercase' }}>Embalag.</th>
-                      <th className="border border-gray-300 px-1 py-0.5 text-right bg-green-100" style={{ fontSize: '7px', textTransform: 'uppercase' }}>Serviço</th>
-                      <th className="border border-gray-300 px-1 py-0.5 text-right bg-purple-100" style={{ fontSize: '7px', textTransform: 'uppercase' }}>Total</th>
+                      <th className="border border-gray-300 p-2 text-left" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Unidade</th>
+                      <th className="border border-gray-300 p-2 text-right bg-yellow-100" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Filé (R$)</th>
+                      <th className="border border-gray-300 p-2 text-right bg-blue-100" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Embalag. (R$)</th>
+                      <th className="border border-gray-300 p-2 text-right bg-green-100" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Serviço (R$)</th>
+                      <th className="border border-gray-300 p-2 text-right bg-purple-100" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Total (R$)</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="border border-gray-300 px-1 py-0.5 font-medium">Pacote</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">{tabelaCustos.custoFile.pacote.toFixed(2)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">{tabelaCustos.custoEmbalagem.pacote.toFixed(2)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">{tabelaCustos.custoServico.pacote.toFixed(2)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right font-bold">{tabelaCustos.custoTotal.pacote.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 font-medium">Pacote</td>
+                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoFile.pacote.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoEmbalagem.pacote.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoServico.pacote.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right font-bold">{tabelaCustos.custoTotal.pacote.toFixed(2)}</td>
                     </tr>
                     <tr className="bg-yellow-50">
-                      <td className="border border-gray-300 px-1 py-0.5 font-medium">KG</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">{tabelaCustos.custoFile.kg.toFixed(2)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">{tabelaCustos.custoEmbalagem.kg.toFixed(2)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">{tabelaCustos.custoServico.kg.toFixed(2)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right font-bold">{tabelaCustos.custoTotal.kg.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 font-medium">KG</td>
+                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoFile.kg.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoEmbalagem.kg.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoServico.kg.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right font-bold">{tabelaCustos.custoTotal.kg.toFixed(2)}</td>
                     </tr>
                     <tr>
-                      <td className="border border-gray-300 px-1 py-0.5 font-medium">Caixa</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">{tabelaCustos.custoFile.caixa.toFixed(2)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">{tabelaCustos.custoEmbalagem.caixa.toFixed(2)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">{tabelaCustos.custoServico.caixa.toFixed(2)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right font-bold">{tabelaCustos.custoTotal.caixa.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 font-medium">Caixa</td>
+                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoFile.caixa.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoEmbalagem.caixa.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">{tabelaCustos.custoServico.caixa.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right font-bold">{tabelaCustos.custoTotal.caixa.toFixed(2)}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -385,10 +385,10 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
         )}
 
         {/* Footer */}
-        <div className="mt-1 pt-1 border-t border-gray-300 text-center" style={{ fontSize: '7px' }}>
+        <div className="mt-4 pt-3 border-t border-gray-300 text-center" style={{ fontSize: '10px' }}>
           <p className="text-gray-600" style={{ margin: 0 }}>ValeFish - Sistema de Gestão de Lotes</p>
-          <p className="text-gray-500" style={{ fontSize: '6px', margin: '0' }}>
-            Gerado em {new Date().toLocaleString('pt-BR')}{username && ` por ${username}`}
+          <p className="text-gray-500" style={{ fontSize: '9px', margin: '2px 0 0 0' }}>
+            Documento gerado automaticamente em {new Date().toLocaleString('pt-BR')}{username && ` por ${username}`}
           </p>
         </div>
       </div>
