@@ -22,6 +22,24 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
     const diferencaFile = totalCongelado - totalInNatura;
     const rendimento = totalInNatura > 0 ? (((totalCongelado / totalInNatura) - 1) * 100) : 0;
 
+    // Calcular custos de embalagem
+    const calcularCustos = () => {
+      const tipoFile = lote.tipoFile || '400g';
+      const caixas = lote.caixas || lote.qtdMaster || 0;
+      const pacotes = lote.pacotes || lote.qtdSacos || 0;
+      const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
+      const totalPacotes = caixas * pacotesPorCaixa + pacotes;
+      const totalCaixas = pacotes / pacotesPorCaixa + caixas;
+      
+      const custoPorPacote = tipoFile === '400g' ? 0.4295 : 0.5515;
+      const custoPacotes = totalPacotes * custoPorPacote;
+      const custoCaixas = totalCaixas * 6.05;
+      
+      return { custoPacotes, custoCaixas };
+    };
+    
+    const custos = calcularCustos();
+
     return (
       <div ref={ref} className="p-8 bg-white" style={{ width: '210mm', fontSize: '13px' }}>
         <style>{`
@@ -267,11 +285,11 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
               </div>
               <div className="bg-blue-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Custo de Pacotes</p>
-                <p className="font-bold text-blue-900" style={{ fontSize: '13px', margin: 0 }}>R$ {(lote.custoPacotes || 0).toFixed(2)}</p>
+                <p className="font-bold text-blue-900" style={{ fontSize: '13px', margin: 0 }}>R$ {(lote.custoPacotes || custos.custoPacotes).toFixed(2)}</p>
               </div>
               <div className="bg-purple-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Custo de Caixas</p>
-                <p className="font-bold text-purple-900" style={{ fontSize: '13px', margin: 0 }}>R$ {(lote.custoCaixas || 0).toFixed(2)}</p>
+                <p className="font-bold text-purple-900" style={{ fontSize: '13px', margin: 0 }}>R$ {(lote.custoCaixas || custos.custoCaixas).toFixed(2)}</p>
               </div>
               <div className="bg-green-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Aproveitamento Nota Fiscal</p>
