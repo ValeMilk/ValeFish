@@ -71,7 +71,24 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
       const multiplicadorServico = tipoFile === '400g' ? 4 : 8;
       const servicoPacket = (6 / 10) * multiplicadorServico;
       const servicoKg = 6.00;
-      const servicoBox = 57.60;\n      \n      // TOTAL\n      const totalPacket = filePacket + embalagemPacket + servicoPacket;\n      const totalKg = fileKg + embalagemKg + servicoKg;\n      const totalBox = fileBox + embalagemBox + servicoBox;\n      \n      return {\n        custoFile: { pacote: filePacket, kg: fileKg, caixa: fileBox },\n        custoEmbalagem: { pacote: embalagemPacket, kg: embalagemKg, caixa: embalagemBox },\n        custoServico: { pacote: servicoPacket, kg: servicoKg, caixa: servicoBox },\n        custoTotal: { pacote: totalPacket, kg: totalKg, caixa: totalBox }\n      };\n    };\n    \n    const tabelaCustos = lote.custoFile && lote.custoEmbalagem && lote.custoServico && lote.custoTotal\n      ? { custoFile: lote.custoFile, custoEmbalagem: lote.custoEmbalagem, custoServico: lote.custoServico, custoTotal: lote.custoTotal }\n      : calcularTabelaCustos();
+      const servicoBox = 57.60;
+      
+      // TOTAL
+      const totalPacket = filePacket + embalagemPacket + servicoPacket;
+      const totalKg = fileKg + embalagemKg + servicoKg;
+      const totalBox = fileBox + embalagemBox + servicoBox;
+      
+      return {
+        custoFile: { pacote: filePacket, kg: fileKg, caixa: fileBox },
+        custoEmbalagem: { pacote: embalagemPacket, kg: embalagemKg, caixa: embalagemBox },
+        custoServico: { pacote: servicoPacket, kg: servicoKg, caixa: servicoBox },
+        custoTotal: { pacote: totalPacket, kg: totalKg, caixa: totalBox }
+      };
+    };
+    
+    const tabelaCustos = lote.custoFile && lote.custoEmbalagem && lote.custoServico && lote.custoTotal
+      ? { custoFile: lote.custoFile, custoEmbalagem: lote.custoEmbalagem, custoServico: lote.custoServico, custoTotal: lote.custoTotal }
+      : calcularTabelaCustos();
 
     return (
       <div ref={ref} className="p-8 bg-white" style={{ width: '210mm', fontSize: '13px' }}>
