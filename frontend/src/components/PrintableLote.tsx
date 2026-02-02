@@ -265,6 +265,14 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Filé Embalado Total</p>
                 <p className="font-bold" style={{ fontSize: '13px', margin: 0 }}>{calcularTotal(lote.fileEmbalado).toFixed(2)} kg</p>
               </div>
+              <div className="bg-blue-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Custo de Pacotes</p>
+                <p className="font-bold text-blue-900" style={{ fontSize: '13px', margin: 0 }}>R$ {(lote.custoPacotes || 0).toFixed(2)}</p>
+              </div>
+              <div className="bg-purple-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Custo de Caixas</p>
+                <p className="font-bold text-purple-900" style={{ fontSize: '13px', margin: 0 }}>R$ {(lote.custoCaixas || 0).toFixed(2)}</p>
+              </div>
               <div className="bg-green-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Aproveitamento Nota Fiscal</p>
                 <p className="font-bold text-green-900" style={{ fontSize: '13px', margin: 0 }}>{lote.aprovNotaFiscal || 0}%</p>

@@ -43,6 +43,10 @@ export interface LoteData {
   // Aproveitamento (calculado)
   aprovNotaFiscal?: number;
   aprovSalao?: number;
+  
+  // Custos (calculado)
+  custoPacotes?: number;
+  custoCaixas?: number;
 }
 
 const createEmptyWeightBySize = (): WeightBySize => ({

@@ -97,6 +97,25 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
     }
   }, [lote.fileEmbalado, lote.pesoNotaFiscal, lote.pesoSalao]);
 
+  // Recalcular custos automaticamente quando caixas/pacotes mudarem
+  useEffect(() => {
+    if ((lote.qtdMaster || lote.qtdSacos) && tipoFile) {
+      const caixas = lote.qtdMaster || 0;
+      const pacotes = lote.qtdSacos || 0;
+      const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
+      const totalPacotes = caixas * pacotesPorCaixa + pacotes;
+      const totalCaixas = pacotes / pacotesPorCaixa + caixas;
+      
+      // Custo por pacote depende do tipo de filé
+      const custoPorPacote = tipoFile === '400g' ? 0.4295 : 0.5515;
+      const novoCustoPacotes = parseFloat((totalPacotes * custoPorPacote).toFixed(2));
+      const novoCustoCaixas = parseFloat((totalCaixas * 6.05).toFixed(2));
+      
+      if (lote.custoPacotes !== novoCustoPacotes) onChange('custoPacotes', novoCustoPacotes);
+      if (lote.custoCaixas !== novoCustoCaixas) onChange('custoCaixas', novoCustoCaixas);
+    }
+  }, [lote.qtdMaster, lote.qtdSacos, tipoFile]);
+
   const handleSizeChange = (field: keyof LoteData, size: FishSize, value: string) => {
     const current = lote[field] as any || { P: 0, M: 0, G: 0, GG: 0 };
     onChange(field, {
@@ -450,9 +469,21 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
         ) : undefined}
       >
         <div className="mb-4 p-3 rounded-lg bg-muted/50 border border-muted-foreground/20">
-          <p className="text-sm font-medium text-foreground">
+          <p className="text-sm font-medium text-foreground mb-2">
             Tipo de Filé selecionado: <span className="font-bold text-primary">{tipoFile}</span>
           </p>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <div className="bg-blue-50 dark:bg-blue-950 p-2 rounded">
+              <p className="text-xs text-muted-foreground">Custo de Pacotes</p>
+              <p className="font-bold text-blue-700 dark:text-blue-300">R$ {(lote.custoPacotes || 0).toFixed(2)}</p>
+              <p className="text-xs text-muted-foreground">{calcularKgMaster() + calcularKgSacos() > 0 ? `${(((lote.custoPacotes || 0) / (calcularKgMaster() + calcularKgSacos())) || 0).toFixed(4)} /kg` : '-'}</p>
+            </div>
+            <div className="bg-purple-50 dark:bg-purple-950 p-2 rounded">
+              <p className="text-xs text-muted-foreground">Custo de Caixas</p>
+              <p className="font-bold text-purple-700 dark:text-purple-300">R$ {(lote.custoCaixas || 0).toFixed(2)}</p>
+              <p className="text-xs text-muted-foreground">{calcularKgMaster() + calcularKgSacos() > 0 ? `${(((lote.custoCaixas || 0) / (calcularKgMaster() + calcularKgSacos())) || 0).toFixed(4)} /kg` : '-'}</p>
+            </div>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
