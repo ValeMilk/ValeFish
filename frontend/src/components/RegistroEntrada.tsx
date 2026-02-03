@@ -560,9 +560,9 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
                   <thead>
                     <tr className="border-b border-gray-200 dark:border-gray-700">
                       <th className="text-left py-1 px-2 text-muted-foreground font-medium">Unidade</th>
-                      <th className="text-right py-1 px-2 text-yellow-700 dark:text-yellow-400 font-medium">Fil\u00e9</th>
+                      <th className="text-right py-1 px-2 text-yellow-700 dark:text-yellow-400 font-medium">Filé</th>
                       <th className="text-right py-1 px-2 text-blue-700 dark:text-blue-400 font-medium">Embalagem</th>
-                      <th className="text-right py-1 px-2 text-green-700 dark:text-green-400 font-medium">Servi\u00e7o</th>
+                      <th className="text-right py-1 px-2 text-green-700 dark:text-green-400 font-medium">Serviço</th>
                       <th className="text-right py-1 px-2 text-purple-700 dark:text-purple-400 font-medium">Total</th>
                     </tr>
                   </thead>
