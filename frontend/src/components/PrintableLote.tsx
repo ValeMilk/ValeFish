@@ -22,6 +22,12 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
     const diferencaFile = totalCongelado - totalInNatura;
     const rendimento = totalInNatura > 0 ? (((totalCongelado / totalInNatura) - 1) * 100) : 0;
 
+    // Função de arredondamento preciso para evitar erros de ponto flutuante
+    const arredondar = (valor: number, casas: number = 2): number => {
+      const multiplicador = Math.pow(10, casas);
+      return Math.round(valor * multiplicador) / multiplicador;
+    };
+
     // Calcular custos de embalagem
     const calcularCustos = () => {
       const tipoFile = lote.tipoFile || '400g';
@@ -56,27 +62,27 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
       }
       
       // FILÉ
-      const filePacket = valorNF / totalPacotes;
-      const fileKg = valorNF / fileEmbalado;
-      const fileBox = valorNF / totalCaixas;
+      const filePacket = arredondar(valorNF / totalPacotes);
+      const fileKg = arredondar(valorNF / fileEmbalado);
+      const fileBox = arredondar(valorNF / totalCaixas);
       
       // EMBALAGEM
       const custoPacoteBase = tipoFile === '400g' ? 0.4295 : 0.5515;
-      const embalagemPacket = custoPacoteBase + (6.05 / 24);
+      const embalagemPacket = arredondar(custoPacoteBase + (6.05 / 24));
       const divisorKg = tipoFile === '400g' ? 4 : 8;
-      const embalagemKg = (embalagemPacket / divisorKg) * 10;
-      const embalagemBox = embalagemKg * 9.6;
+      const embalagemKg = arredondar((embalagemPacket / divisorKg) * 10);
+      const embalagemBox = arredondar(embalagemKg * 9.6);
       
       // SERVIÇO
       const multiplicadorServico = tipoFile === '400g' ? 4 : 8;
-      const servicoPacket = (6 / 10) * multiplicadorServico;
+      const servicoPacket = arredondar((6 / 10) * multiplicadorServico);
       const servicoKg = 6.00;
       const servicoBox = 57.60;
       
       // TOTAL
-      const totalPacket = filePacket + embalagemPacket + servicoPacket;
-      const totalKg = fileKg + embalagemKg + servicoKg;
-      const totalBox = fileBox + embalagemBox + servicoBox;
+      const totalPacket = arredondar(filePacket + embalagemPacket + servicoPacket);
+      const totalKg = arredondar(fileKg + embalagemKg + servicoKg);
+      const totalBox = arredondar(fileBox + embalagemBox + servicoBox);
       
       return {
         custoFile: { pacote: filePacket, kg: fileKg, caixa: fileBox },
