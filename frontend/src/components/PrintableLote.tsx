@@ -93,9 +93,8 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
       };
     };
     
-    const tabelaCustos = lote.custoFile && lote.custoEmbalagem && lote.custoServico && lote.custoTotal
-      ? { custoFile: lote.custoFile, custoEmbalagem: lote.custoEmbalagem, custoServico: lote.custoServico, custoTotal: lote.custoTotal }
-      : calcularTabelaCustos();
+    // Sempre calcular na hora para garantir precisão
+    const tabelaCustos = calcularTabelaCustos();
 
     return (
       <div ref={ref} className="p-6 bg-white" style={{ width: '210mm', fontSize: '12px', lineHeight: '1.4' }}>
