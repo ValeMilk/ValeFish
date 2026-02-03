@@ -22,6 +22,13 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
     const diferencaFile = totalCongelado - totalInNatura;
     const rendimento = totalInNatura > 0 ? (((totalCongelado / totalInNatura) - 1) * 100) : 0;
 
+    // Função para formatar moeda com arredondamento matemático correto
+    const formatarMoeda = (valor: number): string => {
+      // Arredonda usando Math.round para evitar erros de ponto flutuante
+      const valorArredondado = Math.round((valor + Number.EPSILON) * 100) / 100;
+      return valorArredondado.toFixed(2);
+    };
+
     // Calcular custos de embalagem
     const calcularCustos = () => {
       const tipoFile = lote.tipoFile || '400g';
@@ -358,24 +365,24 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                   <tbody>
                     <tr>
                       <td className="border border-gray-300 p-2 font-medium">Pacote</td>
-                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoFile.pacote.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoEmbalagem.pacote.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoServico.pacote.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right font-bold">R$ {tabelaCustos.custoTotal.pacote.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.pacote)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.pacote)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.pacote)}</td>
+                      <td className="border border-gray-300 p-2 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.pacote)}</td>
                     </tr>
                     <tr className="bg-yellow-50">
                       <td className="border border-gray-300 p-2 font-medium">KG</td>
-                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoFile.kg.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoEmbalagem.kg.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoServico.kg.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right font-bold">R$ {tabelaCustos.custoTotal.kg.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.kg)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.kg)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.kg)}</td>
+                      <td className="border border-gray-300 p-2 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.kg)}</td>
                     </tr>
                     <tr>
                       <td className="border border-gray-300 p-2 font-medium">Caixa</td>
-                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoFile.caixa.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoEmbalagem.caixa.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right">R$ {tabelaCustos.custoServico.caixa.toFixed(2)}</td>
-                      <td className="border border-gray-300 p-2 text-right font-bold">R$ {tabelaCustos.custoTotal.caixa.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.caixa)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.caixa)}</td>
+                      <td className="border border-gray-300 p-2 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.caixa)}</td>
+                      <td className="border border-gray-300 p-2 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.caixa)}</td>
                     </tr>
                   </tbody>
                 </table>
