@@ -554,7 +554,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
           {/* Tabela de An\u00e1lise de Custos */}
           {lote.custoFile && lote.custoEmbalagem && lote.custoServico && lote.custoTotal && (
             <div className="mt-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-              <p className="text-sm font-semibold text-foreground mb-2">\ud83d\udcc8 An\u00e1lise de Custos</p>
+              <p className="text-sm font-semibold text-foreground mb-2">Análise de Custos</p>
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
