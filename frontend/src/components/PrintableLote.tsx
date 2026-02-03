@@ -54,7 +54,8 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
       const pacotes = lote.pacotes || lote.qtdSacos || 0;
       const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
       const totalPacotes = caixas * pacotesPorCaixa + pacotes;
-      const totalCaixas = pacotes / pacotesPorCaixa + caixas;
+      // Arredondar totalCaixas para 2 casas decimais ANTES de usar nos cálculos
+      const totalCaixas = Math.round((pacotes / pacotesPorCaixa + caixas) * 100) / 100;
       const fileEmbalado = calcularTotal(lote.fileEmbalado);
       const valorNF = lote.valorNF || 0;
       
