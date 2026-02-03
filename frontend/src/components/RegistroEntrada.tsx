@@ -244,7 +244,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
   const calcularKgMaster = () => {
     if (!lote.qtdMaster) return 0;
     // Fórmula: qtdMaster * (gramatura * 24)
-    return (lote.qtdMaster * (gramatura * 24)) / 1000; // dividido por 1000 para converter de gramas para kg
+    return (lote.qtdMaster * 9.6) / 1000; // dividido por 1000 para converter de gramas para kg
   };
 
   const calcularKgSacos = () => {
