@@ -220,6 +220,14 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <td className="border border-gray-300 p-2 text-right">{lote.pesoSalao?.GG || 0}</td>
 
               </tr>
+              <tr className="bg-blue-50">
+                <td className="border border-gray-300 p-2 font-medium">Nº Basquetas</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.numBasquetas?.P || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.numBasquetas?.M || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.numBasquetas?.G || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.numBasquetas?.GG || 0}</td>
+
+              </tr>
             </tbody>
           </table>
         </div>
