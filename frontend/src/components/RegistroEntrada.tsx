@@ -687,14 +687,14 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
               };
               onChange('fileEmbalado', novoFileEmbalado);
               
-              // Recalcular aproveitamentos COM O NOVO fileEmbalado
+              // Recalcular aproveitamentos usando calcularFileEmbalado()
               const totalPesoNF = (lote.pesoNotaFiscal?.P || 0) + (lote.pesoNotaFiscal?.M || 0) + 
                                    (lote.pesoNotaFiscal?.G || 0) + (lote.pesoNotaFiscal?.GG || 0);
               const totalPesoSalao = (lote.pesoSalao?.P || 0) + (lote.pesoSalao?.M || 0) + 
                                      (lote.pesoSalao?.G || 0) + (lote.pesoSalao?.GG || 0);
               
-              const aprovNF = totalPesoNF > 0 ? ((totalFileEmbalado / totalPesoNF) * 100) : 0;
-              const aprovSal = totalPesoSalao > 0 ? ((totalFileEmbalado / totalPesoSalao) * 100) : 0;
+              const aprovNF = totalPesoNF > 0 ? ((calcularFileEmbalado() / totalPesoNF) * 100) : 0;
+              const aprovSal = totalPesoSalao > 0 ? ((calcularFileEmbalado() / totalPesoSalao) * 100) : 0;
               
               // Salvar tipo de filé, caixas e pacotes
               onChange('tipoFile', tipoFile);
