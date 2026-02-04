@@ -120,12 +120,12 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
     const tabelaCustos = calcularTabelaCustos();
 
     return (
-      <div ref={ref} className="p-3 bg-white" style={{ width: '210mm', fontSize: '10px', lineHeight: '1.2' }}>
+      <div ref={ref} className="p-4 bg-white" style={{ width: '210mm', fontSize: '11px', lineHeight: '1.35' }}>
         <style>{`
           @media print {
             @page {
               size: A4;
-              margin: 6mm;
+              margin: 5mm;
             }}
             body {
               print-color-adjust: exact;
@@ -135,119 +135,119 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
         `}</style>
         
         {/* Header */}
-        <div className="border-b-2 border-blue-600 pb-1.5 mb-1.5">
+        <div className="border-b-2 border-blue-600 pb-2 mb-2.5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <img 
                 src="/Logo ValeFish.png" 
                 alt="ValeFish Logo" 
-                style={{ height: '40px', width: 'auto' }}
+                style={{ height: '55px', width: 'auto' }}
               />
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               {/* QR Code */}
               <div className="text-center">
                 <QRCodeSVG 
                   value={`http://72.61.62.17:8888/lote/${lote.id || (lote as any)._id || ''}`}
-                  size={50}
+                  size={65}
                   level="M"
                   includeMargin={false}
                 />
-                <p style={{ fontSize: '7px', margin: '1px 0 0 0' }} className="text-gray-500">Lote {lote.numeroLote}</p>
+                <p style={{ fontSize: '9px', margin: '2px 0 0 0' }} className="text-gray-500">Lote {lote.numeroLote}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Informações Básicas */}
-        <div className="mb-1.5">
-          <h2 style={{ fontSize: '10px', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.2px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-0.5">
+        <div className="mb-2.5">
+          <h2 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
             Informações do Lote
           </h2>
-          <div className="grid grid-cols-6 gap-1" style={{ fontSize: '9px' }}>
-            <div className="bg-gray-50 p-1 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Data Produção</p>
-              <p className="font-semibold" style={{ fontSize: '9px', margin: 0 }}>{lote.dataProducao ? new Date(lote.dataProducao).toLocaleDateString('pt-BR') : '-'}</p>
+          <div className="grid grid-cols-6 gap-2" style={{ fontSize: '10px' }}>
+            <div className="bg-gray-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Data Produção</p>
+              <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{lote.dataProducao ? new Date(lote.dataProducao).toLocaleDateString('pt-BR') : '-'}</p>
             </div>
-            <div className="bg-gray-50 p-1 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Processo</p>
-              <p className="font-semibold" style={{ fontSize: '9px', margin: 0 }}>{lote.processo}</p>
+            <div className="bg-gray-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Processo</p>
+              <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{lote.processo}</p>
             </div>
-            <div className="bg-gray-50 p-1 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Fornecedor</p>
-              <p className="font-semibold" style={{ fontSize: '9px', margin: 0 }}>{lote.fornecedor}</p>
+            <div className="bg-gray-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Fornecedor</p>
+              <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{lote.fornecedor}</p>
             </div>
-            <div className="bg-blue-50 p-1 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Nº Lote</p>
-              <p className="font-bold text-blue-900" style={{ fontSize: '10px', margin: 0 }}>{lote.numeroLote}</p>
+            <div className="bg-blue-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Nº Lote</p>
+              <p className="font-bold text-blue-900" style={{ fontSize: '12px', margin: 0 }}>{lote.numeroLote}</p>
             </div>
-            <div className="bg-gray-50 p-1 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Nota Fiscal</p>
-              <p className="font-semibold" style={{ fontSize: '9px', margin: 0 }}>{lote.numeroNF || '-'}</p>
+            <div className="bg-gray-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Nota Fiscal</p>
+              <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{lote.numeroNF || '-'}</p>
             </div>
-            <div className="bg-yellow-50 p-1 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Valor Transferência</p>
-              <p className="font-bold text-yellow-900" style={{ fontSize: '10px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+            <div className="bg-yellow-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Valor Transferência</p>
+              <p className="font-bold text-yellow-900" style={{ fontSize: '12px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
             </div>
           </div>
         </div>
 
         {/* Nota Fiscal e Peso */}
-        <div className="mb-1.5">
-          <h2 style={{ fontSize: '10px', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.2px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-0.5">
+        <div className="mb-2.5">
+          <h2 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
             Nota Fiscal e Peso
           </h2>
-          <div className="flex gap-1 mb-1" style={{ fontSize: '9px' }}>
-            <div className="bg-blue-100 border border-blue-300 p-1 rounded text-center flex-1">
-              <p className="font-medium text-blue-700 mb-0" style={{ fontSize: '8px' }}>Total NF</p>
-              <p className="font-bold text-blue-900" style={{ fontSize: '11px', margin: 0 }}>{totalNF.toFixed(2)} kg</p>
+          <div className="flex gap-2 mb-2" style={{ fontSize: '10px' }}>
+            <div className="bg-blue-100 border border-blue-300 p-2 rounded text-center flex-1">
+              <p className="font-medium text-blue-700 mb-0" style={{ fontSize: '9px' }}>Total NF</p>
+              <p className="font-bold text-blue-900" style={{ fontSize: '13px', margin: 0 }}>{totalNF.toFixed(2)} kg</p>
             </div>
-            <div className="bg-green-100 border border-green-300 p-1 rounded text-center flex-1">
-              <p className="font-medium text-green-700 mb-0" style={{ fontSize: '8px' }}>Total Salão</p>
-              <p className="font-bold text-green-900" style={{ fontSize: '11px', margin: 0 }}>{totalSalao.toFixed(2)} kg</p>
+            <div className="bg-green-100 border border-green-300 p-2 rounded text-center flex-1">
+              <p className="font-medium text-green-700 mb-0" style={{ fontSize: '9px' }}>Total Salão</p>
+              <p className="font-bold text-green-900" style={{ fontSize: '13px', margin: 0 }}>{totalSalao.toFixed(2)} kg</p>
             </div>
-            <div className={`border p-1 rounded text-center flex-1 ${
+            <div className={`border p-2 rounded text-center flex-1 ${
               gap >= 0 ? 'bg-orange-100 border-orange-300' : 'bg-red-100 border-red-300'
             }`}>
-              <p className={`font-medium mb-0 ${gap >= 0 ? 'text-orange-700' : 'text-red-700'}`} style={{ fontSize: '8px' }}>Gap</p>
-              <p className={`font-bold ${gap >= 0 ? 'text-orange-900' : 'text-red-900'}`} style={{ fontSize: '11px', margin: 0 }}>{gap.toFixed(2)} kg</p>
+              <p className={`font-medium mb-0 ${gap >= 0 ? 'text-orange-700' : 'text-red-700'}`} style={{ fontSize: '9px' }}>Gap</p>
+              <p className={`font-bold ${gap >= 0 ? 'text-orange-900' : 'text-red-900'}`} style={{ fontSize: '13px', margin: 0 }}>{gap.toFixed(2)} kg</p>
             </div>
           </div>
           
-          <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '9px' }}>
+          <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '10px' }}>
             <thead>
               <tr className="bg-gray-200">
-                <th className="border border-gray-300 px-1 py-0.5 text-left" style={{ fontSize: '8px', textTransform: 'uppercase' }}>Tipo</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>P (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>M (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>G (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>GG (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-left" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Tipo</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>P (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>M (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>G (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>GG (kg)</th>
 
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-1 py-0.5 font-medium">Nota Fiscal</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoNotaFiscal?.P || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoNotaFiscal?.M || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoNotaFiscal?.G || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoNotaFiscal?.GG || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 font-medium">Nota Fiscal</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.pesoNotaFiscal?.P || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.pesoNotaFiscal?.M || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.pesoNotaFiscal?.G || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.pesoNotaFiscal?.GG || 0}</td>
 
               </tr>
               <tr>
-                <td className="border border-gray-300 px-1 py-0.5 font-medium">Salão</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoSalao?.P || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoSalao?.M || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoSalao?.G || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.pesoSalao?.GG || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 font-medium">Salão</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.pesoSalao?.P || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.pesoSalao?.M || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.pesoSalao?.G || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.pesoSalao?.GG || 0}</td>
 
               </tr>
               <tr className="bg-blue-50">
-                <td className="border border-gray-300 px-1 py-0.5 font-medium">Nº Basquetas</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.numBasquetas?.P || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.numBasquetas?.M || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.numBasquetas?.G || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.numBasquetas?.GG || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 font-medium">Nº Basquetas</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.numBasquetas?.P || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.numBasquetas?.M || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.numBasquetas?.G || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.numBasquetas?.GG || 0}</td>
 
               </tr>
             </tbody>
@@ -278,32 +278,32 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
             </div>
           </div>
 
-          <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '9px' }}>
+          <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '10px' }}>
             <thead>
               <tr className="bg-gray-200">
-                <th className="border border-gray-300 px-1 py-0.5 text-left" style={{ fontSize: '8px', textTransform: 'uppercase' }}>Tipo</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>P (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>M (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>G (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>GG (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-left" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Tipo</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>P (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>M (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>G (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>GG (kg)</th>
 
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-1 py-0.5 font-medium">Filé In Natura</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileInNatura?.P || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileInNatura?.M || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileInNatura?.G || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileInNatura?.GG || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 font-medium">Filé In Natura</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.fileInNatura?.P || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.fileInNatura?.M || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.fileInNatura?.G || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.fileInNatura?.GG || 0}</td>
 
               </tr>
               <tr>
-                <td className="border border-gray-300 px-1 py-0.5 font-medium">Filé Congelado</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileCongelado?.P || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileCongelado?.M || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileCongelado?.G || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.fileCongelado?.GG || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 font-medium">Filé Congelado</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.fileCongelado?.P || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.fileCongelado?.M || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.fileCongelado?.G || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.fileCongelado?.GG || 0}</td>
 
               </tr>
             </tbody>
@@ -311,33 +311,33 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
         </div>
 
         {/* Descartes */}
-        <div className="mt-1.5">
-          <h3 style={{ fontSize: '10px', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.2px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-0.5">
+        <div className="mt-2.5">
+          <h3 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
             Descartes
           </h3>
 
-          <div className="bg-red-100 border border-red-300 p-1 rounded text-center mb-1">
-            <p className="font-medium text-red-700 mb-0" style={{ fontSize: '8px' }}>Total de Descartes</p>
-            <p className="font-bold text-red-900" style={{ fontSize: '11px', margin: 0 }}>{calcularTotal(lote.descartes).toFixed(2)} kg</p>
+          <div className="bg-red-100 border border-red-300 p-2 rounded text-center mb-2">
+            <p className="font-medium text-red-700 mb-0" style={{ fontSize: '9px' }}>Total de Descartes</p>
+            <p className="font-bold text-red-900" style={{ fontSize: '13px', margin: 0 }}>{calcularTotal(lote.descartes).toFixed(2)} kg</p>
           </div>
 
-          <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '9px' }}>
+          <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '10px' }}>
             <thead>
               <tr className="bg-gray-200">
-                <th className="border border-gray-300 px-1 py-0.5 text-left" style={{ fontSize: '8px', textTransform: 'uppercase' }}>Tipo</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>P (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>M (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>G (kg)</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-right" style={{ fontSize: '8px', textTransform: 'uppercase' }}>GG (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-left" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Tipo</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>P (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>M (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>G (kg)</th>
+                <th className="border border-gray-300 px-2 py-1 text-right" style={{ fontSize: '9px', textTransform: 'uppercase' }}>GG (kg)</th>
               </tr>
             </thead>
             <tbody>
               <tr className="bg-red-50">
-                <td className="border border-gray-300 px-1 py-0.5 font-medium">Descartes</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.descartes?.P || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.descartes?.M || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.descartes?.G || 0}</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-right">{lote.descartes?.GG || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 font-medium">Descartes</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.descartes?.P || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.descartes?.M || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.descartes?.G || 0}</td>
+                <td className="border border-gray-300 px-2 py-1 text-right">{lote.descartes?.GG || 0}</td>
               </tr>
             </tbody>
           </table>
@@ -345,18 +345,18 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
 
         {/* Embalagem */}
         {lote.status === 'finalizado' && (
-          <div className="mb-1.5">
-            <h2 style={{ fontSize: '10px', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.2px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-0.5">
+          <div className="mb-2.5">
+            <h2 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
               Embalagem
             </h2>
-            <div className="grid grid-cols-4 gap-1" style={{ fontSize: '9px' }}>
-              <div className="bg-gray-50 p-1 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Tipo Filé</p>
-                <p className="font-semibold" style={{ margin: 0, fontSize: '9px' }}>{lote.tipoFile || '-'}</p>
+            <div className="grid grid-cols-4 gap-2" style={{ fontSize: '10px' }}>
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Tipo Filé</p>
+                <p className="font-semibold" style={{ margin: 0, fontSize: '11px' }}>{lote.tipoFile || '-'}</p>
               </div>
-              <div className="bg-gray-50 p-1 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Total Pacotes</p>
-                <p className="font-bold" style={{ fontSize: '10px', margin: 0 }}>
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Total Pacotes</p>
+                <p className="font-bold" style={{ fontSize: '11px', margin: 0 }}>
                   {(() => {
                     const tipoFile = lote.tipoFile || '400g';
                     const caixas = lote.caixas || lote.qtdMaster || 0;
@@ -388,64 +388,64 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <p className="text-gray-600 mb-0" style={{ fontSize: '8px' }}>Data Fabric.</p>
                 <p className="font-semibold" style={{ fontSize: '10px', margin: 0 }}>{lote.dataFabricacao ? new Date(lote.dataFabricacao).toLocaleDateString('pt-BR') : '-'}</p>
               </div>
-              <div className="bg-gray-50 p-1 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Data Validade</p>
-                <p className="font-semibold" style={{ fontSize: '9px', margin: 0 }}>{lote.dataValidade ? new Date(lote.dataValidade).toLocaleDateString('pt-BR') : '-'}</p>
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Data Validade</p>
+                <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{lote.dataValidade ? new Date(lote.dataValidade).toLocaleDateString('pt-BR') : '-'}</p>
               </div>
-              <div className="bg-green-50 p-1 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Aprov. NF</p>
-                <p className="font-bold text-green-900" style={{ fontSize: '9px', margin: 0 }}>{aproveitamento.aprovNotaFiscal}%</p>
+              <div className="bg-green-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Aprov. NF</p>
+                <p className="font-bold text-green-900" style={{ fontSize: '11px', margin: 0 }}>{aproveitamento.aprovNotaFiscal}%</p>
               </div>
-              <div className="bg-green-50 p-1 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Aprov. Salão</p>
-                <p className="font-bold text-green-900" style={{ fontSize: '9px', margin: 0 }}>{aproveitamento.aprovSalao}%</p>
+              <div className="bg-green-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Aprov. Salão</p>
+                <p className="font-bold text-green-900" style={{ fontSize: '11px', margin: 0 }}>{aproveitamento.aprovSalao}%</p>
               </div>
-              <div className="bg-blue-50 p-1 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Custo Pacotes</p>
-                <p className="font-bold text-blue-900" style={{ fontSize: '9px', margin: 0 }}>R$ {(lote.custoPacotes || custos.custoPacotes).toFixed(2)}</p>
+              <div className="bg-blue-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Pacotes</p>
+                <p className="font-bold text-blue-900" style={{ fontSize: '11px', margin: 0 }}>R$ {(lote.custoPacotes || custos.custoPacotes).toFixed(2)}</p>
               </div>
-              <div className="bg-purple-50 p-1 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Custo Caixas</p>
-                <p className="font-bold text-purple-900" style={{ fontSize: '9px', margin: 0 }}>R$ {(lote.custoCaixas || custos.custoCaixas).toFixed(2)}</p>
+              <div className="bg-purple-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Caixas</p>
+                <p className="font-bold text-purple-900" style={{ fontSize: '11px', margin: 0 }}>R$ {(lote.custoCaixas || custos.custoCaixas).toFixed(2)}</p>
               </div>
             </div>
             
             {tabelaCustos && (
-              <div className="mt-1.5">
-                <h3 style={{ fontSize: '10px', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.2px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-0.5">
+              <div className="mt-2.5">
+                <h3 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
                   Análise de Custos
                 </h3>
-                <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '9px' }}>
+                <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '10px' }}>
                   <thead>
                     <tr className="bg-gray-200">
-                      <th className="border border-gray-300 px-1 py-0.5 text-left" style={{ fontSize: '8px', textTransform: 'uppercase' }}>Unidade</th>
-                      <th className="border border-gray-300 px-1 py-0.5 text-right bg-yellow-100" style={{ fontSize: '8px', textTransform: 'uppercase' }}>Filé (R$)</th>
-                      <th className="border border-gray-300 px-1 py-0.5 text-right bg-blue-100" style={{ fontSize: '8px', textTransform: 'uppercase' }}>Embalagem (R$)</th>
-                      <th className="border border-gray-300 px-1 py-0.5 text-right bg-green-100" style={{ fontSize: '8px', textTransform: 'uppercase' }}>Serviço (R$)</th>
-                      <th className="border border-gray-300 px-1 py-0.5 text-right bg-purple-100" style={{ fontSize: '8px', textTransform: 'uppercase' }}>Total (R$)</th>
+                      <th className="border border-gray-300 px-2 py-1 text-left" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Unidade</th>
+                      <th className="border border-gray-300 px-2 py-1 text-right bg-yellow-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Filé (R$)</th>
+                      <th className="border border-gray-300 px-2 py-1 text-right bg-blue-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Embalagem (R$)</th>
+                      <th className="border border-gray-300 px-2 py-1 text-right bg-green-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Serviço (R$)</th>
+                      <th className="border border-gray-300 px-2 py-1 text-right bg-purple-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Total (R$)</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="border border-gray-300 px-1 py-0.5 font-medium">Pacote</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.pacote)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.pacote)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.pacote)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.pacote)}</td>
+                      <td className="border border-gray-300 px-2 py-1 font-medium">Pacote</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.pacote)}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.pacote)}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.pacote)}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.pacote)}</td>
                     </tr>
                     <tr className="bg-yellow-50">
-                      <td className="border border-gray-300 px-1 py-0.5 font-medium">KG</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.kg)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.kg)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.kg)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.kg)}</td>
+                      <td className="border border-gray-300 px-2 py-1 font-medium">KG</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.kg)}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.kg)}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.kg)}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.kg)}</td>
                     </tr>
                     <tr>
-                      <td className="border border-gray-300 px-1 py-0.5 font-medium">Caixa</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.caixa)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.caixa)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.caixa)}</td>
-                      <td className="border border-gray-300 px-1 py-0.5 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.caixa)}</td>
+                      <td className="border border-gray-300 px-2 py-1 font-medium">Caixa</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.caixa)}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.caixa)}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.caixa)}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.caixa)}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -455,9 +455,9 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
         )}
 
         {/* Footer */}
-        <div className="mt-2 pt-1.5 border-t border-gray-300 text-center" style={{ fontSize: '8px' }}>
+        <div className="mt-4 pt-3 border-t border-gray-300 text-center" style={{ fontSize: '10px' }}>
           <p className="text-gray-600" style={{ margin: 0 }}>ValeFish - Sistema de Gestão de Lotes</p>
-          <p className="text-gray-500" style={{ fontSize: '7px', margin: '1px 0 0 0' }}>
+          <p className="text-gray-500" style={{ fontSize: '9px', margin: '3px 0 0 0' }}>
             Documento gerado automaticamente em {new Date().toLocaleString('pt-BR')}{username && ` por ${username}`}
           </p>
         </div>
