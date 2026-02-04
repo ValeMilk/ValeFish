@@ -14,6 +14,18 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
       return (peso.P || 0) + (peso.M || 0) + (peso.G || 0) + (peso.GG || 0);
     };
 
+    // Calcular filé embalado dinamicamente baseado em caixas e pacotes
+    const calcularFileEmbaladoDinamico = () => {
+      const tipoFile = lote.tipoFile || '400g';
+      const caixas = lote.caixas || lote.qtdMaster || 0;
+      const pacotes = lote.pacotes || lote.qtdSacos || 0;
+      const gramatura = tipoFile === '400g' ? 400 : 800;
+      
+      const kgMaster = caixas * 9.6;
+      const kgSacos = (pacotes * gramatura) / 1000;
+      return kgMaster + kgSacos;
+    };
+
     const totalNF = calcularTotal(lote.pesoNotaFiscal);
     const totalSalao = calcularTotal(lote.pesoSalao);
     const gap = totalSalao - totalNF;
@@ -86,7 +98,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
       const totalPacotes = caixas * pacotesPorCaixa + pacotes;
       // Arredondar totalCaixas para 2 casas ANTES do cálculo para bater com display
       const totalCaixas = Math.round((pacotes / pacotesPorCaixa + caixas) * 100) / 100;
-      const fileEmbalado = calcularTotal(lote.fileEmbalado);
+      const fileEmbalado = calcularFileEmbaladoDinamico();
       const valorNF = lote.valorNF || 0;
       
       if (totalPacotes === 0 || fileEmbalado === 0 || totalCaixas === 0 || valorNF === 0) {
@@ -390,7 +402,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
               </div>
               <div className="bg-gray-50 p-1.5 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '8px' }}>Filé Embalado</p>
-                <p className="font-bold" style={{ fontSize: '10px', margin: 0 }}>{calcularTotal(lote.fileEmbalado).toFixed(2)} kg</p>
+                <p className="font-bold" style={{ fontSize: '10px', margin: 0 }}>{calcularFileEmbaladoDinamico().toFixed(2)} kg</p>
               </div>
               <div className="bg-gray-50 p-1.5 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '8px' }}>Data Fabric.</p>
