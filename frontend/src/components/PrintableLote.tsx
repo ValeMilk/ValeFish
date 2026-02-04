@@ -310,6 +310,39 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
           </table>
         </div>
 
+        {/* Descartes */}
+        <div className="mt-3">
+          <h3 style={{ fontSize: '12px', margin: '0 0 6px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
+            Descartes
+          </h3>
+
+          <div className="bg-red-100 border border-red-300 p-2 rounded text-center mb-2">
+            <p className="font-medium text-red-700 mb-0" style={{ fontSize: '10px' }}>Total de Descartes</p>
+            <p className="font-bold text-red-900" style={{ fontSize: '14px', margin: 0 }}>{calcularTotal(lote.descartes).toFixed(2)} kg</p>
+          </div>
+
+          <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '11px' }}>
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-300 p-2 text-left" style={{ fontSize: '10px', textTransform: 'uppercase' }}>Tipo</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>P (kg)</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>M (kg)</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>G (kg)</th>
+                <th className="border border-gray-300 p-2 text-right" style={{ fontSize: '10px', textTransform: 'uppercase' }}>GG (kg)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="bg-red-50">
+                <td className="border border-gray-300 p-2 font-medium">Descartes</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.descartes?.P || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.descartes?.M || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.descartes?.G || 0}</td>
+                <td className="border border-gray-300 p-2 text-right">{lote.descartes?.GG || 0}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         {/* Embalagem */}
         {lote.status === 'finalizado' && (
           <div className="mb-3">

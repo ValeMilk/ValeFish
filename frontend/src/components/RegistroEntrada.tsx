@@ -28,6 +28,7 @@ const FORNECEDORES = ["VALEFISH", "NORFISH", "CARLITO"];
 const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAberto = false, isEditing = false, onCancel }: RegistroEntradaProps) => {
   const [notaFiscalConfirmado, setNotaFiscalConfirmado] = useState(false);
   const [filetagemConfirmado, setFiletagemConfirmado] = useState(false);
+  const [descartesConfirmado, setDescartesConfirmado] = useState(false);
   const [embalagemConfirmado, setEmbalagemConfirmado] = useState(false);
   const [tipoFile, setTipoFile] = useState<'400g' | '800g'>(lote.tipoFile || '400g');
 
@@ -472,10 +473,75 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
               variant="outline" 
               size="lg" 
               className="w-full border-2"
-              onClick={() => setFiletagemConfirmado(true)}
+              onClick={() => {
+                // Calcular descartes automaticamente: Peso NF - File In Natura
+                const pesoNF = lote.pesoNotaFiscal || { P: 0, M: 0, G: 0, GG: 0 };
+                const fileIN = lote.fileInNatura || { P: 0, M: 0, G: 0, GG: 0 };
+                
+                const descartesCalculados = {
+                  P: Math.max(0, pesoNF.P - fileIN.P),
+                  M: Math.max(0, pesoNF.M - fileIN.M),
+                  G: Math.max(0, pesoNF.G - fileIN.G),
+                  GG: Math.max(0, pesoNF.GG - fileIN.GG)
+                };
+                
+                onChange('descartes', descartesCalculados);
+                setFiletagemConfirmado(true);
+              }}
             >
               <CheckCircle className="w-5 h-5 mr-2" />
               Confirmar Filetagem
+            </Button>
+          )}
+        </div>
+      </FormSection>
+
+      {/* Descartes */}
+      <FormSection
+        title="Descartes"
+        icon={<Scale className="w-5 h-5 text-primary-foreground" />}
+        collapsed={descartesConfirmado}
+        headerContent={descartesConfirmado ? (
+          <div className="flex gap-1 md:gap-2 ml-auto items-center flex-wrap md:flex-nowrap justify-end">
+            <div className="px-2 md:px-3 py-1 md:py-1.5 rounded-lg bg-red-100 border border-red-300 text-center">
+              <p className="text-xs font-medium text-red-700">Total Descartes</p>
+              <p className="text-xs md:text-sm font-bold text-red-900">{calcularTotalPeso(lote.descartes).toFixed(2)} kg</p>
+            </div>
+            <button
+              onClick={() => setDescartesConfirmado(false)}
+              className="p-1 md:p-2 hover:bg-foreground/10 rounded-lg transition-colors ml-1"
+              title="Editar"
+            >
+              <Edit2 className="w-4 h-4 text-foreground" />
+            </button>
+          </div>
+        ) : undefined}
+      >
+        <div className="space-y-4">
+          <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800">
+            <p className="text-sm text-amber-800 dark:text-amber-200">
+              <strong>Cálculo automático:</strong> Descartes = Peso Nota Fiscal - Filé In Natura (por tamanho)
+            </p>
+          </div>
+          
+          <SizeWeightInput
+            label="Descartes por Tamanho"
+            icon={<Scale className="w-4 h-4" />}
+            values={lote.descartes || { P: 0, M: 0, G: 0, GG: 0 }}
+            onChange={(size, value) => handleSizeChange('descartes', size, value)}
+            suffix="KG"
+            disabled={descartesConfirmado}
+          />
+          
+          {!descartesConfirmado && (
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="w-full border-2"
+              onClick={() => setDescartesConfirmado(true)}
+            >
+              <CheckCircle className="w-5 h-5 mr-2" />
+              Confirmar Descartes
             </Button>
           )}
         </div>

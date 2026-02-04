@@ -28,6 +28,7 @@ export interface LoteData {
   fileInNatura?: WeightBySize;
   fileCongelado?: WeightBySize;
   fileEmbalado?: WeightBySize;
+  descartes?: WeightBySize;
   
   // Embalagem
   tipoFile?: '400g' | '800g';
@@ -91,4 +92,5 @@ export const createEmptyLote = (): LoteData => ({
   fileInNatura: createEmptyWeightBySize(),
   fileCongelado: createEmptyWeightBySize(),
   fileEmbalado: createEmptyWeightBySize(),
+  descartes: createEmptyWeightBySize(),
 });

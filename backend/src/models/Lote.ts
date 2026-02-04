@@ -22,6 +22,7 @@ interface ILote {
   fileInNatura?: WeightBySize;
   fileCongelado?: WeightBySize;
   fileEmbalado?: WeightBySize;
+  descartes?: WeightBySize;
   
   tipoFile?: '400g' | '800g';
   caixas?: number;
@@ -75,6 +76,7 @@ const loteSchema = new Schema<ILote>(
     fileInNatura: weightBySize,
     fileCongelado: weightBySize,
     fileEmbalado: weightBySize,
+    descartes: weightBySize,
     
     tipoFile: {
       type: String,
