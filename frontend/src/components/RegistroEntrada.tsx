@@ -479,10 +479,10 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
                 const fileIN = lote.fileInNatura || { P: 0, M: 0, G: 0, GG: 0 };
                 
                 const descartesCalculados = {
-                  P: Math.max(0, pesoNF.P - fileIN.P),
-                  M: Math.max(0, pesoNF.M - fileIN.M),
-                  G: Math.max(0, pesoNF.G - fileIN.G),
-                  GG: Math.max(0, pesoNF.GG - fileIN.GG)
+                  P: parseFloat(Math.max(0, pesoNF.P - fileIN.P).toFixed(2)),
+                  M: parseFloat(Math.max(0, pesoNF.M - fileIN.M).toFixed(2)),
+                  G: parseFloat(Math.max(0, pesoNF.G - fileIN.G).toFixed(2)),
+                  GG: parseFloat(Math.max(0, pesoNF.GG - fileIN.GG).toFixed(2))
                 };
                 
                 onChange('descartes', descartesCalculados);
