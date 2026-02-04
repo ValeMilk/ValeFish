@@ -51,6 +51,14 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
       return valorArredondado.toFixed(2);
     };
 
+    // Função para formatar data sem problemas de timezone
+    const formatarData = (data: string | undefined): string => {
+      if (!data) return '-';
+      // Usa split manual para evitar conversão de timezone
+      const [ano, mes, dia] = data.split('-');
+      return `${dia}/${mes}/${ano}`;
+    };
+
     // Calcular custos de embalagem
     const calcularCustos = () => {
       const tipoFile = lote.tipoFile || '400g';
@@ -167,7 +175,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
           <div className="grid grid-cols-6 gap-2" style={{ fontSize: '10px' }}>
             <div className="bg-gray-50 p-2 rounded">
               <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Data Produção</p>
-              <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{lote.dataProducao ? new Date(lote.dataProducao).toLocaleDateString('pt-BR') : '-'}</p>
+              <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{formatarData(lote.dataProducao)}</p>
             </div>
             <div className="bg-gray-50 p-2 rounded">
               <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Processo</p>
@@ -386,11 +394,11 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
               </div>
               <div className="bg-gray-50 p-1.5 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '8px' }}>Data Fabric.</p>
-                <p className="font-semibold" style={{ fontSize: '10px', margin: 0 }}>{lote.dataFabricacao ? new Date(lote.dataFabricacao).toLocaleDateString('pt-BR') : '-'}</p>
+                <p className="font-semibold" style={{ fontSize: '10px', margin: 0 }}>{formatarData(lote.dataFabricacao)}</p>
               </div>
               <div className="bg-gray-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Data Validade</p>
-                <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{lote.dataValidade ? new Date(lote.dataValidade).toLocaleDateString('pt-BR') : '-'}</p>
+                <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{formatarData(lote.dataValidade)}</p>
               </div>
               <div className="bg-green-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Aprov. NF</p>
