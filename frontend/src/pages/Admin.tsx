@@ -666,13 +666,37 @@ export default function Admin({ onLogout }: AdminProps) {
                         <td className="py-3 px-4">{new Date(lote.dataProducao).toLocaleDateString('pt-BR')}</td>
                         <td className="py-3 px-4 text-right">R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                         <td className="py-3 px-4 text-right">
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => handleDeleteLote(lote._id, lote.numeroLote)}
-                          >
-                            Excluir
-                          </Button>
+                          <div className="flex gap-2 justify-end">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => navigate(`/lote/${lote._id}`)}
+                            >
+                              Ver
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                window.open(`/lote/${lote._id}`, '_blank');
+                                setTimeout(() => {
+                                  const printWindow = window.open(`/lote/${lote._id}`, '_blank');
+                                  printWindow?.addEventListener('load', () => {
+                                    printWindow?.print();
+                                  });
+                                }, 500);
+                              }}
+                            >
+                              Imprimir
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleDeleteLote(lote._id, lote.numeroLote)}
+                            >
+                              Excluir
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}
