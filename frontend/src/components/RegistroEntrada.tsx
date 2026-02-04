@@ -615,12 +615,12 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
             <div className="bg-blue-50 dark:bg-blue-950 p-2 rounded">
               <p className="text-xs text-muted-foreground">Custo de Pacotes</p>
               <p className="font-bold text-blue-700 dark:text-blue-300">R$ {(lote.custoPacotes || 0).toFixed(2)}</p>
-              <p className="text-xs text-muted-foreground">{calcularKgMaster() + calcularKgSacos() > 0 ? `${(((lote.custoPacotes || 0) / (calcularKgMaster() + calcularKgSacos())) || 0).toFixed(4)} /kg` : '-'}</p>
+              <p className="text-xs text-muted-foreground">{calcularKgMaster() + calcularKgSacos() > 0 ? `${(((lote.custoPacotes || 0) / (calcularKgMaster() + calcularKgSacos())) || 0).toFixed(2)} /kg` : '-'}</p>
             </div>
             <div className="bg-purple-50 dark:bg-purple-950 p-2 rounded">
               <p className="text-xs text-muted-foreground">Custo de Caixas</p>
               <p className="font-bold text-purple-700 dark:text-purple-300">R$ {(lote.custoCaixas || 0).toFixed(2)}</p>
-              <p className="text-xs text-muted-foreground">{calcularKgMaster() + calcularKgSacos() > 0 ? `${(((lote.custoCaixas || 0) / (calcularKgMaster() + calcularKgSacos())) || 0).toFixed(4)} /kg` : '-'}</p>
+              <p className="text-xs text-muted-foreground">{calcularKgMaster() + calcularKgSacos() > 0 ? `${(((lote.custoCaixas || 0) / (calcularKgMaster() + calcularKgSacos())) || 0).toFixed(2)} /kg` : '-'}</p>
             </div>
           </div>
           
