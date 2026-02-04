@@ -1,8 +1,11 @@
-import { useState, useEffect, useMemo } from 'react';
-import { BarChart3, Users, Package, TrendingUp, DollarSign, Calendar, ArrowLeft, LogOut, User, Filter } from 'lucide-react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { BarChart3, Users, Package, TrendingUp, DollarSign, Calendar, ArrowLeft, LogOut, User, Filter, Printer } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Button } from '../components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import PrintableLote from '../components/PrintableLote';
+import { useReactToPrint } from 'react-to-print';
+import { LoteData } from '../types/lote';
 
 interface AdminProps {
   onLogout: () => void;
@@ -77,6 +80,17 @@ export default function Admin({ onLogout }: AdminProps) {
     status: 'todos'
   });
   const [reportData, setReportData] = useState<any>(null);
+  
+  // View Lote Modal
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [loteToPrint, setLoteToPrint] = useState<LoteData | null>(null);
+  const printRef = useRef<HTMLDivElement>(null);
+  const username = JSON.parse(localStorage.getItem('user') || '{}').username || 'Desconhecido';
+  
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: `Lote-${loteToPrint?.numeroLote || 'documento'}`,
+  });
 
   useEffect(() => {
     if (activeTab === 'dashboard') loadStats();
@@ -194,12 +208,24 @@ export default function Admin({ onLogout }: AdminProps) {
         loadStats(); // Recarregar estatísticas
       } else {
         const error = await response.json();
-        alert('Erro ao excluir lote: ' + (error.message || 'Erro desconhecido'));
+        alert(error.error || 'Erro ao excluir lote');
       }
     } catch (error) {
-      console.error('Erro ao deletar lote:', error);
-      alert('Erro ao excluir lote.');
+      console.error('Erro ao excluir lote:', error);
+      alert('Erro ao excluir lote');
     }
+  };
+
+  const handleViewLote = (lote: any) => {
+    setLoteToPrint(lote);
+    setViewModalOpen(true);
+  };
+
+  const handlePrintLote = (lote: any) => {
+    setLoteToPrint(lote);
+    setTimeout(() => {
+      handlePrint();
+    }, 100);
   };
 
   const filteredChartData = useMemo(() => {
@@ -670,24 +696,16 @@ export default function Admin({ onLogout }: AdminProps) {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => navigate(`/lote/${lote._id}`)}
+                              onClick={() => handleViewLote(lote)}
                             >
                               Ver
                             </Button>
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => {
-                                window.open(`/lote/${lote._id}`, '_blank');
-                                setTimeout(() => {
-                                  const printWindow = window.open(`/lote/${lote._id}`, '_blank');
-                                  printWindow?.addEventListener('load', () => {
-                                    printWindow?.print();
-                                  });
-                                }, 500);
-                              }}
+                              onClick={() => handlePrintLote(lote)}
                             >
-                              Imprimir
+                              <Printer className="w-4 h-4" />
                             </Button>
                             <Button
                               variant="destructive"
@@ -829,6 +847,29 @@ export default function Admin({ onLogout }: AdminProps) {
             )}
           </div>
         )}
+      </div>
+
+      {/* Modal de Visualização com layout de impressão */}
+      {viewModalOpen && loteToPrint && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+            <button
+              onClick={() => {
+                setViewModalOpen(false);
+                setLoteToPrint(null);
+              }}
+              className="sticky top-4 right-4 float-right bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 z-10"
+            >
+              Fechar
+            </button>
+            <PrintableLote lote={loteToPrint} username={username} />
+          </div>
+        </div>
+      )}
+
+      {/* Componente oculto para impressão */}
+      <div style={{ display: 'none' }}>
+        {loteToPrint && <PrintableLote ref={printRef} lote={loteToPrint} username={username} />}
       </div>
     </div>
   );
