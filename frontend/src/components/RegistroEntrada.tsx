@@ -200,6 +200,23 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
   const totalPesoSalao = calcularTotalPeso(lote.pesoSalao);
   const gap = totalPesoSalao - totalPesoNotaFiscal;
 
+  // Cálculos de Embalagem (movidos para antes para evitar erro de referência)
+  const gramatura = tipoFile === '400g' ? 400 : 800; // em gramas
+
+  const calcularKgMaster = () => {
+    if (!lote.qtdMaster) return 0;
+    return (lote.qtdMaster * 9.6); 
+  };
+
+  const calcularKgSacos = () => {
+    if (!lote.qtdSacos) return 0;
+    return (lote.qtdSacos * gramatura) / 1000;
+  };
+
+  const calcularFileEmbalado = () => {
+    return calcularKgMaster() + calcularKgSacos();
+  };
+
   // Cálculos automáticos de aproveitamento
   const calcularAproveitamento = (fileEmbalado: any, pesoReferencia: any) => {
     if (!fileEmbalado || !pesoReferencia) return '0.00';
@@ -245,25 +262,6 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
     const congelado = calcularTotalPeso(lote.fileCongelado);
     if (inNatura === 0) return 0;
     return (((congelado / inNatura) - 1) * 100);
-  };
-
-  // Cálculos de Embalagem
-  const gramatura = tipoFile === '400g' ? 400 : 800; // em gramas
-
-  const calcularKgMaster = () => {
-    if (!lote.qtdMaster) return 0;
-    // Fórmula: qtdMaster * (gramatura * 24)
-    return (lote.qtdMaster * 9.6); 
-  };
-
-  const calcularKgSacos = () => {
-    if (!lote.qtdSacos) return 0;
-    // Fórmula: qtdSacos * gramatura
-    return (lote.qtdSacos * gramatura) / 1000; // dividido por 1000 para converter de gramas para kg
-  };
-
-  const calcularFileEmbalado = () => {
-    return calcularKgMaster() + calcularKgSacos();
   };
 
   return (
