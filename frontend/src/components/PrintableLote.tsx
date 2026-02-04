@@ -22,6 +22,28 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
     const diferencaFile = totalCongelado - totalInNatura;
     const rendimento = totalInNatura > 0 ? (((totalCongelado / totalInNatura) - 1) * 100) : 0;
 
+    // Calcular aproveitamento dinamicamente baseado em caixas/pacotes
+    const calcularAproveitamentoDinamico = () => {
+      const tipoFile = lote.tipoFile || '400g';
+      const caixas = lote.caixas || lote.qtdMaster || 0;
+      const pacotes = lote.pacotes || lote.qtdSacos || 0;
+      const gramatura = tipoFile === '400g' ? 400 : 800;
+      
+      const kgMaster = caixas * 9.6;
+      const kgSacos = (pacotes * gramatura) / 1000;
+      const totalFileEmbalado = kgMaster + kgSacos;
+      
+      const aprovNF = totalNF > 0 ? ((totalFileEmbalado / totalNF) * 100) : 0;
+      const aprovSal = totalSalao > 0 ? ((totalFileEmbalado / totalSalao) * 100) : 0;
+      
+      return {
+        aprovNotaFiscal: parseFloat(aprovNF.toFixed(2)),
+        aprovSalao: parseFloat(aprovSal.toFixed(2))
+      };
+    };
+
+    const aproveitamento = calcularAproveitamentoDinamico();
+
     // Função para formatar moeda com arredondamento matemático correto
     const formatarMoeda = (valor: number): string => {
       // Arredonda usando Math.round para evitar erros de ponto flutuante
@@ -339,11 +361,11 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
               </div>
               <div className="bg-green-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Aprov. NF</p>
-                <p className="font-bold text-green-900" style={{ fontSize: '12px', margin: 0 }}>{lote.aprovNotaFiscal || 0}%</p>
+                <p className="font-bold text-green-900" style={{ fontSize: '12px', margin: 0 }}>{aproveitamento.aprovNotaFiscal}%</p>
               </div>
               <div className="bg-green-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Aprov. Salão</p>
-                <p className="font-bold text-green-900" style={{ fontSize: '12px', margin: 0 }}>{lote.aprovSalao || 0}%</p>
+                <p className="font-bold text-green-900" style={{ fontSize: '12px', margin: 0 }}>{aproveitamento.aprovSalao}%</p>
               </div>
               <div className="bg-blue-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Pacotes</p>
