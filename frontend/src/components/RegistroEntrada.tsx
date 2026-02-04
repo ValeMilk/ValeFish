@@ -211,8 +211,17 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
     return ((totalFile / totalPeso) * 100).toFixed(2);
   };
 
-  const aprovNotaFiscal = calcularAproveitamento(lote.fileEmbalado, lote.pesoNotaFiscal);
-  const aprovSalao = calcularAproveitamento(lote.fileEmbalado, lote.pesoSalao);
+  // Usar calcularFileEmbalado() para exibir aproveitamento atualizado dinamicamente
+  const calcularAproveitamentoAtual = () => {
+    const totalFileEmbalado = calcularFileEmbalado();
+    const fileEmbObj = { P: totalFileEmbalado, M: 0, G: 0, GG: 0 };
+    return {
+      notaFiscal: calcularAproveitamento(fileEmbObj, lote.pesoNotaFiscal),
+      salao: calcularAproveitamento(fileEmbObj, lote.pesoSalao)
+    };
+  };
+
+  const { notaFiscal: aprovNotaFiscal, salao: aprovSalao } = calcularAproveitamentoAtual();
 
   const calcularTotalFileEmbalado = () => {
     if (!lote.fileEmbalado) return 0;
