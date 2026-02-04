@@ -134,7 +134,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
         
         // EMBALAGEM
         const custoPacoteBase = tipoFile === '400g' ? 0.4295 : 0.5515;
-        const embalagemPacket = custoPacoteBase + (6.05 / 24);
+        const embalagemPacket = custoPacoteBase + (6.05 / pacotesPorCaixa);
         const divisorKg = tipoFile === '400g' ? 4 : 8;
         const embalagemKg = (embalagemPacket / divisorKg) * 10;
         const embalagemBox = embalagemKg * 9.6;

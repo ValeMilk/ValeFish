@@ -315,7 +315,7 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
           </div>
         ) : (
           <div className="space-y-3">
-            {normalizedLotes.slice(0, 5).map((lote, index) => {
+            {normalizedLotes.map((lote, index) => {
               const pesoNotaFiscalTotal = lote.pesoNotaFiscal 
                 ? (lote.pesoNotaFiscal.P + lote.pesoNotaFiscal.M + lote.pesoNotaFiscal.G + lote.pesoNotaFiscal.GG)
                 : 0;
