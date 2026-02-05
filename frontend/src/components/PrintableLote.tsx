@@ -501,10 +501,34 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                     <div className="bg-blue-50 p-2 rounded border border-blue-200">
                       <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Pacotes</p>
                       <p className="font-bold text-blue-900" style={{ fontSize: '11px', margin: 0 }}>R$ {(lote.custoPacotes || custos.custoPacotes).toFixed(2)}</p>
+                      <p className="text-gray-500" style={{ fontSize: '8px', margin: '2px 0 0 0' }}>
+                        {(() => {
+                          const tipoFile = lote.tipoFile || '400g';
+                          const caixas = lote.caixas || lote.qtdMaster || 0;
+                          const pacotes = lote.pacotes || lote.qtdSacos || 0;
+                          const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
+                          const totalPacotes = caixas * pacotesPorCaixa + pacotes;
+                          const custoPacotes = lote.custoPacotes || custos.custoPacotes;
+                          const custoUnitario = totalPacotes > 0 ? (custoPacotes / totalPacotes) : 0;
+                          return `Custo unit.: R$ ${custoUnitario.toFixed(2)}/pct`;
+                        })()}
+                      </p>
                     </div>
                     <div className="bg-purple-50 p-2 rounded border border-purple-200">
                       <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Caixas</p>
                       <p className="font-bold text-purple-900" style={{ fontSize: '11px', margin: 0 }}>R$ {(lote.custoCaixas || custos.custoCaixas).toFixed(2)}</p>
+                      <p className="text-gray-500" style={{ fontSize: '8px', margin: '2px 0 0 0' }}>
+                        {(() => {
+                          const tipoFile = lote.tipoFile || '400g';
+                          const caixas = lote.caixas || lote.qtdMaster || 0;
+                          const pacotes = lote.pacotes || lote.qtdSacos || 0;
+                          const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
+                          const totalCaixas = pacotes / pacotesPorCaixa + caixas;
+                          const custoCaixas = lote.custoCaixas || custos.custoCaixas;
+                          const custoUnitario = totalCaixas > 0 ? (custoCaixas / totalCaixas) : 0;
+                          return `Custo unit.: R$ ${custoUnitario.toFixed(2)}/cx`;
+                        })()}
+                      </p>
                     </div>
                   </div>
 
@@ -561,9 +585,9 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                           <th className="border border-gray-300 px-2 py-1 text-left" style={{ fontSize: '8px' }}></th>
                           <th className="border border-gray-300 px-1 py-1 text-center bg-orange-50" style={{ fontSize: '8px' }}>R$ Custo</th>
                           <th className="border border-gray-300 px-1 py-1 text-center bg-orange-50" style={{ fontSize: '8px' }}>% MG </th>
-                          <th className="border border-gray-300 px-1 py-1 text-center bg-cyan-50" style={{ fontSize: '8px' }}>R$Custo</th>
+                          <th className="border border-gray-300 px-1 py-1 text-center bg-cyan-50" style={{ fontSize: '8px' }}>R$ Custo</th>
                           <th className="border border-gray-300 px-1 py-1 text-center bg-cyan-50" style={{ fontSize: '8px' }}>% MG </th>
-                          <th className="border border-gray-300 px-1 py-1 text-center bg-green-50" style={{ fontSize: '8px' }}>R$ Custo</th>
+                          <th className="border border-gray-300 px-1 py-1 text-center bg-green-50" style={{ fontSize: '8px' }}>R$ Venda</th>
                         </tr>
                       </thead>
                       <tbody>
