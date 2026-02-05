@@ -439,7 +439,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 </p>
               </div>
               <div className="bg-gray-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Filé Embalado</p>
+                <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Glazer</p>
                 <p className="font-bold" style={{ fontSize: '15px', margin: 0 }}>{calcularFileEmbaladoDinamico().toFixed(2)} kg</p>
               </div>
               <div className="bg-gray-50 p-2 rounded">
