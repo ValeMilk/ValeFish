@@ -407,14 +407,14 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
 
         {/* Embalagem */}
         {lote.status === 'finalizado' && (
-          <div className="mb-2.5">
-            <h2 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
+          <div className="mb-2">
+            <h2 style={{ fontSize: '10px', margin: '0 0 3px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-0.5">
               Embalagem
             </h2>
-            <div className="grid grid-cols-4 gap-2" style={{ fontSize: '10px' }}>
-              <div className="bg-gray-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Total Pacotes</p>
-                <p className="font-bold" style={{ fontSize: '11px', margin: 0 }}>
+            <div className="grid grid-cols-5 gap-1.5" style={{ fontSize: '9px' }}>
+              <div className="bg-gray-50 p-1.5 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '7.5px' }}>Total Pacotes</p>
+                <p className="font-bold" style={{ fontSize: '9.5px', margin: 0 }}>
                   {(() => {
                     const tipoFile = lote.tipoFile || '400g';
                     const caixas = lote.caixas || lote.qtdMaster || 0;
@@ -426,8 +426,8 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 </p>
               </div>
               <div className="bg-gray-50 p-1.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '8px' }}>Total Caixas</p>
-                <p className="font-bold" style={{ fontSize: '10px', margin: 0 }}>
+                <p className="text-gray-600 mb-0" style={{ fontSize: '7.5px' }}>Total Caixas</p>
+                <p className="font-bold" style={{ fontSize: '9.5px', margin: 0 }}>
                   {(() => {
                     const tipoFile = lote.tipoFile || '400g';
                     const caixas = lote.caixas || lote.qtdMaster || 0;
@@ -439,24 +439,46 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 </p>
               </div>
               <div className="bg-gray-50 p-1.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '8px' }}>Filé Embalado</p>
-                <p className="font-bold" style={{ fontSize: '10px', margin: 0 }}>{calcularFileEmbaladoDinamico().toFixed(2)} kg</p>
+                <p className="text-gray-600 mb-0" style={{ fontSize: '7.5px' }}>Filé Embalado</p>
+                <p className="font-bold" style={{ fontSize: '9.5px', margin: 0 }}>{calcularFileEmbaladoDinamico().toFixed(2)} kg</p>
               </div>
               <div className="bg-gray-50 p-1.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '8px' }}>Data Fabric.</p>
-                <p className="font-semibold" style={{ fontSize: '10px', margin: 0 }}>{formatarData(lote.dataFabricacao)}</p>
+                <p className="text-gray-600 mb-0" style={{ fontSize: '7.5px' }}>Data Fabric.</p>
+                <p className="font-semibold" style={{ fontSize: '9.5px', margin: 0 }}>{formatarData(lote.dataFabricacao)}</p>
               </div>
-              <div className="bg-gray-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Data Validade</p>
-                <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{formatarData(lote.dataValidade)}</p>
+              <div className="bg-gray-50 p-1.5 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '7.5px' }}>Data Validade</p>
+                <p className="font-semibold" style={{ fontSize: '9.5px', margin: 0 }}>{formatarData(lote.dataValidade)}</p>
               </div>
-              <div className="bg-green-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Aprov. NF</p>
-                <p className="font-bold text-green-900" style={{ fontSize: '11px', margin: 0 }}>{aproveitamento.aprovNotaFiscal}%</p>
+              <div className="bg-green-50 p-1.5 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '7.5px' }}>Aprov. NF</p>
+                <p className="font-bold text-green-900" style={{ fontSize: '9.5px', margin: 0 }}>{aproveitamento.aprovNotaFiscal}%</p>
               </div>
-              <div className="bg-green-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Aprov. Salão</p>
-                <p className="font-bold text-green-900" style={{ fontSize: '11px', margin: 0 }}>{aproveitamento.aprovSalao}%</p>
+              <div className="bg-green-50 p-1.5 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '7.5px' }}>Aprov. Salão</p>
+                <p className="font-bold text-green-900" style={{ fontSize: '9.5px', margin: 0 }}>{aproveitamento.aprovSalao}%</p>
+              </div>
+              <div className="bg-purple-50 p-1.5 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '7.5px' }}>% Aprov x In Nat.</p>
+                <p className="font-bold text-purple-900" style={{ fontSize: '9.5px', margin: 0 }}>
+                  {(() => {
+                    const fileEmbalado = calcularFileEmbaladoDinamico();
+                    const fileInNatura = totalInNatura;
+                    const resultado = fileInNatura > 0 ? ((fileEmbalado / fileInNatura) - 1) * 100 : 0;
+                    return `${resultado.toFixed(2)}%`;
+                  })()}
+                </p>
+              </div>
+              <div className="bg-purple-50 p-1.5 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '7.5px' }}>% Aprov x Cong.</p>
+                <p className="font-bold text-purple-900" style={{ fontSize: '9.5px', margin: 0 }}>
+                  {(() => {
+                    const fileEmbalado = calcularFileEmbaladoDinamico();
+                    const fileCongelado = totalCongelado;
+                    const resultado = fileCongelado > 0 ? ((fileEmbalado / fileCongelado) - 1) * 100 : 0;
+                    return `${resultado.toFixed(2)}%`;
+                  })()}
+                </p>
               </div>
             </div>
             
