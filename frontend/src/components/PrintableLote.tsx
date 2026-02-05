@@ -250,6 +250,9 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
             <div className="bg-yellow-50 p-2 rounded">
               <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Valor Transferência</p>
               <p className="font-bold text-yellow-900" style={{ fontSize: '12px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+              <p className="text-gray-500" style={{ fontSize: '8px', margin: '2px 0 0 0' }}>
+                Preço médio: R$ {totalNF > 0 ? ((lote.valorNF || 0) / totalNF).toFixed(2) : '0.00'}/kg
+              </p>
             </div>
           </div>
         </div>
