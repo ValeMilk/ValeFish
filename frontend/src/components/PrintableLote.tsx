@@ -247,12 +247,9 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
               <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Nota Fiscal</p>
               <p className="font-semibold" style={{ fontSize: '11px', margin: 0 }}>{lote.numeroNF || '-'}</p>
             </div>
-            <div className="bg-yellow-50 p-2 rounded">
-              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Valor Transferência</p>
-              <p className="font-bold text-yellow-900" style={{ fontSize: '12px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-              <p className="text-gray-500" style={{ fontSize: '8px', margin: '2px 0 0 0' }}>
-                Preço médio: R$ {totalNF > 0 ? ((lote.valorNF || 0) / totalNF).toFixed(2) : '0.00'}/kg
-              </p>
+            <div className="bg-gray-50 p-2 rounded">
+              <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Tipo Filé</p>
+              <p className="font-semibold" style={{ margin: 0, fontSize: '11px' }}>{lote.tipoFile || '-'}</p>
             </div>
           </div>
         </div>
@@ -415,9 +412,12 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
               Embalagem
             </h2>
             <div className="grid grid-cols-4 gap-2" style={{ fontSize: '10px' }}>
-              <div className="bg-gray-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Tipo Filé</p>
-                <p className="font-semibold" style={{ margin: 0, fontSize: '11px' }}>{lote.tipoFile || '-'}</p>
+              <div className="bg-yellow-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Valor Transferência</p>
+                <p className="font-bold text-yellow-900" style={{ fontSize: '12px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                <p className="text-gray-500" style={{ fontSize: '8px', margin: '2px 0 0 0' }}>
+                  Preço médio: R$ {totalNF > 0 ? ((lote.valorNF || 0) / totalNF).toFixed(2) : '0.00'}/kg
+                </p>
               </div>
               <div className="bg-gray-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Total Pacotes</p>
@@ -465,7 +465,15 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Aprov. Salão</p>
                 <p className="font-bold text-green-900" style={{ fontSize: '11px', margin: 0 }}>{aproveitamento.aprovSalao}%</p>
               </div>
-              <div className="bg-blue-50 p-2 rounded">
+            </div>
+            
+            {tabelaCustos && (
+              <>
+                <div className="mt-2.5">
+                  <h3 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
+                    Análise de Custos
+                  </h3>
+                    <div className="bg-blue-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Pacotes</p>
                 <p className="font-bold text-blue-900" style={{ fontSize: '11px', margin: 0 }}>R$ {(lote.custoPacotes || custos.custoPacotes).toFixed(2)}</p>
               </div>
@@ -493,14 +501,6 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                   })()}
                 </p>
               </div>
-            </div>
-            
-            {tabelaCustos && (
-              <>
-                <div className="mt-2.5">
-                  <h3 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
-                    Análise de Custos
-                  </h3>
                   <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '10px' }}>
                     <thead>
                       <tr className="bg-gray-200">
