@@ -626,7 +626,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
         {/* Footer */}
         <div className="mt-3 pt-2 border-t border-gray-200 text-center" style={{ fontSize: '8px' }}>
           <p className="text-gray-600" style={{ margin: 0 }}>ValeFish - Sistema de Gestão de Lotes</p>
-          <p className="text-gray-500" style={{ fontSize: '9px', margin: '3px 0 0 0' }}>
+          <p className="text-gray-500" style={{ fontSize: '8px', margin: '2px 0 0 0' }}>
             Documento gerado automaticamente em {new Date().toLocaleString('pt-BR')}{username && ` por ${username}`}
           </p>
         </div>
