@@ -139,6 +139,48 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
     // Sempre calcular na hora para garantir precisão
     const tabelaCustos = calcularTabelaCustos();
 
+    // Calcular análise de margem
+    const calcularAnaliseMargem = () => {
+      if (!tabelaCustos) return null;
+      
+      const tipoFile = lote.tipoFile || '400g';
+      
+      // INDÚSTRIA (FILE + EMBALAGEM)
+      const industriaPacote = tabelaCustos.custoFile.pacote + tabelaCustos.custoEmbalagem.pacote;
+      const industriaKg = tabelaCustos.custoFile.kg + tabelaCustos.custoEmbalagem.kg;
+      const industriaCaixa = tabelaCustos.custoFile.caixa + tabelaCustos.custoEmbalagem.caixa;
+      
+      // FILIAL (TOTAL = FILE + EMBALAGEM + SERVIÇO)
+      const filialPacote = tabelaCustos.custoTotal.pacote;
+      const filialKg = tabelaCustos.custoTotal.kg;
+      const filialCaixa = tabelaCustos.custoTotal.caixa;
+      
+      // CLIENTE (valores fixos)
+      const clientePacote = tipoFile === '400g' ? 16.00 : 32.00;
+      const clienteKg = 40.00;
+      const clienteCaixa = 384.00;
+      
+      // % MG IND (INDÚSTRIA - TOTAL) / TOTAL * 100
+      const mgIndPacote = ((industriaPacote - filialPacote) / filialPacote) * 100;
+      const mgIndKg = ((industriaKg - filialKg) / filialKg) * 100;
+      const mgIndCaixa = ((industriaCaixa - filialCaixa) / filialCaixa) * 100;
+      
+      // % MG FILIAL (CLIENTE - TOTAL) / CLIENTE * 100
+      const mgFilialPacote = ((clientePacote - filialPacote) / clientePacote) * 100;
+      const mgFilialKg = ((clienteKg - filialKg) / clienteKg) * 100;
+      const mgFilialCaixa = ((clienteCaixa - filialCaixa) / clienteCaixa) * 100;
+      
+      return {
+        industria: { pacote: industriaPacote, kg: industriaKg, caixa: industriaCaixa },
+        filial: { pacote: filialPacote, kg: filialKg, caixa: filialCaixa },
+        cliente: { pacote: clientePacote, kg: clienteKg, caixa: clienteCaixa },
+        mgInd: { pacote: mgIndPacote, kg: mgIndKg, caixa: mgIndCaixa },
+        mgFilial: { pacote: mgFilialPacote, kg: mgFilialKg, caixa: mgFilialCaixa }
+      };
+    };
+    
+    const analiseMargem = calcularAnaliseMargem();
+
     return (
       <div ref={ref} className="p-4 bg-white" style={{ width: '210mm', fontSize: '11px', lineHeight: '1.35' }}>
         <style>{`
@@ -431,45 +473,99 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
             </div>
             
             {tabelaCustos && (
-              <div className="mt-2.5">
-                <h3 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
-                  Análise de Custos
-                </h3>
-                <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '10px' }}>
-                  <thead>
-                    <tr className="bg-gray-200">
-                      <th className="border border-gray-300 px-2 py-1 text-left" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Unidade</th>
-                      <th className="border border-gray-300 px-2 py-1 text-right bg-yellow-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Filé (R$)</th>
-                      <th className="border border-gray-300 px-2 py-1 text-right bg-blue-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Embalagem (R$)</th>
-                      <th className="border border-gray-300 px-2 py-1 text-right bg-green-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Serviço (R$)</th>
-                      <th className="border border-gray-300 px-2 py-1 text-right bg-purple-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Total (R$)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border border-gray-300 px-2 py-1 font-medium">Pacote</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.pacote)}</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.pacote)}</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.pacote)}</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.pacote)}</td>
-                    </tr>
-                    <tr className="bg-yellow-50">
-                      <td className="border border-gray-300 px-2 py-1 font-medium">KG</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.kg)}</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.kg)}</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.kg)}</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.kg)}</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-gray-300 px-2 py-1 font-medium">Caixa</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.caixa)}</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.caixa)}</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.caixa)}</td>
-                      <td className="border border-gray-300 px-2 py-1 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.caixa)}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              <>
+                <div className="mt-2.5">
+                  <h3 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
+                    Análise de Custos
+                  </h3>
+                  <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '10px' }}>
+                    <thead>
+                      <tr className="bg-gray-200">
+                        <th className="border border-gray-300 px-2 py-1 text-left" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Unidade</th>
+                        <th className="border border-gray-300 px-2 py-1 text-right bg-yellow-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Filé (R$)</th>
+                        <th className="border border-gray-300 px-2 py-1 text-right bg-blue-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Embalagem (R$)</th>
+                        <th className="border border-gray-300 px-2 py-1 text-right bg-green-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Serviço (R$)</th>
+                        <th className="border border-gray-300 px-2 py-1 text-right bg-purple-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Total (R$)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border border-gray-300 px-2 py-1 font-medium">Pacote</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.pacote)}</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.pacote)}</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.pacote)}</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.pacote)}</td>
+                      </tr>
+                      <tr className="bg-yellow-50">
+                        <td className="border border-gray-300 px-2 py-1 font-medium">KG</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.kg)}</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.kg)}</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.kg)}</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.kg)}</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-gray-300 px-2 py-1 font-medium">Caixa</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoFile.caixa)}</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoEmbalagem.caixa)}</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right">R$ {formatarMoeda(tabelaCustos.custoServico.caixa)}</td>
+                        <td className="border border-gray-300 px-2 py-1 text-right font-bold">R$ {formatarMoeda(tabelaCustos.custoTotal.caixa)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {analiseMargem && (
+                  <div className="mt-2.5">
+                    <h3 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
+                      Análise de Margem
+                    </h3>
+                    <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '10px' }}>
+                      <thead>
+                        <tr className="bg-gray-200">
+                          <th className="border border-gray-300 px-2 py-1 text-left" style={{ fontSize: '9px', textTransform: 'uppercase' }}>Unidade</th>
+                          <th className="border border-gray-300 px-2 py-1 text-center bg-orange-100" style={{ fontSize: '9px', textTransform: 'uppercase' }} colSpan={2}>INDÚSTRIA</th>
+                          <th className="border border-gray-300 px-2 py-1 text-center bg-cyan-100" style={{ fontSize: '9px', textTransform: 'uppercase' }} colSpan={2}>FILIAL</th>
+                          <th className="border border-gray-300 px-2 py-1 text-center bg-green-100" style={{ fontSize: '9px', textTransform: 'uppercase' }}>CLIENTE</th>
+                        </tr>
+                        <tr className="bg-gray-100">
+                          <th className="border border-gray-300 px-2 py-1 text-left" style={{ fontSize: '8px' }}></th>
+                          <th className="border border-gray-300 px-1 py-1 text-center bg-orange-50" style={{ fontSize: '8px' }}>R$</th>
+                          <th className="border border-gray-300 px-1 py-1 text-center bg-orange-50" style={{ fontSize: '8px' }}>% MG IND</th>
+                          <th className="border border-gray-300 px-1 py-1 text-center bg-cyan-50" style={{ fontSize: '8px' }}>R$</th>
+                          <th className="border border-gray-300 px-1 py-1 text-center bg-cyan-50" style={{ fontSize: '8px' }}>% MG IND</th>
+                          <th className="border border-gray-300 px-1 py-1 text-center bg-green-50" style={{ fontSize: '8px' }}>R$</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="border border-gray-300 px-2 py-1 font-medium">Pacote</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">R$ {formatarMoeda(analiseMargem.industria.pacote)}</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">{formatarMoeda(analiseMargem.mgInd.pacote)}%</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">R$ {formatarMoeda(analiseMargem.filial.pacote)}</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">{formatarMoeda(analiseMargem.mgFilial.pacote)}%</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right font-bold">R$ {formatarMoeda(analiseMargem.cliente.pacote)}</td>
+                        </tr>
+                        <tr className="bg-yellow-50">
+                          <td className="border border-gray-300 px-2 py-1 font-medium">KG</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">R$ {formatarMoeda(analiseMargem.industria.kg)}</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">{formatarMoeda(analiseMargem.mgInd.kg)}%</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">R$ {formatarMoeda(analiseMargem.filial.kg)}</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">{formatarMoeda(analiseMargem.mgFilial.kg)}%</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right font-bold">R$ {formatarMoeda(analiseMargem.cliente.kg)}</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-gray-300 px-2 py-1 font-medium">Caixa</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">R$ {formatarMoeda(analiseMargem.industria.caixa)}</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">{formatarMoeda(analiseMargem.mgInd.caixa)}%</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">R$ {formatarMoeda(analiseMargem.filial.caixa)}</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">{formatarMoeda(analiseMargem.mgFilial.caixa)}%</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right font-bold">R$ {formatarMoeda(analiseMargem.cliente.caixa)}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
