@@ -412,13 +412,6 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
               Embalagem
             </h2>
             <div className="grid grid-cols-4 gap-2" style={{ fontSize: '10px' }}>
-              <div className="bg-yellow-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Valor Transferência</p>
-                <p className="font-bold text-yellow-900" style={{ fontSize: '12px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                <p className="text-gray-500" style={{ fontSize: '8px', margin: '2px 0 0 0' }}>
-                  Preço médio: R$ {totalNF > 0 ? ((lote.valorNF || 0) / totalNF).toFixed(2) : '0.00'}/kg
-                </p>
-              </div>
               <div className="bg-gray-50 p-2 rounded">
                 <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Total Pacotes</p>
                 <p className="font-bold" style={{ fontSize: '11px', margin: 0 }}>
@@ -473,34 +466,26 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                   <h3 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
                     Análise de Custos
                   </h3>
-                    <div className="bg-blue-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Pacotes</p>
-                <p className="font-bold text-blue-900" style={{ fontSize: '11px', margin: 0 }}>R$ {(lote.custoPacotes || custos.custoPacotes).toFixed(2)}</p>
-              </div>
-              <div className="bg-purple-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Caixas</p>
-                <p className="font-bold text-purple-900" style={{ fontSize: '11px', margin: 0 }}>R$ {(lote.custoCaixas || custos.custoCaixas).toFixed(2)}</p>
-              </div>
-              <div className="bg-cyan-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>% Aprov Emb. x In Natura</p>
-                <p className="font-bold text-cyan-900" style={{ fontSize: '11px', margin: 0 }}>
-                  {(() => {
-                    const fileEmbalado = calcularFileEmbaladoDinamico();
-                    const aprovEmb = totalInNatura > 0 ? (((fileEmbalado / totalInNatura) - 1) * 100) : 0;
-                    return `${aprovEmb.toFixed(2)}%`;
-                  })()}
-                </p>
-              </div>
-              <div className="bg-indigo-50 p-2 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>% Aprov Emb. x Congelado</p>
-                <p className="font-bold text-indigo-900" style={{ fontSize: '11px', margin: 0 }}>
-                  {(() => {
-                    const fileEmbalado = calcularFileEmbaladoDinamico();
-                    const aprovEmb = totalCongelado > 0 ? (((fileEmbalado / totalCongelado) - 1) * 100) : 0;
-                    return `${aprovEmb.toFixed(2)}%`;
-                  })()}
-                </p>
-              </div>
+                  
+                  {/* Cards de valores lado a lado */}
+                  <div className="grid grid-cols-3 gap-2 mb-2" style={{ fontSize: '10px' }}>
+                    <div className="bg-yellow-50 p-2 rounded border border-yellow-200">
+                      <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Valor Transferência</p>
+                      <p className="font-bold text-yellow-900" style={{ fontSize: '11px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                      <p className="text-gray-500" style={{ fontSize: '8px', margin: '2px 0 0 0' }}>
+                        Preço médio: R$ {totalNF > 0 ? ((lote.valorNF || 0) / totalNF).toFixed(2) : '0.00'}/kg
+                      </p>
+                    </div>
+                    <div className="bg-blue-50 p-2 rounded border border-blue-200">
+                      <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Pacotes</p>
+                      <p className="font-bold text-blue-900" style={{ fontSize: '11px', margin: 0 }}>R$ {(lote.custoPacotes || custos.custoPacotes).toFixed(2)}</p>
+                    </div>
+                    <div className="bg-purple-50 p-2 rounded border border-purple-200">
+                      <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Caixas</p>
+                      <p className="font-bold text-purple-900" style={{ fontSize: '11px', margin: 0 }}>R$ {(lote.custoCaixas || custos.custoCaixas).toFixed(2)}</p>
+                    </div>
+                  </div>
+
                   <table className="w-full border-collapse border border-gray-300" style={{ fontSize: '10px' }}>
                     <thead>
                       <tr className="bg-gray-200">
