@@ -413,8 +413,8 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
             </h2>
             <div className="grid grid-cols-5 gap-1.5" style={{ fontSize: '10px' }}>
               <div className="bg-gray-50 p-1.5 rounded">
-                <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Total Pacotes</p>
-                <p className="font-bold" style={{ fontSize: '10px', margin: 0 }}>
+                <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Total Pacotes</p>
+                <p className="font-bold" style={{ fontSize: '15px', margin: 0 }}>
                   {(() => {
                     const tipoFile = lote.tipoFile || '400g';
                     const caixas = lote.caixas || lote.qtdMaster || 0;
@@ -492,9 +492,9 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                   {/* Cards de valores lado a lado */}
                   <div className="grid grid-cols-3 gap-1.5 mb-1" style={{ fontSize: '10px' }}>
                     <div className="bg-yellow-50 p-1.5 rounded border border-yellow-200">
-                      <p className="text-gray-600 mb-0" style={{ fontSize: '7px' }}>Valor Transferência</p>
-                      <p className="font-bold text-yellow-900" style={{ fontSize: '10px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                      <p className="text-gray-500" style={{ fontSize: '6.5px', margin: '1px 0 0 0' }}>
+                      <p className="text-gray-600 mb-0" style={{ fontSize: '10px' }}>Valor Transferência</p>
+                      <p className="font-bold text-yellow-900" style={{ fontSize: '15px', margin: 0 }}>R$ {(lote.valorNF || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                      <p className="text-gray-500" style={{ fontSize: '8px', margin: '1px 0 0 0' }}>
                         Preço médio: R$ {totalNF > 0 ? ((lote.valorNF || 0) / totalNF).toFixed(2) : '0.00'}/kg
                       </p>
                     </div>
