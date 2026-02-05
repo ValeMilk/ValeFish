@@ -374,7 +374,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
 
         {/* Descartes */}
         <div className="mt-2.5">
-          <h3 style={{ fontSize: '11px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.4px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
+          <h3 style={{ fontSize: '13px', margin: '0 0 6px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }} className="font-bold text-gray-800 border-b border-gray-300 pb-1">
             Descartes
           </h3>
 
@@ -470,6 +470,26 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                 <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>Custo Caixas</p>
                 <p className="font-bold text-purple-900" style={{ fontSize: '11px', margin: 0 }}>R$ {(lote.custoCaixas || custos.custoCaixas).toFixed(2)}</p>
               </div>
+              <div className="bg-cyan-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>% Aprov Emb. x In Natura</p>
+                <p className="font-bold text-cyan-900" style={{ fontSize: '11px', margin: 0 }}>
+                  {(() => {
+                    const fileEmbalado = calcularFileEmbaladoDinamico();
+                    const aprovEmb = totalInNatura > 0 ? (((fileEmbalado / totalInNatura) - 1) * 100) : 0;
+                    return `${aprovEmb.toFixed(2)}%`;
+                  })()}
+                </p>
+              </div>
+              <div className="bg-indigo-50 p-2 rounded">
+                <p className="text-gray-600 mb-0" style={{ fontSize: '9px' }}>% Aprov Emb. x Congelado</p>
+                <p className="font-bold text-indigo-900" style={{ fontSize: '11px', margin: 0 }}>
+                  {(() => {
+                    const fileEmbalado = calcularFileEmbaladoDinamico();
+                    const aprovEmb = totalCongelado > 0 ? (((fileEmbalado / totalCongelado) - 1) * 100) : 0;
+                    return `${aprovEmb.toFixed(2)}%`;
+                  })()}
+                </p>
+              </div>
             </div>
             
             {tabelaCustos && (
@@ -555,7 +575,7 @@ const PrintableLote = React.forwardRef<HTMLDivElement, PrintableLoteProps>(
                         </tr>
                         <tr>
                           <td className="border border-gray-300 px-2 py-1 font-medium">Caixa</td>
-                          <td className="border border-gray-300 px-1 py-1 text-right">R$ Custo {formatarMoeda(analiseMargem.industria.caixa)}</td>
+                          <td className="border border-gray-300 px-1 py-1 text-right">R$ {formatarMoeda(analiseMargem.industria.caixa)}</td>
                           <td className="border border-gray-300 px-1 py-1 text-right">{formatarMoeda(analiseMargem.mgInd.caixa)}%</td>
                           <td className="border border-gray-300 px-1 py-1 text-right">R$ {formatarMoeda(analiseMargem.filial.caixa)}</td>
                           <td className="border border-gray-300 px-1 py-1 text-right">{formatarMoeda(analiseMargem.mgFilial.caixa)}%</td>
