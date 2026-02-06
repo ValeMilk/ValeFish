@@ -107,13 +107,27 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
           entry.valor += lote.valorNF;
         }
         
-        // Calcular custo total do lote (matéria-prima + embalagem + serviço)
-        if (lote.custoTotal && lote.fileEmbalado) {
-          const fileEmbalado = (lote.fileEmbalado.P || 0) + (lote.fileEmbalado.M || 0) + 
-                              (lote.fileEmbalado.G || 0) + (lote.fileEmbalado.GG || 0);
-          const custoKg = lote.custoTotal.kg || 0;
-          entry.custoTotal += fileEmbalado * custoKg;
+        // Calcular custo total do lote
+        let custoLote = 0;
+        
+        if (lote.custoTotal) {
+          // Se temos fileEmbalado e custoTotal.kg, calcula pelo peso
+          if (lote.fileEmbalado && lote.custoTotal.kg) {
+            const totalKg = (lote.fileEmbalado.P || 0) + (lote.fileEmbalado.M || 0) + 
+                           (lote.fileEmbalado.G || 0) + (lote.fileEmbalado.GG || 0);
+            custoLote = totalKg * lote.custoTotal.kg;
+          }
+          // Se temos pacotes e custoTotal.pacote, usa o custo por pacote
+          else if (lote.pacotes && lote.custoTotal.pacote) {
+            custoLote = lote.pacotes * lote.custoTotal.pacote;
+          }
+          // Se temos caixas e custoTotal.caixa, usa o custo por caixa
+          else if (lote.caixas && lote.custoTotal.caixa) {
+            custoLote = lote.caixas * lote.custoTotal.caixa;
+          }
         }
+        
+        entry.custoTotal += custoLote;
       }
       
       entry.count += 1;
