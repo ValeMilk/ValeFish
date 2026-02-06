@@ -354,13 +354,12 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
         </div>
       )}
 
-      {/* Lotes Recentes - Apenas para Admin */}
-      {userRole === 'admin' && (
-        <div className="card-ocean p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-foreground">Lotes Recentes</h2>
-            <span className="text-sm text-muted-foreground">{normalizedLotes.length} registros</span>
-          </div>
+      {/* Lotes Recentes */}
+      <div className="card-ocean p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-foreground">Lotes Recentes</h2>
+          <span className="text-sm text-muted-foreground">{normalizedLotes.length} registros</span>
+        </div>
 
         {normalizedLotes.length === 0 ? (
           <div className="text-center py-12">
@@ -443,8 +442,7 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
             })}
           </div>
         )}
-        </div>
-      )}
+      </div>
 
       {/* Modal de Edição */}
       <LoteModal
