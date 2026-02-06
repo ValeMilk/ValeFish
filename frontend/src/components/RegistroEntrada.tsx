@@ -368,7 +368,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
             inputMode="numeric"
           />
           <FormInput
-            label="Valor da Nota Fiscal"
+            label="Valor da Transferência"
             icon={<FileText className="w-4 h-4" />}
             type="number"
             placeholder="Digite o valor"
@@ -510,7 +510,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
             <button
               onClick={() => setDescartesConfirmado(false)}
               className="p-1 md:p-2 hover:bg-foreground/10 rounded-lg transition-colors ml-1"
-              title="Editar"
+              title="Visualizar"
             >
               <Edit2 className="w-4 h-4 text-foreground" />
             </button>
@@ -530,7 +530,7 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
             values={lote.descartes || { P: 0, M: 0, G: 0, GG: 0 }}
             onChange={(size, value) => handleSizeChange('descartes', size, value)}
             suffix="KG"
-            disabled={descartesConfirmado}
+            disabled={true}
           />
           
           {!descartesConfirmado && (
