@@ -204,7 +204,7 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${userRole === 'admin' ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-4`}>
         <div className="stat-card">
           <div className="flex items-start justify-between">
             <div>
@@ -229,18 +229,21 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
           </div>
         </div>
 
-        <div className="stat-card">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Faturamento</p>
-              <p className="text-3xl font-bold text-foreground mt-1">R$ {faturamentoFinalizados.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-              <p className="text-xs text-muted-foreground mt-1">Lotes finalizados</p>
-            </div>
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-yellow-500/15">
-              <TrendingUp className="w-5 h-5 text-yellow-500" />
+        {/* Card de Faturamento - Apenas para Admin */}
+        {userRole === 'admin' && (
+          <div className="stat-card">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Faturamento</p>
+                <p className="text-3xl font-bold text-foreground mt-1">R$ {faturamentoFinalizados.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                <p className="text-xs text-muted-foreground mt-1">Lotes finalizados</p>
+              </div>
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-yellow-500/15">
+                <TrendingUp className="w-5 h-5 text-yellow-500" />
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="stat-card">
           <div className="flex items-start justify-between">
@@ -255,57 +258,60 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
         </div>
       </div>
 
-      {/* Gráficos */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Gráfico Kg Processados */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Kg Processados (Últimos 7 dias)</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="date" 
-                tickFormatter={(value) => new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
-              />
-              <YAxis />
-              <Tooltip 
-                labelFormatter={(value) => new Date(value).toLocaleDateString('pt-BR')}
-                formatter={(value: any) => [`${value.toFixed(2)} kg`, 'Kg']}
-              />
-              <Legend />
-              <Line type="monotone" dataKey="kg" stroke="#3b82f6" strokeWidth={2} name="Kg" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+      {/* Gráficos - Apenas para Admin */}
+      {userRole === 'admin' && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Gráfico Kg Processados */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4">Kg Processados (Últimos 7 dias)</h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="date" 
+                  tickFormatter={(value) => new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                />
+                <YAxis />
+                <Tooltip 
+                  labelFormatter={(value) => new Date(value).toLocaleDateString('pt-BR')}
+                  formatter={(value: any) => [`${value.toFixed(2)} kg`, 'Kg']}
+                />
+                <Legend />
+                <Line type="monotone" dataKey="kg" stroke="#3b82f6" strokeWidth={2} name="Kg" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
 
-        {/* Gráfico Faturamento */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Faturamento Lotes Finalizados (Últimos 7 dias)</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="date" 
-                tickFormatter={(value) => new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
-              />
-              <YAxis />
-              <Tooltip 
-                labelFormatter={(value) => new Date(value).toLocaleDateString('pt-BR')}
-                formatter={(value: any) => [`R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Faturamento']}
-              />
-              <Legend />
-              <Line type="monotone" dataKey="valor" stroke="#10b981" strokeWidth={2} name="Faturamento (R$)" />
-            </LineChart>
-          </ResponsiveContainer>
+          {/* Gráfico Faturamento */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4">Faturamento Lotes Finalizados (Últimos 7 dias)</h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="date" 
+                  tickFormatter={(value) => new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                />
+                <YAxis />
+                <Tooltip 
+                  labelFormatter={(value) => new Date(value).toLocaleDateString('pt-BR')}
+                  formatter={(value: any) => [`R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Faturamento']}
+                />
+                <Legend />
+                <Line type="monotone" dataKey="valor" stroke="#10b981" strokeWidth={2} name="Faturamento (R$)" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Lotes Recentes */}
-      <div className="card-ocean p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-foreground">Lotes Recentes</h2>
-          <span className="text-sm text-muted-foreground">{normalizedLotes.length} registros</span>
-        </div>
+      {/* Lotes Recentes - Apenas para Admin */}
+      {userRole === 'admin' && (
+        <div className="card-ocean p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-foreground">Lotes Recentes</h2>
+            <span className="text-sm text-muted-foreground">{normalizedLotes.length} registros</span>
+          </div>
 
         {normalizedLotes.length === 0 ? (
           <div className="text-center py-12">
@@ -388,7 +394,8 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
             })}
           </div>
         )}
-      </div>
+        </div>
+      )}
 
       {/* Modal de Edição */}
       <LoteModal
