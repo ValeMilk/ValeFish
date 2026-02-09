@@ -7,6 +7,12 @@ interface WeightBySize {
   GG: number;
 }
 
+interface CustoTotal {
+  pacote: number;
+  kg: number;
+  caixa: number;
+}
+
 interface ILote {
   dataProducao: string;
   processo: string;
@@ -34,6 +40,8 @@ interface ILote {
   
   aprovNotaFiscal?: number;
   aprovSalao?: number;
+  
+  custoTotal?: CustoTotal;
   
   status: 'aberto' | 'em_producao' | 'finalizado';
   createdAt: Date;
@@ -91,6 +99,12 @@ const loteSchema = new Schema<ILote>(
     
     aprovNotaFiscal: Number,
     aprovSalao: Number,
+    
+    custoTotal: {
+      pacote: { type: Number, default: 0 },
+      kg: { type: Number, default: 0 },
+      caixa: { type: Number, default: 0 },
+    },
     
     status: {
       type: String,

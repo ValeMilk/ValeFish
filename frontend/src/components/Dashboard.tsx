@@ -106,45 +106,47 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
       if (lote.status === 'finalizado') {
         entry.countFinalizados += 1;
         
-        console.log('=== Lote Finalizado ===');
-        console.log('Numero:', lote.numeroLote);
-        console.log('custoTotal:', JSON.stringify(lote.custoTotal, null, 2));
-        console.log('fileEmbalado:', JSON.stringify(lote.fileEmbalado, null, 2));
-        console.log('pacotes:', lote.pacotes);
-        console.log('caixas:', lote.caixas);
-        
         if (lote.valorNF) {
           entry.valor += lote.valorNF;
         }
         
-        // Calcular custo total do lote
+        // Calcular custo total do lote dinamicamente
         let custoLote = 0;
         
-        if (lote.custoTotal) {
-          // Se temos fileEmbalado e custoTotal.kg, calcula pelo peso
-          if (lote.fileEmbalado && lote.custoTotal.kg) {
-            const totalKg = (lote.fileEmbalado.P || 0) + (lote.fileEmbalado.M || 0) + 
-                           (lote.fileEmbalado.G || 0) + (lote.fileEmbalado.GG || 0);
-            custoLote = totalKg * lote.custoTotal.kg;
-            console.log('Calculado por kg - totalKg:', totalKg, 'custoTotal.kg:', lote.custoTotal.kg, 'custoLote:', custoLote);
-          }
-          // Se temos pacotes e custoTotal.pacote, usa o custo por pacote
-          else if (lote.pacotes && lote.custoTotal.pacote) {
-            custoLote = lote.pacotes * lote.custoTotal.pacote;
-            console.log('Calculado por pacote - pacotes:', lote.pacotes, 'custoTotal.pacote:', lote.custoTotal.pacote, 'custoLote:', custoLote);
-          }
-          // Se temos caixas e custoTotal.caixa, usa o custo por caixa
-          else if (lote.caixas && lote.custoTotal.caixa) {
-            custoLote = lote.caixas * lote.custoTotal.caixa;
-            console.log('Calculado por caixa - caixas:', lote.caixas, 'custoTotal.caixa:', lote.custoTotal.caixa, 'custoLote:', custoLote);
-          } else {
-            console.log('❌ Nenhuma condição de cálculo atendida');
-          }
-        } else {
-          console.log('❌ lote.custoTotal NÃO EXISTE!');
+        const tipoFile = lote.tipoFile || '400g';
+        const caixas = lote.caixas || lote.qtdMaster || 0;
+        const pacotes = lote.pacotes || lote.qtdSacos ||0;
+        const valorNF = lote.valorNF || 0;
+        const fileEmbaladoTotal = lote.fileEmbalado 
+          ? (lote.fileEmbalado.P || 0) + (lote.fileEmbalado.M || 0) + 
+            (lote.fileEmbalado.G || 0) + (lote.fileEmbalado.GG || 0)
+          : 0;
+        
+        if (valorNF > 0 && fileEmbaladoTotal > 0) {
+          const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
+          const totalPacotes = caixas * pacotesPorCaixa + pacotes;
+          const totalCaixas = Math.round((pacotes / pacotesPorCaixa + caixas) * 100) / 100;
+          
+          // Calcular custos (mesma lógica do PrintableLote)
+          // FILÉ (custo do produto no lote)
+          const fileKg = valorNF / fileEmbaladoTotal;
+          
+          // EMBALAGEM
+          const custoPacoteBase = tipoFile === '400g' ? 0.4295 : 0.5515;
+          const embalagemPacket = custoPacoteBase + (6.05 / pacotesPorCaixa);
+          const divisorKg = tipoFile === '400g' ? 4 : 8;
+          const embalagemKg = (embalagemPacket / divisorKg) * 10;
+          
+          // SERVIÇO
+          const servicoKg = 6.00;
+          
+          // TOTAL POR KG
+          const custoTotalKg = fileKg + embalagemKg + servicoKg;
+          
+          // Custo total do lote
+          custoLote = fileEmbaladoTotal * custoTotalKg;
         }
         
-        console.log('custoLote final:', custoLote);
         entry.custoTotal += custoLote;
       }
       
