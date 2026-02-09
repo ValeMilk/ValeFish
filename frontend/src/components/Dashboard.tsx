@@ -106,6 +106,13 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
       if (lote.status === 'finalizado') {
         entry.countFinalizados += 1;
         
+        console.log('=== Lote Finalizado ===');
+        console.log('Numero:', lote.numeroLote);
+        console.log('custoTotal:', JSON.stringify(lote.custoTotal, null, 2));
+        console.log('fileEmbalado:', JSON.stringify(lote.fileEmbalado, null, 2));
+        console.log('pacotes:', lote.pacotes);
+        console.log('caixas:', lote.caixas);
+        
         if (lote.valorNF) {
           entry.valor += lote.valorNF;
         }
@@ -119,17 +126,25 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
             const totalKg = (lote.fileEmbalado.P || 0) + (lote.fileEmbalado.M || 0) + 
                            (lote.fileEmbalado.G || 0) + (lote.fileEmbalado.GG || 0);
             custoLote = totalKg * lote.custoTotal.kg;
+            console.log('Calculado por kg - totalKg:', totalKg, 'custoTotal.kg:', lote.custoTotal.kg, 'custoLote:', custoLote);
           }
           // Se temos pacotes e custoTotal.pacote, usa o custo por pacote
           else if (lote.pacotes && lote.custoTotal.pacote) {
             custoLote = lote.pacotes * lote.custoTotal.pacote;
+            console.log('Calculado por pacote - pacotes:', lote.pacotes, 'custoTotal.pacote:', lote.custoTotal.pacote, 'custoLote:', custoLote);
           }
           // Se temos caixas e custoTotal.caixa, usa o custo por caixa
           else if (lote.caixas && lote.custoTotal.caixa) {
             custoLote = lote.caixas * lote.custoTotal.caixa;
+            console.log('Calculado por caixa - caixas:', lote.caixas, 'custoTotal.caixa:', lote.custoTotal.caixa, 'custoLote:', custoLote);
+          } else {
+            console.log('❌ Nenhuma condição de cálculo atendida');
           }
+        } else {
+          console.log('❌ lote.custoTotal NÃO EXISTE!');
         }
         
+        console.log('custoLote final:', custoLote);
         entry.custoTotal += custoLote;
       }
       
