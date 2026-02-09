@@ -85,15 +85,14 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
       valor: number; 
       count: number;
       countFinalizados: number;
-      custoTotal: number;
-      custoTotalKgAcumulado: number;
+      custoTotalCaixaAcumulado: number;
       margemFilialPercent: number;
     }>();
     
     normalizedLotes.forEach(lote => {
       const date = lote.dataProducao;
       if (!dataMap.has(date)) {
-        dataMap.set(date, { date, kg: 0, valor: 0, count: 0, countFinalizados: 0, custoTotal: 0, custoTotalKgAcumulado: 0, margemFilialPercent: 0 });
+        dataMap.set(date, { date, kg: 0, valor: 0, count: 0, countFinalizados: 0, custoTotalCaixaAcumulado: 0, margemFilialPercent: 0 });
       }
       const entry = dataMap.get(date)!;
       
@@ -111,12 +110,10 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
           entry.valor += lote.valorNF;
         }
         
-        // Calcular custo total do lote dinamicamente
-        let custoLote = 0;
-        
+        // Calcular custo total por caixa do lote (mesma lógica do PrintableLote)
         const tipoFile = lote.tipoFile || '400g';
         const caixas = lote.caixas || lote.qtdMaster || 0;
-        const pacotes = lote.pacotes || lote.qtdSacos ||0;
+        const pacotes = lote.pacotes || lote.qtdSacos || 0;
         const valorNF = lote.valorNF || 0;
         const fileEmbaladoTotal = lote.fileEmbalado 
           ? (lote.fileEmbalado.P || 0) + (lote.fileEmbalado.M || 0) + 
@@ -125,62 +122,54 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
         
         if (valorNF > 0 && fileEmbaladoTotal > 0) {
           const pacotesPorCaixa = tipoFile === '800g' ? 12 : 24;
-          const totalPacotes = caixas * pacotesPorCaixa + pacotes;
           const totalCaixas = Math.round((pacotes / pacotesPorCaixa + caixas) * 100) / 100;
           
-          // Calcular custos (mesma lógica do PrintableLote)
-          // FILÉ (custo do produto no lote)
-          const fileKg = valorNF / fileEmbaladoTotal;
-          
-          // EMBALAGEM
-          const custoPacoteBase = tipoFile === '400g' ? 0.4295 : 0.5515;
-          const embalagemPacket = custoPacoteBase + (6.05 / pacotesPorCaixa);
-          const divisorKg = tipoFile === '400g' ? 4 : 8;
-          const embalagemKg = (embalagemPacket / divisorKg) * 10;
-          
-          // SERVIÇO
-          const servicoKg = 6.00;
-          
-          // TOTAL POR KG
-          const custoTotalKg = fileKg + embalagemKg + servicoKg;
-          
-          // Custo total do lote
-          custoLote = fileEmbaladoTotal * custoTotalKg;
-          
-          // Acumular custo por kg para média
-          entry.custoTotalKgAcumulado += custoTotalKg;
+          if (totalCaixas > 0) {
+            // Calcular custos por caixa (mesma lógica do PrintableLote)
+            // FILÉ
+            const fileBox = valorNF / totalCaixas;
+            
+            // EMBALAGEM
+            const custoPacoteBase = tipoFile === '400g' ? 0.4295 : 0.5515;
+            const embalagemPacket = custoPacoteBase + (6.05 / pacotesPorCaixa);
+            const divisorKg = tipoFile === '400g' ? 4 : 8;
+            const embalagemKg = (embalagemPacket / divisorKg) * 10;
+            const embalagemBox = embalagemKg * 9.6;
+            
+            // SERVIÇO
+            const servicoBox = 57.60;
+            
+            // TOTAL POR CAIXA
+            const custoTotalCaixa = fileBox + embalagemBox + servicoBox;
+            
+            // Acumular custo por caixa para média
+            entry.custoTotalCaixaAcumulado += custoTotalCaixa;
+          }
         }
-        
-        entry.custoTotal += custoLote;
       }
       
       entry.count += 1;
     });
     
-    // Calcular média de custo por lote e margem da filial
+    // Calcular média de custo por caixa e margem da filial
     const result = Array.from(dataMap.values()).map(entry => {
-      // Média de custo por lote finalizado
-      const custoMedioPorLote = entry.countFinalizados > 0 
-        ? entry.custoTotal / entry.countFinalizados 
+      // Média de custo por caixa dos lotes finalizados
+      const custoMedioPorCaixa = entry.countFinalizados > 0 
+        ? entry.custoTotalCaixaAcumulado / entry.countFinalizados 
         : 0;
       
-      // Margem da Filial: ((Preço Cliente - Custo Total) / Preço Cliente) * 100
-      // Preço cliente por kg = R$ 40,00
-      const precoClienteKg = 40.00;
+      // Margem da Filial: ((Preço Cliente - Custo) / Preço Cliente) * 100
+      // Preço cliente por caixa = R$ 384,00 (fixo)
+      const precoClienteCaixa = 384.00;
       
-      // Calcular custo médio por kg (média dos custos por kg dos lotes finalizados)
-      const custoMedioKg = entry.countFinalizados > 0 
-        ? entry.custoTotalKgAcumulado / entry.countFinalizados 
-        : 0;
-      
-      // Margem % da Filial
-      const margemFilialPercent = precoClienteKg > 0 && custoMedioKg > 0
-        ? ((precoClienteKg - custoMedioKg) / precoClienteKg) * 100 
+      // Margem % da Filial por caixa
+      const margemFilialPercent = precoClienteCaixa > 0 && custoMedioPorCaixa > 0
+        ? ((precoClienteCaixa - custoMedioPorCaixa) / precoClienteCaixa) * 100 
         : 0;
       
       return {
         ...entry,
-        custoMedioPorLote: parseFloat(custoMedioPorLote.toFixed(2)),
+        custoMedioPorLote: parseFloat(custoMedioPorCaixa.toFixed(2)),
         margemFilialPercent: parseFloat(margemFilialPercent.toFixed(2))
       };
     });
@@ -373,7 +362,7 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
 
           {/* Gráfico de Custos */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Média de Custo por Lote (Últimos 7 dias)</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-4">Média de Custo por Caixa (Últimos 7 dias)</h3>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -387,7 +376,7 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
                   formatter={(value: any) => [`R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Custo Médio']}
                 />
                 <Legend />
-                <Bar dataKey="custoMedioPorLote" fill="#ef4444" name="Custo Médio por Lote (R$)" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="custoMedioPorLote" fill="#ef4444" name="Custo Médio por Caixa (R$)" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
