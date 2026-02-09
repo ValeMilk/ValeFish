@@ -84,14 +84,15 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
       kg: number; 
       valor: number; 
       count: number;
+      countFinalizados: number;
       custoTotal: number;
-      margemPercent: number;
+      margemFilialPercent: number;
     }>();
     
     normalizedLotes.forEach(lote => {
       const date = lote.dataProducao;
       if (!dataMap.has(date)) {
-        dataMap.set(date, { date, kg: 0, valor: 0, count: 0, custoTotal: 0, margemPercent: 0 });
+        dataMap.set(date, { date, kg: 0, valor: 0, count: 0, countFinalizados: 0, custoTotal: 0, margemFilialPercent: 0 });
       }
       const entry = dataMap.get(date)!;
       
@@ -103,6 +104,8 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
       
       // Somar valor e custos apenas dos lotes finalizados
       if (lote.status === 'finalizado') {
+        entry.countFinalizados += 1;
+        
         if (lote.valorNF) {
           entry.valor += lote.valorNF;
         }
@@ -133,14 +136,31 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
       entry.count += 1;
     });
     
-    // Calcular margem percentual para cada data
+    // Calcular média de custo por lote e margem da filial
     const result = Array.from(dataMap.values()).map(entry => {
-      const margemPercent = entry.valor > 0 
-        ? ((entry.valor - entry.custoTotal) / entry.valor) * 100 
+      // Média de custo por lote finalizado
+      const custoMedioPorLote = entry.countFinalizados > 0 
+        ? entry.custoTotal / entry.countFinalizados 
         : 0;
+      
+      // Margem da Filial: ((Preço Cliente - Custo Total) / Preço Cliente) * 100
+      // Preço cliente por kg = R$ 40,00
+      const precoClienteKg = 40.00;
+      
+      // Calcular custo médio por kg
+      const custoMedioKg = entry.kg > 0 
+        ? entry.custoTotal / entry.kg 
+        : 0;
+      
+      // Margem % da Filial
+      const margemFilialPercent = precoClienteKg > 0 && custoMedioKg > 0
+        ? ((precoClienteKg - custoMedioKg) / precoClienteKg) * 100 
+        : 0;
+      
       return {
         ...entry,
-        margemPercent: parseFloat(margemPercent.toFixed(2))
+        custoMedioPorLote: parseFloat(custoMedioPorLote.toFixed(2)),
+        margemFilialPercent: parseFloat(margemFilialPercent.toFixed(2))
       };
     });
     
@@ -326,7 +346,7 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
 
           {/* Gráfico de Custos */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Custos Lotes Finalizados (Últimos 7 dias)</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-4">Média de Custo por Lote (Últimos 7 dias)</h3>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -337,17 +357,17 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
                 <YAxis />
                 <Tooltip 
                   labelFormatter={(value) => new Date(value).toLocaleDateString('pt-BR')}
-                  formatter={(value: any) => [`R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Custo']}
+                  formatter={(value: any) => [`R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Custo Médio']}
                 />
                 <Legend />
-                <Line type="monotone" dataKey="custoTotal" stroke="#ef4444" strokeWidth={2} name="Custo Total (R$)" />
+                <Line type="monotone" dataKey="custoMedioPorLote" stroke="#ef4444" strokeWidth={2} name="Custo Médio por Lote (R$)" />
               </LineChart>
             </ResponsiveContainer>
           </div>
 
           {/* Gráfico de Margem */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Margem % Lotes Finalizados (Últimos 7 dias)</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-4">Margem % Filial (Últimos 7 dias)</h3>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -358,10 +378,10 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
                 <YAxis />
                 <Tooltip 
                   labelFormatter={(value) => new Date(value).toLocaleDateString('pt-BR')}
-                  formatter={(value: any) => [`${value.toFixed(2)}%`, 'Margem']}
+                  formatter={(value: any) => [`${value.toFixed(2)}%`, 'Margem Filial']}
                 />
                 <Legend />
-                <Line type="monotone" dataKey="margemPercent" stroke="#8b5cf6" strokeWidth={2} name="Margem (%)" />
+                <Line type="monotone" dataKey="margemFilialPercent" stroke="#8b5cf6" strokeWidth={2} name="Margem Filial (%)" />
               </LineChart>
             </ResponsiveContainer>
           </div>
