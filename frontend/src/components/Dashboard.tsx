@@ -86,13 +86,14 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
       count: number;
       countFinalizados: number;
       custoTotal: number;
+      custoTotalKgAcumulado: number;
       margemFilialPercent: number;
     }>();
     
     normalizedLotes.forEach(lote => {
       const date = lote.dataProducao;
       if (!dataMap.has(date)) {
-        dataMap.set(date, { date, kg: 0, valor: 0, count: 0, countFinalizados: 0, custoTotal: 0, margemFilialPercent: 0 });
+        dataMap.set(date, { date, kg: 0, valor: 0, count: 0, countFinalizados: 0, custoTotal: 0, custoTotalKgAcumulado: 0, margemFilialPercent: 0 });
       }
       const entry = dataMap.get(date)!;
       
@@ -145,6 +146,9 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
           
           // Custo total do lote
           custoLote = fileEmbaladoTotal * custoTotalKg;
+          
+          // Acumular custo por kg para média
+          entry.custoTotalKgAcumulado += custoTotalKg;
         }
         
         entry.custoTotal += custoLote;
@@ -164,9 +168,9 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
       // Preço cliente por kg = R$ 40,00
       const precoClienteKg = 40.00;
       
-      // Calcular custo médio por kg
-      const custoMedioKg = entry.kg > 0 
-        ? entry.custoTotal / entry.kg 
+      // Calcular custo médio por kg (média dos custos por kg dos lotes finalizados)
+      const custoMedioKg = entry.countFinalizados > 0 
+        ? entry.custoTotalKgAcumulado / entry.countFinalizados 
         : 0;
       
       // Margem % da Filial
