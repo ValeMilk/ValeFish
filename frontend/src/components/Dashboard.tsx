@@ -5,7 +5,7 @@ import { toast } from "@/hooks/use-toast";
 import LoteModal from "./LoteModal";
 import PrintableLote from "./PrintableLote";
 import { useReactToPrint } from 'react-to-print';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface DashboardProps {
   lotes: LoteData[];
@@ -344,7 +344,13 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-foreground mb-4">Kg Processados (Últimos 7 dias)</h3>
             <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={chartData}>
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="colorKg" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="date" 
@@ -356,8 +362,8 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
                   formatter={(value: any) => [`${value.toFixed(2)} kg`, 'Kg']}
                 />
                 <Legend />
-                <Line type="monotone" dataKey="kg" stroke="#3b82f6" strokeWidth={2} name="Kg" />
-              </LineChart>
+                <Area type="monotone" dataKey="kg" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#colorKg)" name="Kg" />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
 
@@ -365,7 +371,7 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-foreground mb-4">Média de Custo por Lote (Últimos 7 dias)</h3>
             <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={chartData}>
+              <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="date" 
@@ -377,8 +383,8 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
                   formatter={(value: any) => [`R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Custo Médio']}
                 />
                 <Legend />
-                <Line type="monotone" dataKey="custoMedioPorLote" stroke="#ef4444" strokeWidth={2} name="Custo Médio por Lote (R$)" />
-              </LineChart>
+                <Bar dataKey="custoMedioPorLote" fill="#ef4444" name="Custo Médio por Lote (R$)" radius={[8, 8, 0, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
 
@@ -386,7 +392,13 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-foreground mb-4">Margem % Filial (Últimos 7 dias)</h3>
             <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={chartData}>
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="colorMargem" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.1}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="date" 
@@ -398,8 +410,8 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
                   formatter={(value: any) => [`${value.toFixed(2)}%`, 'Margem Filial']}
                 />
                 <Legend />
-                <Line type="monotone" dataKey="margemFilialPercent" stroke="#8b5cf6" strokeWidth={2} name="Margem Filial (%)" />
-              </LineChart>
+                <Area type="monotone" dataKey="margemFilialPercent" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorMargem)" name="Margem Filial (%)" />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
