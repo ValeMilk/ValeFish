@@ -26,6 +26,9 @@ interface RegistroEntradaProps {
 const FORNECEDORES = ["VALEFISH", "NORFISH", "CARLITO"];
 
 const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAberto = false, isEditing = false, onCancel }: RegistroEntradaProps) => {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const userRole = user.role || 'operador';
+  
   const [notaFiscalConfirmado, setNotaFiscalConfirmado] = useState(false);
   const [filetagemConfirmado, setFiletagemConfirmado] = useState(false);
   const [descartesConfirmado, setDescartesConfirmado] = useState(false);
@@ -611,7 +614,9 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
           <p className="text-sm font-medium text-foreground mb-2">
             Tipo de Filé selecionado: <span className="font-bold text-primary">{tipoFile}</span>
           </p>
-          <div className="grid grid-cols-2 gap-2 mt-2">
+          {userRole === 'admin' && (
+            <>
+              <div className="grid grid-cols-2 gap-2 mt-2">
             <div className="bg-blue-50 dark:bg-blue-950 p-2 rounded">
               <p className="text-xs text-muted-foreground">Custo de Pacotes</p>
               <p className="font-bold text-blue-700 dark:text-blue-300">R$ {(lote.custoPacotes || 0).toFixed(2)}</p>
@@ -665,6 +670,8 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
                 </table>
               </div>
             </div>
+          )}
+            </>
           )}
         </div>
         
