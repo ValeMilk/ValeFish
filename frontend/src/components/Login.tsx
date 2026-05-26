@@ -31,13 +31,21 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${API_URL}/auth/users-list`);
-        if (response.ok) {
-          const data = await response.json();
-          setUsers(data);
+        const userListUrl = `${API_URL}/auth/users-list`;
+        console.log('🔍 Buscando usuários em:', userListUrl);
+        
+        const response = await fetch(userListUrl);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          console.error('❌ Erro ao buscar usuários:', response.status, data);
+          return;
         }
+        
+        console.log('✅ Usuários carregados:', data);
+        setUsers(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.error('Erro ao buscar usuários:', error);
+        console.error('❌ Erro de conexão ao buscar usuários:', error);
       }
     };
     fetchUsers();

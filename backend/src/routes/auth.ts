@@ -6,11 +6,23 @@ import { AuthenticatedRequest, authMiddleware } from '../middleware/auth';
 const router = Router();
 
 // Get all users (public - for login dropdown)
-router.get('/users-list', async (req: AuthenticatedRequest, res: Response) => {
+router.get('/users-list', async (req, res) => {
   try {
-    const users = await User.find().select('username name').sort({ name: 1 });
-    res.json(users);
+    console.log('📍 Requisição recebida: GET /auth/users-list');
+    
+    const users = await User.find({}, { username: 1, name: 1, _id: 1 }).sort({ name: 1 });
+    
+    console.log(`✅ ${users.length} usuário(s) encontrado(s)`);
+    
+    res.status(200).json(users);
   } catch (error: any) {
+    console.error('❌ Erro ao buscar usuários:', error.message);
+    res.status(500).json({ 
+      error: error.message,
+      details: 'Erro ao conectar ao banco de dados'
+    });
+  }
+});
     res.status(500).json({ error: error.message });
   }
 });
