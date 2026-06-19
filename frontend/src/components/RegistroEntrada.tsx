@@ -145,9 +145,9 @@ const RegistroEntrada = ({ lote, onChange, onSubmit, loading = false, loadingAbe
         
         // SERVIÇO
         const multiplicadorServico = tipoFile === '400g' ? 4 : 8;
-        const servicoPacket = (6 / 10) * multiplicadorServico;
-        const servicoKg = 6.00;
-        const servicoBox = 57.60;
+        const servicoPacket = (7 / 10) * multiplicadorServico;
+        const servicoKg = 7.00;
+        const servicoBox = 67.20;
         
         // TOTAL
         const totalPacket = filePacket + embalagemPacket + servicoPacket;

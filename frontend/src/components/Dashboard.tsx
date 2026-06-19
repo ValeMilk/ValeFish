@@ -137,7 +137,7 @@ const Dashboard = ({ lotes, onLoteUpdate, onLoadLoteForEdit }: DashboardProps) =
             const embalagemBox = embalagemKg * 9.6;
             
             // SERVIÇO
-            const servicoBox = 57.60;
+            const servicoBox = 67.20;
             
             // TOTAL POR CAIXA
             const custoTotalCaixa = fileBox + embalagemBox + servicoBox;
